@@ -44,8 +44,9 @@ const TOOLS: { id: Tool; label: string; key: string }[] = [
 const PART_NAME: Record<Part, string> = { solar: 'Solar panel', wind: 'Wind turbine', battery: 'Battery', garden: 'Garden' };
 const TERRAIN_NAME: Record<Terrain, string> = { open: 'Open ground', ridge: 'Windy ridge', home: 'Home', tree: 'Tree', pond: 'Pond' };
 
-const PART_BG: Record<Part, string> = { solar: '#1F6F78', wind: '#FFFDF7', battery: '#2F6B45', garden: '#CFE3D3' };
-const TERRAIN_BG: Record<Terrain, string> = { open: '#CFE3D3', ridge: '#BFD3A6', home: '#F3E3B5', tree: '#A9C48E', pond: '#A9C48E' };
+// Colors come from CSS tokens so the board dims to a moonlit version in dark mode.
+const PART_BG: Record<Part, string> = { solar: 'var(--g-solar)', wind: 'var(--g-wind)', battery: 'var(--g-battery)', garden: 'var(--g-garden)' };
+const TERRAIN_BG: Record<Terrain, string> = { open: 'var(--g-open)', ridge: 'var(--g-ridge)', home: 'var(--g-home)', tree: 'var(--g-green)', pond: 'var(--g-green)' };
 
 export interface GameProps {
   date: string;
@@ -54,9 +55,11 @@ export interface GameProps {
   saved?: DailyGame;
   onSave: (g: DailyGame) => void;
   ranked: boolean;
+  /** Open the rules on a player's very first visit. */
+  firstVisit?: boolean;
 }
 
-export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked }: GameProps) {
+export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked, firstVisit = false }: GameProps) {
   const reduceMotion = useReducedMotion();
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -81,7 +84,7 @@ export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ra
         Drawing today’s map…
       </p>
     );
-  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} />;
+  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} />;
 }
 
 function Board({
@@ -91,6 +94,7 @@ function Board({
   onSave,
   ranked,
   reduceMotion,
+  firstVisit,
 }: {
   puzzle: Puzzle;
   date: string;
@@ -98,6 +102,7 @@ function Board({
   onSave: (g: DailyGame) => void;
   ranked: boolean;
   reduceMotion: boolean;
+  firstVisit: boolean;
 }) {
   const [layout, setLayout] = useState<Layout>(() => saved?.layout ?? new Array(CELLS).fill(null));
   const [history, setHistory] = useState<boolean[][]>(() => saved?.history ?? []);
@@ -106,6 +111,8 @@ function Board({
   const [anim, setAnim] = useState<{ sim: SimResult; hour: number } | null>(null);
   const [showSolution, setShowSolution] = useState(false);
   const [notice, setNotice] = useState('');
+  // Set when the player tries to run with parts that aren't connected; a second press runs anyway.
+  const [offWarning, setOffWarning] = useState(false);
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const tries = history.length;
@@ -120,6 +127,7 @@ function Board({
   const shownSim = anim?.sim ?? null;
   const shownHour = anim?.hour ?? -1;
   const lastLit = history[tries - 1];
+  const offCount = layout.filter((part, i) => part && !connected[i]).length;
 
   // Persist the board as the player edits it.
   const persist = useCallback(
@@ -148,12 +156,19 @@ function Board({
       next[i] = tool;
     }
     setNotice(next[i] ? `${PART_NAME[next[i]!]} placed. ${used + (layout[i] ? 0 : 1)} of ${puzzle.budget} parts used.` : `Cleared. ${countParts(next)} of ${puzzle.budget} parts used.`);
+    setOffWarning(false);
     setLayout(next);
     persist({ layout: next });
   }
 
   function run() {
     if (done || running || used === 0) return;
+    if (offCount > 0 && !offWarning) {
+      setOffWarning(true);
+      setNotice(offText(offCount));
+      return;
+    }
+    setOffWarning(false);
     const sim = simulate(puzzle, layout);
     const nextHistory = [...history, sim.lit];
     setHistory(nextHistory);
@@ -194,6 +209,7 @@ function Board({
         next[focus] = null;
         setLayout(next);
         persist({ layout: next });
+        setOffWarning(false);
         setNotice(`Cleared. ${countParts(next)} of ${puzzle.budget} parts used.`);
       }
       return;
@@ -245,24 +261,52 @@ function Board({
     return notes.length ? `, ${notes.join(', ')}` : '';
   }
 
+  const runLabel = running
+    ? 'Running the day…'
+    : done
+      ? won
+        ? 'Solved!'
+        : 'No tries left'
+      : used === 0
+        ? 'Place a part to run the day'
+        : offWarning
+          ? 'Run anyway'
+          : `Run the day (try ${tries + 1} of ${MAX_TRIES})`;
+  const canRun = !(done || running || used === 0);
+  const runClass = `min-h-[52px] rounded-full text-lg font-bold ${
+    canRun ? 'bg-leaf text-white' : 'cursor-not-allowed border-2 border-dashed border-line-strong bg-transparent text-muted'
+  }`;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="mb-1 text-[14px] font-bold uppercase tracking-[.08em] text-leaf-ink">
-            {ranked ? `Daily puzzle · ${formatDate(date)}` : `Bonus grid · just for fun`}
-          </p>
-          <h1 className="font-serif text-[36px] font-bold leading-tight sm:text-[44px]">{ranked ? `Microgrid #${num}` : info.name}</h1>
-          {!ranked && <p className="mt-1 text-[17px] text-body">{info.blurb}</p>}
+          <h1 className="font-serif text-[40px] font-bold leading-tight sm:text-[52px]">{ranked ? `Microgrid #${num}` : info.name}</h1>
+          <p className="mt-1 text-[17px] text-body">{ranked ? `Today’s puzzle, ${formatDate(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
         </div>
         <p className="text-[17px]">
-          Tries left: <strong>{MAX_TRIES - tries}</strong> of {MAX_TRIES}
+          Tries left: <strong className="num text-[22px]">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
         </p>
       </div>
 
-      <div className="flex flex-wrap items-start gap-7">
+      <div className="play-layout">
+        {/* ---------- the forecast (first on phones, so you plan before you place) ---------- */}
+        <section data-area="forecast" aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
+          <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
+            <h2 className="font-serif text-[22px] font-semibold">Today’s forecast</h2>
+            <ForecastChart puzzle={puzzle} demand={demand} />
+            <div className="hidden flex-col gap-2 md:flex">
+              <button type="button" onClick={run} disabled={!canRun} className={runClass}>
+                {runLabel}
+              </button>
+              {offWarning && <p className="text-[15px] font-bold text-terracotta">{offText(offCount)}</p>}
+            </div>
+          </div>
+          <HowToPlay open={firstVisit} />
+        </section>
+
         {/* ---------- the board ---------- */}
-        <section aria-label="Neighborhood grid" className="flex min-w-0 flex-[1_1_360px] flex-col gap-3.5">
+        <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-3.5">
           <p className="text-[17px] leading-normal">
             Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot to place it.
           </p>
@@ -288,7 +332,7 @@ function Board({
                   {t.id === 'clear' && <span className="text-lg leading-none">×</span>}
                 </span>
                 {t.label}
-                <kbd className="hidden text-[12px] font-normal opacity-70 md:inline" aria-hidden="true">
+                <kbd className="hidden rounded border border-current px-1 text-[12px] font-normal leading-4 md:inline" aria-hidden="true">
                   {t.key}
                 </kbd>
               </button>
@@ -298,7 +342,8 @@ function Board({
           <div
             role="grid"
             aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
-            className="grid max-w-[480px] grid-cols-5 gap-2 rounded-[20px] bg-meadow p-3 sm:p-3.5"
+            className="grid max-w-[520px] grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
+            style={{ background: 'var(--board)' }}
             onKeyDown={onGridKey}
           >
             {Array.from({ length: SIZE }, (_, r) => (
@@ -335,15 +380,12 @@ function Board({
                         {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
                         {part === 'garden' && <GardenIcon />}
                         {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
-                          <span
-                            aria-hidden="true"
-                            className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-[11px] font-bold leading-[18px] text-ink shadow-sm"
-                          >
+                          <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-[12px] font-bold leading-[18px] text-ink shadow-sm">
                             ×{fmt(m)}
                           </span>
                         )}
                         {off && (
-                          <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-[10px] font-bold leading-4 text-terracotta">
+                          <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-[12px] font-bold leading-4 text-terracotta">
                             off grid
                           </span>
                         )}
@@ -357,36 +399,27 @@ function Board({
 
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-[15px]">
             <span>
-              Parts used: <strong>{used}</strong> of {puzzle.budget}
+              Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
             </span>
-            <span className="text-muted">Homes: {puzzle.terrain.filter((t) => t === 'home').length}</span>
+            <span className="text-muted">
+              Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
+            </span>
           </div>
+          <p className="text-[14px] text-muted">
+            Badges like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it.
+          </p>
           <p className="sr-only" role="status" aria-live="polite">
             {notice}
           </p>
           <TerrainKey />
         </section>
 
-        {/* ---------- the day ---------- */}
-        <section aria-label="The day" className="flex min-w-0 flex-[1_1_400px] flex-col gap-4">
-          <div className="flex flex-col gap-3 rounded-[18px] border border-line bg-card p-5">
-            <h2 className="font-serif text-[22px] font-semibold">Today’s forecast</h2>
-            <ForecastChart puzzle={puzzle} demand={demand} />
-            <button
-              type="button"
-              onClick={run}
-              disabled={done || running || used === 0}
-              className="min-h-[52px] rounded-full bg-leaf text-lg font-bold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {running ? 'Running the day…' : done ? (won ? 'Solved!' : 'No tries left') : `Run the day (try ${tries + 1} of ${MAX_TRIES})`}
-            </button>
-            {used === 0 && !done && <p className="text-[14px] text-muted">Place at least one part to run the day.</p>}
-          </div>
-
+        {/* ---------- results ---------- */}
+        <section data-area="rest" aria-label="The day" className="flex min-w-0 flex-col gap-4">
           {lastLit && (
-            <div className="flex flex-col gap-3 rounded-[18px] bg-forest p-5 text-on-forest">
+            <div className="on-forest flex flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
               <h2 className="font-serif text-[26px] font-semibold">
-                {shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : lastLit.filter(Boolean).length} of 24 hours lit
+                <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : lastLit.filter(Boolean).length}</span> of 24 hours lit
               </h2>
               <ResultChart
                 lit={shownSim ? shownSim.lit : lastLit}
@@ -419,19 +452,41 @@ function Board({
           {done && share && !running && <SharePanel share={share} />}
 
           {done && !won && !running && (
-            <div className="rounded-[18px] border border-line bg-card p-5">
+            <div className="rounded-[20px] border border-line bg-card p-5">
               <button type="button" className="font-bold text-sky underline" onClick={() => setShowSolution((s) => !s)} aria-expanded={showSolution}>
                 {showSolution ? 'Hide' : 'Show'} one way to light every hour
               </button>
               {showSolution && <SolutionPreview puzzle={puzzle} />}
             </div>
           )}
-
-          <HowToPlay />
         </section>
       </div>
+
+      {/* On phones, the run button stays within thumb's reach while you place parts. */}
+      {!done && (
+        <div className="on-forest fixed inset-x-0 bottom-0 z-30 border-t border-forest-2 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest md:hidden">
+          {offWarning && <p className="mb-2 text-[14px] font-bold text-pale-sun">{offText(offCount)}</p>}
+          <div className="flex items-center gap-3">
+            <p className="shrink-0 text-[15px]">
+              Parts <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
+            </p>
+            <button
+              type="button"
+              onClick={run}
+              disabled={!canRun}
+              className={`min-h-12 flex-1 rounded-full text-[17px] font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
+            >
+              {runLabel}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
+}
+
+function offText(n: number): string {
+  return `${n === 1 ? 'One part is' : `${n} parts are`} off grid and won’t make power. Connect ${n === 1 ? 'it' : 'them'} to a home, or press again to run anyway.`;
 }
 
 function hint(p: Puzzle, lit: boolean[], layout: Layout): string {
@@ -472,9 +527,9 @@ function TerrainKey() {
   );
 }
 
-function HowToPlay() {
+function HowToPlay({ open }: { open: boolean }) {
   return (
-    <details id="how" className="rounded-[18px] border border-line bg-card p-5">
+    <details id="how" open={open} className="rounded-[20px] border border-line bg-card p-5">
       <summary className="cursor-pointer font-serif text-[20px] font-semibold">How it works</summary>
       <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-[16px] leading-normal text-body">
         <li>

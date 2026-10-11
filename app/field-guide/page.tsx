@@ -36,9 +36,10 @@ export default function FieldGuidePage() {
                   {related.map((r, k) => (
                     <span key={r.slug}>
                       {k > 0 && ' · '}
-                      <Link href={`/library/${r.slug}`}>
-                        {shortAuthors(r)} ({yearText(r.year)})
-                      </Link>
+                      <Link href={`/library/${r.slug}`}>{r.title}</Link>{' '}
+                      <span className="text-muted">
+                        ({shortAuthors(r)}, <span className="num">{yearText(r.year)}</span>)
+                      </span>
                     </span>
                   ))}
                 </dd>

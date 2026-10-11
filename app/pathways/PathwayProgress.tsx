@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useProgress } from '@/lib/progress';
 
@@ -9,42 +10,68 @@ export function PathwayCardProgress({ slugs }: { slugs: string[] }) {
   const done = slugs.filter((s) => progress.visited[s]).length;
   if (!done) return null;
   return (
-    <span className="mt-auto pt-2 text-[14px] font-bold">
+    <span className="text-[14px] font-bold text-leaf-ink">
       {done === slugs.length ? 'Pathway complete' : `${done} of ${slugs.length} read`}
     </span>
   );
 }
 
-/** A vine that grows down the left side of a pathway as stops are read. */
-export function PathwayVine({ slugs }: { slugs: string[] }) {
+/** How far along the pathway the reader is, in words. */
+export function PathwayStatus({ slugs }: { slugs: string[] }) {
+  const progress = useProgress();
+  const done = progress ? slugs.filter((s) => progress.visited[s]).length : 0;
+  return (
+    <p className="text-[15px] font-bold" role="status">
+      {progress ? (done === slugs.length ? 'You’ve read every stop on this pathway.' : `${done} of ${slugs.length} stops read`) : ' '}
+    </p>
+  );
+}
+
+/**
+ * One stretch of the vine that runs down the left of a pathway. It turns green
+ * once that stop is read, and the stop's bud opens into a leaf.
+ */
+export function VineSegment({ slug, index, last }: { slug: string; index: number; last: boolean }) {
   const progress = useProgress();
   const reduce = useReducedMotion();
-  const done = progress ? slugs.filter((s) => progress.visited[s]).length : 0;
-  const frac = slugs.length ? done / slugs.length : 0;
+  const read = !!progress?.visited[slug];
+  const side = index % 2 === 0 ? 1 : -1;
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-[15px] font-bold" role="status">
-        {progress ? (done === slugs.length ? 'You’ve read every stop on this pathway.' : `${done} of ${slugs.length} stops read`) : ' '}
-      </p>
-      <svg viewBox="0 0 300 24" className="h-6 w-full max-w-[420px]" aria-hidden="true">
-        <path d="M4 12 C40 0 60 24 100 12 S160 0 200 12 S260 24 296 12" stroke="var(--line)" strokeWidth="4" fill="none" strokeLinecap="round" />
-        <motion.path
-          d="M4 12 C40 0 60 24 100 12 S160 0 200 12 S260 24 296 12"
-          stroke="#2F6B45"
-          strokeWidth="4"
-          fill="none"
-          strokeLinecap="round"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: frac }}
-          transition={{ duration: reduce ? 0 : 1.2, ease: 'easeOut' }}
-        />
-        {slugs.map((s, k) => {
-          const x = 4 + (292 * (k + 1)) / slugs.length;
-          const read = progress?.visited[s];
-          return read ? <path key={s} d={`M${x - 6} 12 C${x - 6} 4 ${x} 2 ${x + 4} 2 C${x + 4} 8 ${x} 12 ${x - 6} 12Z`} fill="#5E9467" /> : null;
-        })}
-      </svg>
-    </div>
+    <span className="relative flex w-12 shrink-0 flex-col items-center" aria-hidden="true">
+      {/* The bud, with the stop number. */}
+      <span
+        className={`num relative z-10 mt-3 flex h-10 w-10 items-center justify-center rounded-[50%_50%_50%_6px] border-2 text-[17px] font-bold transition-colors duration-500 ${
+          read ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
+        }`}
+        style={{ transform: 'rotate(-45deg)' }}
+      >
+        <span style={{ transform: 'rotate(45deg)' }}>{index + 1}</span>
+      </span>
+      {!last && (
+        <svg viewBox="0 0 48 100" preserveAspectRatio="none" className="absolute left-0 top-12 h-[calc(100%-2rem)] w-12 overflow-visible">
+          <path d="M24 0 C24 30 36 40 24 60 S16 90 24 100" stroke="var(--line-strong)" strokeWidth="3" fill="none" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
+          <motion.path
+            d="M24 0 C24 30 36 40 24 60 S16 90 24 100"
+            stroke="var(--leaf)"
+            strokeWidth="3"
+            fill="none"
+            vectorEffect="non-scaling-stroke"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: read ? 1 : 0 }}
+            transition={{ duration: reduce ? 0 : 1, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </svg>
+      )}
+      {!last && (
+        <svg viewBox="0 0 24 24" className="absolute top-[58%] h-6 w-6 transition-opacity duration-500" style={{ left: side > 0 ? 30 : -6, opacity: read ? 1 : 0.35 }}>
+          <path
+            d={side > 0 ? 'M2 20 C4 10 12 4 22 3 C21 13 13 19 2 20Z' : 'M22 20 C20 10 12 4 2 3 C3 13 11 19 22 20Z'}
+            fill={read ? '#5E9467' : 'var(--line-strong)'}
+          />
+        </svg>
+      )}
+    </span>
   );
 }
 
@@ -55,4 +82,45 @@ export function StepStatus({ slug }: { slug: string }) {
   const noted = progress.notes[slug];
   if (!read) return null;
   return <span className="rounded-full bg-chip-leaf px-2.5 py-0.5 text-[13px] font-bold">{noted ? 'Read · field note' : 'Read'}</span>;
+}
+
+/** The end of the pathway: a bloom once every stop is read, and the way onward. */
+export function PathwayEnd({ slugs, next }: { slugs: string[]; next?: { slug: string; title: string; blurb: string } }) {
+  const progress = useProgress();
+  const done = progress ? slugs.filter((s) => progress.visited[s]).length : 0;
+  const complete = progress && done === slugs.length;
+  return (
+    <div className="nouveau flex flex-wrap items-center gap-6 rounded-[24px] bg-pale-sun px-7 py-7 sm:px-9">
+      <svg viewBox="0 0 64 64" className="h-16 w-16 shrink-0" aria-hidden="true">
+        {complete ? (
+          <>
+            {Array.from({ length: 8 }, (_, k) => (
+              <ellipse key={k} cx="32" cy="17" rx="7" ry="13" fill="#E3A72F" opacity="0.9" transform={`rotate(${k * 45} 32 32)`} />
+            ))}
+            <circle cx="32" cy="32" r="9" fill="#6B4A2E" />
+          </>
+        ) : (
+          <>
+            <path d="M32 60 V30" stroke="#2F6B45" strokeWidth="3" />
+            <path d="M32 30 C22 28 20 18 26 12 C34 14 36 22 32 30Z" fill="#5E9467" />
+            <path d="M32 40 C42 38 46 30 42 24 C36 26 32 32 32 40Z" fill="#3E7C4F" />
+          </>
+        )}
+      </svg>
+      <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-1.5">
+        <p className="font-serif text-[24px] font-semibold leading-snug">
+          {complete ? 'This pathway is in full bloom.' : 'Keep going: the vine grows with every stop you read.'}
+        </p>
+        {next && (
+          <p className="text-[17px] text-body">
+            Next pathway:{' '}
+            <Link href={`/pathways/${next.slug}`} className="font-bold">
+              {next.title}
+            </Link>
+            . {next.blurb}
+          </p>
+        )}
+      </div>
+    </div>
+  );
 }

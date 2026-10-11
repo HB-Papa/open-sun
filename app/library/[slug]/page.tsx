@@ -6,6 +6,7 @@ import { apa, chicago, shortAuthors } from '@/lib/cite';
 import { LANGUAGES, topicLabel, TYPE_COLORS } from '@/lib/topics';
 import { yearText } from '@/lib/types';
 import { ExternalIcon } from '@/components/icons';
+import { VineRule } from '@/components/Ornaments';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
 import { FieldNoteCard, ReadToEnd } from './FieldNote';
@@ -50,7 +51,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             {item.type}
           </span>
           <span className="rounded-full bg-chip-leaf px-3 py-1 text-[13px] font-bold">Open access · {item.license}</span>
-          <span className="rounded-full bg-chip px-3 py-1 text-[13px]">{yearText(item.year)}</span>
+          <span className="num rounded-full bg-chip px-3 py-1 text-[13px]">{yearText(item.year)}</span>
           {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-[13px]">In {LANGUAGES[item.language] ?? item.language}</span>}
         </div>
         <h1 className="font-serif text-[34px] font-bold leading-[1.1] sm:text-[44px]">{item.title}</h1>
@@ -73,10 +74,13 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           )}
         </div>
 
-        <section aria-labelledby="sum" className="flex flex-col gap-3 rounded-[18px] border border-line bg-card px-6 py-6 sm:px-7">
-          <h2 id="sum" className="font-serif text-2xl font-semibold">
-            In plain language
-          </h2>
+        <section aria-labelledby="sum" className="flex flex-col gap-3 rounded-[22px] border border-line bg-card px-6 py-7 sm:px-8">
+          <div className="flex items-center gap-4">
+            <h2 id="sum" className="font-serif text-2xl font-semibold">
+              In plain language
+            </h2>
+            <VineRule />
+          </div>
           <div className="prose-os" dangerouslySetInnerHTML={{ __html: item.summaryHtml }} />
           {item.why && (
             <>
@@ -100,11 +104,12 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             </Link>
           ))}
         </div>
+        {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
+        <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
         <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
       </article>
 
-      <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5">
-        <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
+      <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5 lg:sticky lg:top-6">
         {related.length > 0 && (
           <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
             <h2 id="rel" className="font-serif text-[22px] font-semibold">
@@ -116,7 +121,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
                   <Link href={`/library/${r.slug}`} className="flex flex-col gap-1 text-ink no-underline hover:text-ink">
                     <span className="text-base font-bold hover:underline">{r.title}</span>
                     <span className="text-[14px] text-muted">
-                      {shortAuthors(r)}, {yearText(r.year)} · {r.type}
+                      {shortAuthors(r)}, <span className="num">{yearText(r.year)}</span> · {r.type}
                     </span>
                   </Link>
                 </li>

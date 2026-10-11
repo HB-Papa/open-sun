@@ -57,7 +57,7 @@ export function PlayClient() {
           />
         </>
       ) : (
-        <MicrogridGame date={today} variant="daily" saved={progress.games[today]} onSave={onSaveDaily} ranked />
+        <MicrogridGame date={today} variant="daily" saved={progress.games[today]} onSave={onSaveDaily} ranked firstVisit={Object.keys(progress.games).length === 0} />
       )}
 
       <div className="flex flex-wrap items-start gap-6">
@@ -71,13 +71,18 @@ export function PlayClient() {
 function BonusList({ progress, today, activeId }: { progress: Progress; today: string; activeId: string | null }) {
   const rounds = progress.bonus[today] ?? [];
   return (
-    <section aria-labelledby="bonus-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-3 rounded-[18px] border border-line bg-card p-5">
+    <section aria-labelledby="bonus-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
       <h2 id="bonus-h" className="font-serif text-[22px] font-semibold">
         Bonus grids from your reading
       </h2>
-      <p className="text-[15px] text-muted">
-        Answer a field note on any library page to unlock a themed bonus grid (up to {MAX_BONUS_PER_DAY} a day). Bonus grids are just for fun: they never change your streak or share result.
+      <p className="text-[15px] text-body">
+        Answer a field note on any library page to open a themed bonus grid (up to {MAX_BONUS_PER_DAY} a day). Bonus grids are just for fun: they never change your streak or share result.
       </p>
+      {rounds.length === 0 ? (
+        <Link href="/library" className="self-start font-bold">
+          Find something to read
+        </Link>
+      ) : (
       <ul className="flex flex-wrap gap-2.5">
         {rounds.map((b) => (
           <li key={b.id} className="flex-[1_1_200px]">
@@ -94,15 +99,18 @@ function BonusList({ progress, today, activeId }: { progress: Progress; today: s
             </Link>
           </li>
         ))}
-        {Array.from({ length: Math.max(0, MAX_BONUS_PER_DAY - rounds.length) }, (_, k) => (
-          <li key={`locked-${k}`} className="flex-[1_1_200px]">
-            <Link href="/library" className="flex h-full flex-col gap-1 rounded-[14px] bg-chip p-3.5 text-muted no-underline">
-              <strong className="text-ink">Locked bonus grid</strong>
-              <span className="text-[14px]">Read something in the library and answer its field note</span>
+        {rounds.length < MAX_BONUS_PER_DAY && (
+          <li className="flex-[1_1_200px]">
+            <Link href="/library" className="flex h-full flex-col gap-1 rounded-[14px] border-2 border-dashed border-line-strong p-3.5 text-ink no-underline hover:text-ink">
+              <strong>
+                {MAX_BONUS_PER_DAY - rounds.length} more today
+              </strong>
+              <span className="text-[14px] text-body">Read something and answer its field note</span>
             </Link>
           </li>
-        ))}
+        )}
       </ul>
+      )}
     </section>
   );
 }
@@ -113,7 +121,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
   const maxBar = Math.max(1, ...progress.histogram);
   const labels = ['1 try', '2 tries', '3 tries', 'Not yet'];
   return (
-    <section aria-labelledby="stats-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-4 rounded-[18px] border border-line bg-card p-5">
+    <section aria-labelledby="stats-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-4 rounded-[20px] border border-line bg-card p-5">
       <h2 id="stats-h" className="font-serif text-[22px] font-semibold">
         Your stats
       </h2>
@@ -157,7 +165,7 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div>
       <dt className="text-[13px] text-muted">{label}</dt>
-      <dd className="font-serif text-[26px] font-bold">{value}</dd>
+      <dd className="num text-[26px] font-bold">{value}</dd>
     </div>
   );
 }

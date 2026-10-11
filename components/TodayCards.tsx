@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { baseDemand, generatePuzzle, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
 import { currentStreak, MAX_BONUS_PER_DAY, notesToday, useProgress } from '@/lib/progress';
 import { forecastSentence } from './microgrid/DayCharts';
+import { NouveauCorners } from './Ornaments';
 
 const TILE: Record<Terrain, string> = { open: '#5E9467', ridge: '#7C9A6A', home: '#F3E3B5', tree: '#2F6B45', pond: '#4F97A0' };
 
@@ -23,13 +24,14 @@ export function TodayPuzzleCard() {
   const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length;
 
   return (
-    <div className="flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-6 rounded-3xl bg-forest px-6 py-7 text-on-forest sm:px-8">
+    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10">
+      <NouveauCorners />
       <div className="flex-[1_1_260px]">
-        <p className="mb-1.5 text-[15px] font-bold uppercase tracking-[.08em] text-sun">Today’s puzzle</p>
-        <h2 id="today" className="mb-2.5 font-serif text-[36px] font-bold">
-          Microgrid {today ? `#${puzzleNumber(today)}` : ''}
+        <h2 id="today" className="mb-2 font-serif text-[40px] font-bold leading-none sm:text-[48px]">
+          Microgrid {today ? <span className="text-sun">#{puzzleNumber(today)}</span> : ''}
         </h2>
-        <p className="mb-[18px] text-lg leading-normal text-on-forest-muted">
+        <p className="mb-3 text-[17px] text-on-forest">Today’s puzzle takes about three minutes.</p>
+        <p className="mb-[22px] text-lg leading-normal text-on-forest-muted">
           Keep a small neighborhood lit for all 24 hours.{' '}
           {puzzle ? shortForecast(puzzle) : 'Checking today’s forecast…'}
         </p>
@@ -51,9 +53,9 @@ export function TodayPuzzleCard() {
           )}
         </div>
       </div>
-      <div className="grid flex-[0_1_200px] grid-cols-5 gap-1.5" aria-hidden="true">
+      <div className={`grid flex-[0_1_220px] grid-cols-5 gap-1.5 rounded-2xl bg-forest-2 p-2 ${puzzle ? '' : 'animate-pulse'}`} aria-hidden="true">
         {(puzzle?.terrain ?? new Array<Terrain>(25).fill('open')).map((t, i) => (
-          <div key={i} className="aspect-square rounded-lg transition-colors duration-500" style={{ background: puzzle ? TILE[t] : '#2A4436' }} />
+          <div key={i} className="aspect-square rounded-lg transition-colors duration-500" style={{ background: puzzle ? TILE[t] : 'var(--forest)' }} />
         ))}
       </div>
     </div>
@@ -72,8 +74,12 @@ export function GardenCard() {
   const today = localDateKey();
   const visited = progress ? Object.keys(progress.visited) : [];
   const streak = progress ? currentStreak(progress, today).streak : 0;
+  const notes = progress ? Math.min(notesToday(progress, today), MAX_BONUS_PER_DAY) : 0;
+  const rest = progress?.restDays ?? 0;
+  // Counters only appear once there is something to count, so a first visit isn't a wall of zeros.
+  const showStats = streak > 0 || notes > 0 || rest > 0;
   return (
-    <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-3xl border border-line bg-card px-6 py-6 sm:px-7">
+    <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-[28px] border border-line bg-card px-6 py-6 shadow-[0_18px_40px_-24px_rgba(30,51,40,.35)] sm:px-7">
       <h2 className="font-serif text-2xl font-semibold">Your garden</h2>
       <p className="text-base leading-normal text-body">
         {visited.length
@@ -86,20 +92,33 @@ export function GardenCard() {
           <Sprout key={slug} k={hash(slug)} />
         ))}
       </div>
-      <dl className="grid grid-cols-3 gap-2 text-center">
-        <div>
-          <dt className="text-[13px] text-muted">Day streak</dt>
-          <dd className="font-serif text-[26px] font-bold">{progress ? streak : '–'}</dd>
-        </div>
-        <div>
-          <dt className="text-[13px] text-muted">Field notes today</dt>
-          <dd className="font-serif text-[26px] font-bold">{progress ? `${Math.min(notesToday(progress, today), MAX_BONUS_PER_DAY)}/${MAX_BONUS_PER_DAY}` : '–'}</dd>
-        </div>
-        <div>
-          <dt className="text-[13px] text-muted">Rest days</dt>
-          <dd className="font-serif text-[26px] font-bold">{progress ? progress.restDays : '–'}</dd>
-        </div>
-      </dl>
+      {showStats ? (
+        <>
+          <dl className="grid grid-cols-3 gap-2 text-center">
+            <div>
+              <dt className="text-[13px] text-muted">Day streak</dt>
+              <dd className="num text-[26px] font-bold">{streak}</dd>
+            </div>
+            <div>
+              <dt className="text-[13px] text-muted">Field notes today</dt>
+              <dd className="num text-[26px] font-bold">
+                {notes}/{MAX_BONUS_PER_DAY}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[13px] text-muted">Rest days</dt>
+              <dd className="num text-[26px] font-bold">{rest}</dd>
+            </div>
+          </dl>
+          <p className="text-[14px] leading-snug text-muted">
+            Answer the question on a library page to earn a field note. Each one opens a bonus grid, and every three earn a rest day that covers a day you miss.
+          </p>
+        </>
+      ) : (
+        <Link href="/library" className="self-start font-bold">
+          Find something to read
+        </Link>
+      )}
     </div>
   );
 }
