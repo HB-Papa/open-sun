@@ -24,11 +24,11 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
   const params = useSearchParams();
   const [query, setQuery] = useState(params.get('q') ?? '');
   const [topics, setTopics] = useState<string[]>(() => params.getAll('topic'));
-  const [types, setTypes] = useState<string[]>([]);
-  const [since, setSince] = useState('any');
-  const [language, setLanguage] = useState('any');
-  const [license, setLicense] = useState<LicenseFilter>('any');
-  const [sort, setSort] = useState<Sort>('relevance');
+  const [types, setTypes] = useState<string[]>(() => params.getAll('type'));
+  const [since, setSince] = useState(params.get('since') ?? 'any');
+  const [language, setLanguage] = useState(params.get('lang') ?? 'any');
+  const [license, setLicense] = useState<LicenseFilter>((params.get('license') as LicenseFilter) ?? 'any');
+  const [sort, setSort] = useState<Sort>((params.get('sort') as Sort) ?? 'relevance');
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -50,9 +50,14 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
     const sp = new URLSearchParams();
     if (query) sp.set('q', query);
     topics.forEach((t) => sp.append('topic', t));
+    types.forEach((t) => sp.append('type', t));
+    if (since !== 'any') sp.set('since', since);
+    if (language !== 'any') sp.set('lang', language);
+    if (license !== 'any') sp.set('license', license);
+    if (sort !== 'relevance') sp.set('sort', sort);
     const qs = sp.toString();
     window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
-  }, [query, topics]);
+  }, [query, topics, types, since, language, license, sort]);
 
   const index = useMemo(() => {
     const ms = new MiniSearch<ItemCard & { id: string; authorText: string; topicText: string }>({
@@ -100,6 +105,14 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
     });
   }, [items, index, query, topics, types, since, language, license, sort]);
 
+  // Announce the count to screen readers only once typing pauses, not on every keystroke.
+  const countText = results.length === items.length ? `All ${items.length} items` : `${results.length} of ${items.length} items`;
+  const [announced, setAnnounced] = useState(countText);
+  useEffect(() => {
+    const t = setTimeout(() => setAnnounced(countText), 700);
+    return () => clearTimeout(t);
+  }, [countText]);
+
   const activeFilters = topics.length + types.length + (since !== 'any' ? 1 : 0) + (language !== 'any' ? 1 : 0) + (license !== 'any' ? 1 : 0);
   const clearAll = () => {
     setTopics([]);
@@ -123,7 +136,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           placeholder="Search titles, authors, summaries, and topics"
           className="min-h-[52px] flex-[1_1_320px] rounded-full border-2 border-line-strong bg-input px-[18px] text-lg text-ink placeholder:text-muted"
         />
-        <div className="flex flex-wrap gap-2" role="group" aria-label="View">
+        <div className="hidden flex-wrap gap-2 sm:flex" role="group" aria-label="View">
           {(['grid', 'list'] as const).map((v) => (
             <button
               key={v}
@@ -139,6 +152,9 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
       </form>
 
       <div className="flex flex-wrap items-start gap-7">
+        <a href="#results" className="sr-only focus:not-sr-only focus:rounded-full focus:bg-card focus:px-4 focus:py-2 focus:font-bold">
+          Skip to results
+        </a>
         <div className="w-full md:hidden">
           <button
             type="button"
@@ -155,8 +171,8 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           aria-label="Filters"
           className={`${filtersOpen ? 'flex' : 'hidden'} max-w-full flex-[1_1_240px] flex-col gap-5 rounded-[18px] border border-line bg-card p-5 md:flex md:max-w-[280px]`}
         >
-          <CheckGroup legend="Topic" options={allTopics.map(([t, n]) => ({ value: t, label: topicLabel(t), n }))} selected={topics} onChange={setTopics} />
-          <CheckGroup legend="Type" options={allTypes.map(([t, n]) => ({ value: t, label: t, n }))} selected={types} onChange={setTypes} />
+          <CheckGroup legend="Topic" options={allTopics.map(([t, n]) => ({ value: t, label: topicLabel(t), n }))} selected={topics} onChange={setTopics} show={6} more="topics" />
+          <CheckGroup legend="Type" options={allTypes.map(([t, n]) => ({ value: t, label: t, n }))} selected={types} onChange={setTypes} show={4} more="types" />
           <Select id="since" label="Published since" value={since} onChange={setSince} options={[['any', 'Any year'], ...years.map((y) => [String(y), String(y)] as [string, string])]} />
           <Select
             id="lang"
@@ -184,10 +200,13 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           )}
         </aside>
 
-        <section aria-label="Results" className="flex min-w-0 flex-[999_1_560px] flex-col gap-4">
+        <section id="results" tabIndex={-1} aria-label="Results" className="flex min-w-0 flex-[999_1_560px] flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-base text-muted" role="status" aria-live="polite">
-              {results.length === items.length ? `All ${items.length} items` : `${results.length} of ${items.length} items`}
+            <p className="text-base text-muted" aria-hidden="true">
+              {countText}
+            </p>
+            <p className="sr-only" role="status" aria-live="polite">
+              {announced}
             </p>
             <Select
               id="sort"
@@ -196,8 +215,8 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
               value={sort}
               onChange={(v) => setSort(v as Sort)}
               options={[
-                ['relevance', query ? 'Most relevant' : 'Most relevant (newest added)'],
-                ['added', 'Newest added'],
+                ['relevance', query ? 'Most relevant' : 'Newest added'],
+                ...(query ? ([['added', 'Newest added']] as [string, string][]) : []),
                 ['newest', 'Newest published'],
                 ['oldest', 'Oldest published'],
               ]}
@@ -244,16 +263,25 @@ function CheckGroup({
   options,
   selected,
   onChange,
+  show,
+  more,
 }: {
   legend: string;
   options: { value: string; label: string; n: number }[];
   selected: string[];
   onChange: (v: string[]) => void;
+  /** How many options to show before "More …". */
+  show: number;
+  more: string;
 }) {
+  const [expanded, setExpanded] = useState(false);
+  // Always keep checked options visible, even when they're past the cut.
+  const visible = expanded ? options : options.filter((o, k) => k < show || selected.includes(o.value));
+  const hidden = options.length - visible.length;
   return (
     <fieldset className="flex flex-col gap-1.5">
       <legend className="mb-2 text-base font-bold">{legend}</legend>
-      {options.map((o) => (
+      {visible.map((o) => (
         <label key={o.value} className="flex min-h-8 items-center gap-2.5 text-base">
           <input
             type="checkbox"
@@ -262,10 +290,15 @@ function CheckGroup({
             onChange={(e) => onChange(e.target.checked ? [...selected, o.value] : selected.filter((s) => s !== o.value))}
           />
           <span>
-            {o.label} <span className="text-muted">({o.n})</span>
+            {o.label} <span className="num text-muted">({o.n})</span>
           </span>
         </label>
       ))}
+      {(hidden > 0 || expanded) && (
+        <button type="button" onClick={() => setExpanded((e) => !e)} aria-expanded={expanded} className="mt-1 self-start font-bold text-sky underline">
+          {expanded ? `Fewer ${more}` : `More ${more} (${hidden})`}
+        </button>
+      )}
     </fieldset>
   );
 }

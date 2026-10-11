@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { VARIANT_INFO } from '@/lib/microgrid';
 import { earnFieldNote, recordVisit, useProgress, type NoteResult } from '@/lib/progress';
 import type { FieldNote } from '@/lib/types';
+import { NouveauCorners } from '@/components/Ornaments';
 
 function resultMessage(r: NoteResult): string {
   const parts = ['Field note earned.'];
@@ -27,14 +28,15 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
   }
 
   return (
-    <section aria-labelledby="note-h" className="flex flex-col gap-3 rounded-[18px] bg-forest p-[22px] text-on-forest">
-      <p className="text-[13px] font-bold uppercase tracking-[.08em] text-sun">Field note</p>
+    <section aria-labelledby="note-h" className="nouveau on-forest relative flex flex-col gap-3.5 rounded-[24px] bg-forest px-6 pb-7 pt-9 text-on-forest sm:px-9">
+      <NouveauCorners />
       {note ? (
         <>
-          <h2 id="note-h" className="font-serif text-[22px] font-semibold leading-snug">
+          <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug text-balance">
             {note.question}
           </h2>
-          <div role="group" aria-labelledby="note-h" className="flex flex-col gap-2">
+          <p className="-mt-1 text-[15px] text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
+          <div role="radiogroup" aria-labelledby="note-h" className="flex max-w-[560px] flex-col gap-2">
             {note.options.map((o, k) => {
               const isPicked = picked === k;
               const right = isPicked && k === note.answer;
@@ -43,12 +45,23 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                 <button
                   key={k}
                   type="button"
+                  role="radio"
                   onClick={() => pick(k)}
-                  aria-pressed={isPicked}
-                  className="flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-3.5 py-2.5 text-left text-base text-[#1E3328] hover:border-leaf"
+                  aria-checked={isPicked}
+                  tabIndex={picked === null ? (k === 0 ? 0 : -1) : isPicked ? 0 : -1}
+                  onKeyDown={(e) => {
+                    const step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
+                    if (!step) return;
+                    e.preventDefault();
+                    const n = (k + step + note.options.length) % note.options.length;
+                    const sibling = e.currentTarget.parentElement?.children[n] as HTMLElement | undefined;
+                    sibling?.focus();
+                  }}
+                  className="flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-base hover:border-sun"
                   style={{
-                    borderColor: right ? '#E3A72F' : wrong ? '#C9774F' : '#DCD3BC',
-                    background: right ? '#F3E3B5' : '#FFFDF7',
+                    color: right ? '#1E3328' : 'var(--option-ink)',
+                    borderColor: right ? 'var(--sun)' : wrong ? 'var(--terracotta)' : 'var(--option-line)',
+                    background: right ? '#F3E3B5' : 'var(--option-bg)',
                   }}
                 >
                   <span>{o}</span>

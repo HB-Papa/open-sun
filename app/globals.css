@@ -28,6 +28,22 @@
   --chip-rose: #f0d6d0;
   --terracotta: #b5563a;
   --input-bg: #ffffff;
+  /* Focus ring: teal reads on paper; panels on forest switch it to sun. */
+  --focus: #1f6f78;
+  /* Microgrid board. */
+  --board: #a9c48e;
+  --g-open: #cfe3d3;
+  --g-ridge: #bfd3a6;
+  --g-home: #f3e3b5;
+  --g-green: #a9c48e;
+  --g-solar: #1f6f78;
+  --g-wind: #fffdf7;
+  --g-battery: #2f6b45;
+  --g-garden: #cfe3d3;
+  /* Field-note answers. */
+  --option-bg: #fffdf7;
+  --option-ink: #1e3328;
+  --option-line: #dcd3bc;
   color-scheme: light;
 }
 
@@ -40,7 +56,8 @@
     --ink: #eee8d6;
     --body: #dcd8c8;
     --muted: #b6c3b3;
-    --leaf: #2f6b45;
+    /* A lighter leaf so buttons stand off the dark paper; white text stays above 5:1. */
+    --leaf: #357a4f;
     --leaf-ink: #8fcb9f;
     --sky: #86ccd4;
     --sky-hover: #b3e2e7;
@@ -55,6 +72,20 @@
     --chip-rose: #4a2f33;
     --terracotta: #e48e72;
     --input-bg: #0f1b14;
+    --focus: #e3a72f;
+    /* A moonlit board: mid-tones, so the dark icon strokes still read. */
+    --board: #5c7a55;
+    --g-open: #9fb79f;
+    --g-ridge: #a3b58b;
+    --g-home: #e0cf9a;
+    --g-green: #8fae78;
+    --g-solar: #1f6f78;
+    --g-wind: #e6dfcb;
+    --g-battery: #2f6b45;
+    --g-garden: #a9c9b0;
+    --option-bg: #1b2c22;
+    --option-ink: #eee8d6;
+    --option-line: #4a6252;
     color-scheme: dark;
   }
 }
@@ -109,8 +140,75 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--sun);
+    outline: 3px solid var(--focus);
     outline-offset: 2px;
+  }
+  .on-forest :focus-visible {
+    outline-color: var(--sun);
+  }
+
+  ::selection {
+    background: var(--pale-sun);
+    color: var(--ink);
+  }
+
+  a {
+    text-underline-offset: 0.18em;
+  }
+}
+
+/* Years and counts in Fraunces: lining figures without the slashed zero. */
+.num {
+  font-family: var(--font-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Art Nouveau frame: a hairline of gold leading set inside a panel. */
+.nouveau {
+  position: relative;
+  isolation: isolate;
+}
+.nouveau::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border: 1.5px solid color-mix(in srgb, var(--sun) 55%, transparent);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Arched "window" panels, after stained glass. */
+.arch {
+  border-top-left-radius: 50% 110px;
+  border-top-right-radius: 50% 110px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+/* Microgrid page: forecast first on phones, beside the board on wide screens. */
+.play-layout {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'forecast' 'board' 'rest';
+}
+.play-layout > [data-area='forecast'] {
+  grid-area: forecast;
+}
+.play-layout > [data-area='board'] {
+  grid-area: board;
+}
+.play-layout > [data-area='rest'] {
+  grid-area: rest;
+}
+@media (min-width: 900px) {
+  .play-layout {
+    gap: 20px 28px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 'board forecast' 'board rest';
+    align-items: start;
   }
 }
 
@@ -136,6 +234,9 @@
     transform 0.25s ease,
     box-shadow 0.25s ease;
 }
+.card {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 24px rgb(30 51 40 / 0.12);
@@ -146,7 +247,7 @@
   top: 12px;
   transform-origin: 0% 100%;
   transform: scale(0) rotate(-30deg);
-  transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card:hover .leaf,
 .card:focus-visible .leaf {
@@ -155,6 +256,7 @@
 
 /* Long-form text from Markdown. */
 .prose-os {
+  max-width: 68ch;
   font-size: 18px;
   line-height: 1.6;
   color: var(--body);

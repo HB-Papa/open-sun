@@ -5,7 +5,7 @@ import { hourLabel, HOURS, RULES, type Puzzle, type SimResult } from '@/lib/micr
 import { MoonGlyph, SunGlyph } from '@/components/icons';
 
 const AXIS = [
-  { h: 0, label: 'Midnight' },
+  { h: 0, label: '12 am' },
   { h: 6, label: '6 am' },
   { h: 12, label: 'Noon' },
   { h: 18, label: '6 pm' },

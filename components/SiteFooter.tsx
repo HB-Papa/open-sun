@@ -2,7 +2,11 @@ import Link from 'next/link';
 
 export function SiteFooter() {
   return (
-    <footer className="bg-forest text-on-forest-muted">
+    <footer className="on-forest relative mt-12 bg-forest text-on-forest-muted">
+      {/* The page ends on a hill, like the hero begins on one. */}
+      <svg viewBox="0 0 1200 48" preserveAspectRatio="none" className="absolute bottom-full left-0 h-8 w-full sm:h-12" aria-hidden="true">
+        <path d="M0 48 C180 14 380 34 600 22 C820 10 1000 30 1200 14 V48 Z" fill="var(--forest)" />
+      </svg>
       <div className="mx-auto flex max-w-[1200px] flex-wrap justify-between gap-8 px-4 py-10 sm:px-6">
         <div className="max-w-md flex-[1_1_320px]">
           <p className="mb-2 font-serif text-[22px] text-on-forest">Open Sun</p>

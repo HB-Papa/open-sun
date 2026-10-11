@@ -19,3 +19,6 @@ open-sun-handoff.zip
 open-sun-resources.md
 .vercel
 .env*
+
+# Design before/after screenshots (local only)
+.design-compare/
