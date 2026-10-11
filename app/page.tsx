@@ -20,7 +20,7 @@ export default function HomePage() {
   const pathways = getPathways();
 
   return (
-    <main>
+    <main id="main" tabIndex={-1}>
       <Hero />
 
       <div className="mx-auto flex max-w-[1200px] flex-col gap-16 px-4 pb-20 sm:px-6">
@@ -56,9 +56,9 @@ export default function HomePage() {
             Short routes through the library, eight or nine readings each. Every stop with a field note can unlock a bonus grid.
           </p>
           <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] sm:overflow-visible sm:px-0 sm:pb-0">
-            {pathways.map((p) => (
+            {pathways.map((p, k) => (
               <li key={p.slug} className="w-[240px] shrink-0 snap-start sm:w-auto">
-                <PathwayWindow pathway={p} />
+                <PathwayWindow pathway={p} featured={k === 0} />
               </li>
             ))}
           </ul>

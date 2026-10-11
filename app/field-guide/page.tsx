@@ -3,15 +3,22 @@ import Link from 'next/link';
 import { getGlossary, getItem } from '@/lib/content';
 import { shortAuthors } from '@/lib/cite';
 import { yearText } from '@/lib/types';
+import { PageSky } from '@/components/PageSky';
+import { TermGlyph, VineRule } from '@/components/Ornaments';
 
 export const metadata: Metadata = { title: 'Field Guide', description: 'Short, plain definitions of solarpunk ideas, each linked to readings in the library.' };
 
 export default function FieldGuidePage() {
   const terms = getGlossary();
   return (
-    <main className="mx-auto flex max-w-[860px] flex-col gap-7 px-4 pb-16 pt-9 sm:px-6">
+    <>
+      <PageSky />
+      <main id="main" tabIndex={-1} className="mx-auto flex max-w-[860px] flex-col gap-7 px-4 pb-16 pt-9 sm:px-6">
       <div className="flex flex-col gap-2.5">
-        <h1 className="font-serif text-[40px] font-bold sm:text-[44px]">Field Guide</h1>
+        <div className="flex items-center gap-5">
+          <h1 className="font-serif text-[40px] font-bold leading-none sm:text-[56px]">Field Guide</h1>
+          <VineRule className="hidden sm:flex" />
+        </div>
         <p className="text-lg leading-normal text-body">
           Short definitions of the ideas you’ll meet in the library and in the Microgrid puzzle. Each term links to readings.
         </p>
@@ -27,8 +34,13 @@ export default function FieldGuidePage() {
         {terms.map((t) => {
           const related = t.related.map(getItem).filter((x) => x !== undefined);
           return (
-            <div key={t.slug} id={t.slug} className="scroll-mt-6 rounded-[18px] border border-line bg-card p-6">
-              <dt className="font-serif text-[24px] font-semibold">{t.term}</dt>
+            <div key={t.slug} id={t.slug} className="scroll-mt-6 rounded-[20px] border border-line bg-card p-6">
+              <dt className="flex items-center gap-3.5 font-serif text-[24px] font-semibold">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-chip-leaf text-leaf-ink">
+                  <TermGlyph slug={t.slug} className="h-8 w-8" />
+                </span>
+                {t.term}
+              </dt>
               <dd className="mt-2 text-[17px] leading-relaxed text-body">{t.definition}</dd>
               {related.length > 0 && (
                 <dd className="mt-3 text-[15px]">
@@ -48,6 +60,7 @@ export default function FieldGuidePage() {
           );
         })}
       </dl>
-    </main>
+      </main>
+    </>
   );
 }

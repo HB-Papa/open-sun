@@ -15,11 +15,49 @@ function resultMessage(r: NoteResult): string {
   return parts.join(' ');
 }
 
+const OPENED = (slug: string) => `opensun:opened:${slug}`;
+/** How long someone spends with the summary before the question appears without opening the reading. */
+const DWELL_MS = 30000;
+
+/** "Read it free": opening the reading also opens this page's field note. */
+export function ReadItLink({ slug, href, children, className }: { slug: string; href: string; children: React.ReactNode; className?: string }) {
+  return (
+    <a
+      href={href}
+      className={className}
+      rel="noopener"
+      onClick={() => {
+        try {
+          sessionStorage.setItem(OPENED(slug), '1');
+        } catch {}
+        window.dispatchEvent(new CustomEvent('opensun:opened', { detail: slug }));
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+
 export function FieldNoteCard({ slug, title, topics, note }: { slug: string; title: string; topics: string[]; note?: FieldNote }) {
   const progress = useProgress();
   const [picked, setPicked] = useState<number | null>(null);
   const [result, setResult] = useState<NoteResult | null>(null);
   const already = progress?.notes[slug];
+  // The question opens once the reader has opened the reading or spent a little while with the summary.
+  const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(OPENED(slug))) setOpened(true);
+    } catch {}
+    const onOpen = (e: Event) => (e as CustomEvent).detail === slug && setOpened(true);
+    window.addEventListener('opensun:opened', onOpen);
+    const t = setTimeout(() => setOpened(true), DWELL_MS);
+    return () => {
+      window.removeEventListener('opensun:opened', onOpen);
+      clearTimeout(t);
+    };
+  }, [slug]);
+  const unlocked = opened || !!already;
 
   function pick(k: number) {
     if (!note) return;
@@ -30,7 +68,16 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
   return (
     <section aria-labelledby="note-h" className="nouveau on-forest relative flex flex-col gap-3.5 rounded-[24px] bg-forest px-6 pb-7 pt-9 text-on-forest sm:px-9">
       <NouveauCorners />
-      {note ? (
+      {note && !unlocked ? (
+        <>
+          <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug">
+            A field note is waiting
+          </h2>
+          <p className="max-w-[56ch] text-[16px] text-on-forest-muted">
+            Open the reading with “Read it free”, or spend a little time with the summary, and a short question will appear here. Answer it to open a bonus grid in Play.
+          </p>
+        </>
+      ) : note ? (
         <>
           <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug text-balance">
             {note.question}
@@ -102,8 +149,28 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
 export function ReadToEnd({ slug, title, topics, hasQuestion }: { slug: string; title: string; topics: string[]; hasQuestion: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const [msg, setMsg] = useState('');
+  // A page counts as read (for the garden and pathways) once the reader scrolls well into it
+  // or stays a while, not the moment it opens.
   useEffect(() => {
-    recordVisit(slug);
+    let done = false;
+    const mark = () => {
+      if (done) return;
+      done = true;
+      recordVisit(slug);
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(timer);
+    };
+    const onScroll = () => {
+      const doc = document.documentElement;
+      if (window.scrollY + window.innerHeight >= doc.scrollHeight * 0.6) mark();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const timer = setTimeout(mark, 20000);
+    onScroll();
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(timer);
+    };
   }, [slug]);
   useEffect(() => {
     if (hasQuestion || !ref.current) return;

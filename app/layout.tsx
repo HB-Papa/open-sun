@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <SiteHeader />
-        <div id="main" className="flex-1" tabIndex={-1}>
+        <div className="flex-1">
           {children}
         </div>
         <SiteFooter />

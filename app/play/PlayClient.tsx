@@ -62,7 +62,8 @@ export function PlayClient() {
 
       <div className="flex flex-wrap items-start gap-6">
         <BonusList progress={progress} today={today} activeId={bonusId} />
-        <StatsCard progress={progress} today={today} />
+        {/* Stats appear after the first game, so a first visit isn't a wall of zeros. */}
+        {stats(progress).played > 0 && <StatsCard progress={progress} today={today} />}
       </div>
     </>
   );

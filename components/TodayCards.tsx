@@ -24,7 +24,7 @@ export function TodayPuzzleCard() {
   const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length;
 
   return (
-    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10">
+    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.25),0_18px_40px_-18px_rgba(0,0,0,.8)]">
       <NouveauCorners />
       <div className="flex-[1_1_260px]">
         <h2 id="today" className="mb-2 font-serif text-[40px] font-bold leading-none sm:text-[48px]">
@@ -53,9 +53,10 @@ export function TodayPuzzleCard() {
           )}
         </div>
       </div>
-      <div className={`grid flex-[0_1_220px] grid-cols-5 gap-1.5 rounded-2xl bg-forest-2 p-2 ${puzzle ? '' : 'animate-pulse'}`} aria-hidden="true">
+      <div className="grid flex-[0_1_220px] grid-cols-5 gap-1.5 rounded-2xl bg-forest-2 p-2 dark:bg-forest" aria-hidden="true">
+        {/* Until the puzzle is drawn, the tiles wait as soft meadow green rather than dark gaps. */}
         {(puzzle?.terrain ?? new Array<Terrain>(25).fill('open')).map((t, i) => (
-          <div key={i} className="aspect-square rounded-lg transition-colors duration-500" style={{ background: puzzle ? TILE[t] : 'var(--forest)' }} />
+          <div key={i} className="aspect-square rounded-lg transition-[background-color,opacity] duration-500" style={{ background: TILE[t], opacity: puzzle ? 1 : 0.55 }} />
         ))}
       </div>
     </div>

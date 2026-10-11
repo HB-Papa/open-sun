@@ -121,6 +121,43 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
   );
 }
 
+/** A compact, label-only version of the forecast for planning beside the board on phones. */
+export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzle; demand: number[]; className?: string }) {
+  const maxDemand = Math.max(...demand);
+  const cloudy = puzzle.sky.map((s) => s === 'cloudy' || s === 'hazy');
+  const rows: [string, number[], number, string, boolean[] | undefined][] = [
+    ['Sun', puzzle.sun, 1, 'var(--sun)', cloudy],
+    ['Wind', puzzle.wind, 1, 'var(--sky)', undefined],
+    ['Use', demand, maxDemand, 'var(--terracotta)', undefined],
+  ];
+  return (
+    <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2.5 ${className}`} aria-hidden="true">
+      {rows.map(([label, values, max, color, dim]) => (
+        <div key={label} className="grid grid-cols-[40px_1fr] items-end gap-2">
+          <span className="text-[12px] font-bold text-muted">{label}</span>
+          <div className="flex h-5 items-end gap-[2px]">
+            {values.map((v, h) => (
+              <div
+                key={h}
+                className="flex-1"
+                style={{ height: `${Math.max(v > 0 ? 10 : 0, (v / max) * 100)}%`, background: color, opacity: dim?.[h] ? 0.45 : 1, borderRadius: '2px 2px 0 0' }}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="grid grid-cols-[40px_1fr] gap-2">
+        <span />
+        <div className="flex justify-between text-[12px] text-muted">
+          <span>12 am</span>
+          <span>Noon</span>
+          <span>11 pm</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /** After a run: which hours stayed lit, and how full the batteries were. */
 export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResult; upTo: number }) {
   const [hover, setHover] = useState<number | null>(null);

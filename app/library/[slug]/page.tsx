@@ -9,7 +9,8 @@ import { ExternalIcon } from '@/components/icons';
 import { VineRule } from '@/components/Ornaments';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
-import { FieldNoteCard, ReadToEnd } from './FieldNote';
+import { FieldNoteCard, ReadItLink, ReadToEnd } from './FieldNote';
+import { PageSky } from '@/components/PageSky';
 
 // Pages are built ahead of time; a slug added while `npm run dev` is running is
 // still found (unknown slugs fall through to notFound below).
@@ -35,7 +36,9 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
     .join(', ');
 
   return (
-    <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-8 px-4 pb-16 pt-7 sm:px-6">
+    <>
+      <PageSky />
+      <main id="main" tabIndex={-1} className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-8 px-4 pb-16 pt-7 sm:px-6">
       <article className="flex min-w-0 flex-[999_1_560px] flex-col gap-5">
         <nav aria-label="Breadcrumb" className="text-[15px]">
           <Link href="/library">Library</Link>
@@ -59,14 +62,14 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           {authorsLine(item)} · <em>{venueLine}</em>
         </p>
         <div className="flex flex-wrap gap-3">
-          <a
+          <ReadItLink
+            slug={item.slug}
             href={item.url}
             className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-[22px] font-bold text-white no-underline hover:text-white"
-            rel="noopener"
           >
             Read it free <ExternalIcon />
             <span className="sr-only">(opens the publisher’s site)</span>
-          </a>
+          </ReadItLink>
           {item.doi && item.url !== `https://doi.org/${item.doi}` && (
             <a href={`https://doi.org/${item.doi}`} className="inline-flex min-h-12 items-center px-2 font-bold" rel="noopener">
               Publisher’s page (DOI)
@@ -130,6 +133,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           </section>
         )}
       </aside>
-    </main>
+      </main>
+    </>
   );
 }

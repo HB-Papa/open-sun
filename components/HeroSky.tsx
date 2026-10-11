@@ -3,17 +3,35 @@
 import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 
-type Phase = 'dawn' | 'day' | 'dusk' | 'night';
+export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
 type Palette = { sky: string; sky2: string; sun: string; far: string; mid: string; near: string; front: string; panel: string; line: string; text: string; soft: string };
 
-const PALETTES: Record<Phase, Palette> = {
+export const PALETTES: Record<Phase, Palette> = {
   dawn: { sky: '#F6D9B8', sky2: '#F3E3B5', sun: '#EFA04A', far: '#B8C996', mid: '#7FA877', near: '#3E7C4F', front: '#2F6B45', panel: '#2A7C86', line: '#2F5E40', text: '#1E3328', soft: '#2E3E34' },
   day: { sky: '#F3E3B5', sky2: '#F6ECCB', sun: '#E3A72F', far: '#B5CC98', mid: '#7FA877', near: '#3E7C4F', front: '#2F6B45', panel: '#1F6F78', line: '#2F5E40', text: '#1E3328', soft: '#2E3E34' },
   dusk: { sky: '#EBC0A0', sky2: '#F0D2B4', sun: '#D9773F', far: '#A3B58B', mid: '#6E8E62', near: '#3A6646', front: '#2A5639', panel: '#245E66', line: '#24452F', text: '#1E3328', soft: '#2E3E34' },
   night: { sky: '#1B2D3A', sky2: '#22394A', sun: '#F1E6C2', far: '#2E4A3B', mid: '#26402F', near: '#1D3326', front: '#14251B', panel: '#1E4C55', line: '#3E5F4B', text: '#F6F1E4', soft: '#DCE6D8' },
 };
+
+/** The sky follows the visitor's local time, and stays at night in dark mode. */
+export function useSkyPhase(): Phase {
+  const [phase, setPhase] = useState<Phase>('day');
+  useEffect(() => {
+    const dark = window.matchMedia('(prefers-color-scheme: dark)');
+    const tick = () => setPhase(dark.matches ? 'night' : phaseFor(new Date().getHours()));
+    tick();
+    const id = setInterval(tick, 5 * 60 * 1000);
+    dark.addEventListener('change', tick);
+    return () => {
+      clearInterval(id);
+      dark.removeEventListener('change', tick);
+    };
+  }, []);
+  return phase;
+}
 
 function phaseFor(h: number): Phase {
   if (h >= 5 && h < 8) return 'dawn';
@@ -30,7 +48,7 @@ const INK = '#1E3328';
 function Pane({ x, y, w, h, glass }: { x: number; y: number; w: number; h: number; glass: string }) {
   return (
     <g>
-      <rect x={x} y={y} width={w} height={h} fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
+      <rect className="pane" x={x} y={y} width={w} height={h} fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
       <path d={`M${x + w / 2} ${y} V${y + h} M${x} ${y + h / 2} H${x + w}`} stroke={INK} strokeWidth="1.4" />
     </g>
   );
@@ -51,13 +69,14 @@ function Tufts({ points, leaf, flowers = true }: { points: [number, number][]; l
 }
 
 /** Three eco homes: a green-roofed cottage, a gabled house with a living roof, and a two-storey house with a roof garden and a climbing vine. */
-function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: string; leaf: string; turf: string }) {
+export function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: string; leaf: string; turf: string }) {
   const wood = night ? '#A88C66' : '#D9B98C';
   const cream = night ? '#CDBF97' : '#F3E3B5';
   const clay = night ? '#B89D8A' : '#E6CBB5';
   return (
     <g strokeLinejoin="round">
       {/* Cottage with a sloping sod roof, a big window and a flower box. */}
+      <g style={{ ['--d' as string]: '0.2s' }}>
       <rect x="664" y="262" width="66" height="42" fill={wood} stroke={INK} strokeWidth="2" />
       <path d="M672 266 V302 M682 266 V302 M720 266 V302" stroke={INK} strokeOpacity="0.18" strokeWidth="1.5" />
       <path d="M656 266 L738 252 L738 245 L656 259 Z" fill={turf} stroke={INK} strokeWidth="2" />
@@ -67,20 +86,26 @@ function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: string;
       <rect x="668" y="291" width="32" height="6" fill="#6B4A2E" stroke={INK} strokeWidth="1.5" />
       <Tufts leaf={leaf} points={[[673, 291], [683, 291], [693, 291]]} />
 
+      </g>
+
       {/* Gabled house with a living roof and a round window under the ridge. */}
+      <g style={{ ['--d' as string]: '0.9s' }}>
       <rect x="762" y="254" width="82" height="46" fill={cream} stroke={INK} strokeWidth="2" />
       <path d="M754 258 L803 214 L852 258 L844 258 L803 222 L762 258 Z" fill={turf} stroke={INK} strokeWidth="2" />
       <path d="M762 258 L803 222 L844 258 Z" fill={cream} />
       <path d="M762 258 L803 222 L844 258" fill="none" stroke={INK} strokeWidth="2" />
       <Tufts leaf={leaf} points={[[764, 252], [776, 241], [788, 230], [818, 230], [830, 241], [842, 252]]} />
-      <circle cx="803" cy="241" r="7" fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
+      <circle className="pane" cx="803" cy="241" r="7" fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
       <Pane x={770} y={264} w={18} h={26} glass={glass} />
       <Pane x={818} y={264} w={18} h={26} glass={glass} />
       <path d="M795 300 V280 a8 8 0 0 1 16 0 V300 Z" fill="#6B4A2E" stroke={INK} strokeWidth="2" />
       <circle cx="758" cy="294" r="7" fill={leaf} />
       <circle cx="849" cy="295" r="6" fill={leaf} />
 
+      </g>
+
       {/* Two-storey house with a roof garden, wide windows and a climbing vine. */}
+      <g style={{ ['--d' as string]: '1.6s' }}>
       <rect x="868" y="238" width="62" height="56" fill={clay} stroke={INK} strokeWidth="2" />
       <rect x="863" y="232" width="72" height="7" fill={wood} stroke={INK} strokeWidth="2" />
       <circle cx="874" cy="229" r="6" fill={leaf} />
@@ -94,12 +119,13 @@ function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: string;
       {[[930, 284], [929, 270], [931, 256], [928, 244]].map(([x, y], k) => (
         <path key={k} d={k % 2 ? `M${x} ${y} c-6 -1 -8 -6 -6 -9 c4 1 6 5 6 9Z` : `M${x} ${y} c6 -1 8 -6 6 -9 c-4 1 -6 5 -6 9Z`} fill={leaf} />
       ))}
+      </g>
     </g>
   );
 }
 
 /** A small community solar array on racks, with wildflowers growing underneath. */
-function SolarArray({ panel, night }: { panel: string; night: boolean }) {
+export function SolarArray({ panel, night }: { panel: string; night: boolean }) {
   const frame = night ? '#7E9CA2' : '#FFFDF7';
   const leg = night ? '#3E4F45' : '#4A5A50';
   const rows = [
@@ -147,24 +173,14 @@ function SolarArray({ panel, night }: { panel: string; night: boolean }) {
  * local time (and stays at night in dark mode). The headline sits on open sky.
  */
 export function Hero() {
-  const [phase, setPhase] = useState<Phase>('day');
+  const phase = useSkyPhase();
   const reduce = useReducedMotion();
   const { scrollY } = useScroll();
   const sunY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 50]);
   const farY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 20]);
   const midY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 10]);
-
-  useEffect(() => {
-    const dark = window.matchMedia('(prefers-color-scheme: dark)');
-    const tick = () => setPhase(dark.matches ? 'night' : phaseFor(new Date().getHours()));
-    tick();
-    const id = setInterval(tick, 5 * 60 * 1000);
-    dark.addEventListener('change', tick);
-    return () => {
-      clearInterval(id);
-      dark.removeEventListener('change', tick);
-    };
-  }, []);
+  const [puzzleNo, setPuzzleNo] = useState<number | null>(null);
+  useEffect(() => setPuzzleNo(puzzleNumber(localDateKey())), []);
 
   const p = PALETTES[phase];
   const night = phase === 'night';
@@ -180,6 +196,14 @@ export function Hero() {
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-6 pt-9 sm:px-6 md:pb-40 md:pt-16">
         <div className="max-w-[540px]" style={{ color: p.text }}>
           <h1 className="mb-4 font-serif text-[40px] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[56px]">A free library for a brighter tomorrow</h1>
+          {/* On phones, today's puzzle is one tap away from the top of the page. */}
+          <Link
+            href="/play"
+            className="mb-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-forest px-5 font-bold text-on-forest no-underline shadow-[0_6px_16px_-8px_rgba(13,24,18,.6)] hover:text-on-forest md:hidden"
+          >
+            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-sun" />
+            Play today’s Microgrid{puzzleNo ? ` #${puzzleNo}` : ''}
+          </Link>
           <p className="mb-6 max-w-[46ch] text-[17px] leading-normal sm:text-[19px]" style={{ color: p.soft }}>
             Open access writing on solarpunk, solar power, living land, and the commons, gathered in one place and updated every week.
           </p>
@@ -209,7 +233,7 @@ export function Hero() {
       <svg
         viewBox="0 0 1200 400"
         preserveAspectRatio="xMaxYMax slice"
-        className="block h-[230px] w-full sm:h-[280px] md:absolute md:inset-0 md:h-full"
+        className="block h-[150px] w-full sm:h-[260px] md:absolute md:inset-0 md:h-full"
         aria-hidden="true"
       >
         {night && (

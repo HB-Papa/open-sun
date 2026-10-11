@@ -6,6 +6,7 @@ import { authorsLine } from '@/components/ItemCard';
 import { ArchRays, PathwayGlyph } from '@/components/Ornaments';
 import { yearText } from '@/lib/types';
 import { PathwayEnd, PathwayStatus, StepStatus, VineSegment } from '../PathwayProgress';
+import { PageSky } from '@/components/PageSky';
 
 export function generateStaticParams() {
   return getPathways().map((p) => ({ slug: p.slug }));
@@ -25,7 +26,9 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
   const next = all[(all.findIndex((p) => p.slug === pathway.slug) + 1) % all.length];
 
   return (
-    <main className="mx-auto flex max-w-[860px] flex-col gap-8 px-4 pb-20 pt-7 sm:px-6">
+    <>
+      <PageSky />
+      <main id="main" tabIndex={-1} className="mx-auto flex max-w-[860px] flex-col gap-8 px-4 pb-20 pt-7 sm:px-6">
       <nav aria-label="Breadcrumb" className="text-[15px]">
         <Link href="/pathways">Pathways</Link>
       </nav>
@@ -63,6 +66,7 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
         ))}
       </ol>
       <PathwayEnd slugs={steps.map((s) => s.slug)} next={next && next.slug !== pathway.slug ? { slug: next.slug, title: next.title, blurb: next.blurb } : undefined} />
-    </main>
+      </main>
+    </>
   );
 }

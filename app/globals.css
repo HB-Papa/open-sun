@@ -146,6 +146,17 @@
   .on-forest :focus-visible {
     outline-color: var(--sun);
   }
+  /* The skip link moves focus to <main>; no ring is needed on the page itself. */
+  main:focus {
+    outline: none;
+  }
+  /* Game cells: a two-tone ring that shows against every tile color. */
+  .board button:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px var(--pale-sun);
+    z-index: 1;
+  }
 
   ::selection {
     background: var(--pale-sun);
@@ -178,6 +189,19 @@
   z-index: -1;
 }
 
+/* After a win, the village's windows come on one house at a time. */
+@keyframes os-light {
+  from {
+    fill: #33464f;
+  }
+  to {
+    fill: #e8b547;
+  }
+}
+.village-lights .pane {
+  animation: os-light 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+}
+
 /* Arched "window" panels, after stained glass. */
 .arch {
   border-top-left-radius: 50% 110px;
@@ -186,12 +210,13 @@
   border-bottom-right-radius: 18px;
 }
 
-/* Microgrid page: forecast first on phones, beside the board on wide screens. */
+/* Microgrid page: on phones the board comes first (with a compact forecast strip above it),
+   then results, then the full forecast and rules. On wide screens the forecast sits beside the board. */
 .play-layout {
   display: grid;
   gap: 24px;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: 'forecast' 'board' 'rest';
+  grid-template-areas: 'board' 'rest' 'forecast';
 }
 .play-layout > [data-area='forecast'] {
   grid-area: forecast;
@@ -256,7 +281,8 @@
 
 /* Long-form text from Markdown. */
 .prose-os {
-  max-width: 68ch;
+  /* Atkinson runs narrow, so 60ch lands near 70 characters per line. */
+  max-width: 60ch;
   font-size: 18px;
   line-height: 1.6;
   color: var(--body);

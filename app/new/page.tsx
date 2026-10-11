@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { ItemRow } from '@/components/ItemCard';
 import { getAllItems, toCard } from '@/lib/content';
+import { PageSky } from '@/components/PageSky';
 
 export const metadata: Metadata = { title: 'New arrivals', description: 'Everything recently added to the Open Sun library.' };
 
@@ -11,9 +12,11 @@ export default function NewArrivalsPage() {
   const dates = [...byDate.keys()].sort().reverse();
 
   return (
-    <main className="mx-auto flex max-w-[860px] flex-col gap-7 px-4 pb-16 pt-9 sm:px-6">
+    <>
+      <PageSky />
+      <main id="main" tabIndex={-1} className="mx-auto flex max-w-[860px] flex-col gap-7 px-4 pb-16 pt-9 sm:px-6">
       <div className="flex flex-col gap-2.5">
-        <h1 className="font-serif text-[40px] font-bold sm:text-[44px]">New arrivals</h1>
+        <h1 className="font-serif text-[40px] font-bold leading-[1.05] text-balance sm:text-[48px]">New arrivals</h1>
         <p className="text-lg leading-normal text-body">
           Everything added to the library, newest first. Follow along with the <a href="/rss.xml">RSS feed</a>.
         </p>
@@ -32,7 +35,8 @@ export default function NewArrivalsPage() {
           </ul>
         </section>
       ))}
-    </main>
+      </main>
+    </>
   );
 }
 
