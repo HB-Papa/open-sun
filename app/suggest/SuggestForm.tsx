@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { NouveauCorners } from '@/components/Ornaments';
 
 type Status = { kind: 'idle' | 'sending' | 'sent' | 'error'; message?: string };
 
@@ -38,7 +39,12 @@ export function SuggestForm() {
 
   const field = 'min-h-12 w-full rounded-xl border-2 border-line-strong bg-input px-3.5 text-base text-ink';
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-5 rounded-[18px] border border-line bg-card p-6" noValidate={false}>
+    <form onSubmit={onSubmit} className="nouveau relative flex flex-col gap-5 rounded-[24px] border border-line bg-card px-6 pb-7 pt-10 sm:px-9" noValidate={false}>
+      <NouveauCorners />
+      {/* A library slip: a dashed tear line, as on a borrowing card. */}
+      <div className="-mt-2 flex items-center gap-3 border-b-2 border-dashed border-line-strong pb-3 font-serif text-[20px] font-semibold" aria-hidden="true">
+        Suggestion slip
+      </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="s-url" className="font-bold">
           Link to the resource <span className="font-normal text-muted">(required)</span>

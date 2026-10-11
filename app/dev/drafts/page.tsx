@@ -15,7 +15,7 @@ export default function DraftsPage() {
   const unreviewed = items.filter((i) => !i.reviewed);
 
   return (
-    <main className="mx-auto flex max-w-[900px] flex-col gap-6 px-4 pb-16 pt-9 sm:px-6">
+    <main id="main" tabIndex={-1} className="mx-auto flex max-w-[900px] flex-col gap-6 px-4 pb-16 pt-9 sm:px-6">
       <p className="self-start rounded-full bg-pale-sun px-3 py-1 text-[13px] font-bold">Only visible on your computer</p>
       <h1 className="font-serif text-[40px] font-bold">Summaries to edit</h1>
       <p className="text-lg text-body">

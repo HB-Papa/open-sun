@@ -135,6 +135,34 @@ export function PathwayGlyph({ slug, className = 'h-12 w-12' }: { slug: string; 
   );
 }
 
+const TERM_GLYPHS: [RegExp, React.ReactNode][] = [
+  [/microgrid/, <path key="g" d="M8 8h32v32H8Z M18.7 8v32 M29.3 8v32 M8 18.7h32 M8 29.3h32 M24 24l-4 6h8l-4 6" />],
+  [/agrivoltaic/, GLYPHS['power-from-the-sun']],
+  [/multispecies/, GLYPHS['living-land']],
+  [/justice/, GLYPHS['fair-energy-transitions']],
+  [/democracy|prosumer|community/, <path key="p" d="M14 20a5 5 0 1 0 0-.1M34 20a5 5 0 1 0 0-.1M24 14a5 5 0 1 0 0-.1M6 40c0-6 4-10 8-10s6 2 7 4M42 40c0-6-4-10-8-10s-6 2-7 4M16 40c0-6 4-11 8-11s8 5 8 11" />],
+  [/battery/, <path key="b" d="M14 12h20v30H14Z M20 8h8 M26 18l-5 8h6l-5 8" />],
+  [/wind/, <path key="w" d="M24 24v18 M24 24V6 M24 24 9 33 M24 24l15 9 M18 42h12" />],
+  [/degrowth/, <path key="d" d="M24 42V24 M24 30c-8 0-12-6-12-12 6 0 12 4 12 12Z M24 24c0-7 5-12 12-12 0 7-5 12-12 12Z M14 42h20" />],
+  [/commons|library/, GLYPHS['libraries-and-the-commons']],
+  [/resilience/, <path key="r" d="M8 22 24 8l16 14 M12 19v21h24V19 M20 40V30h8v10 M30 12V6h5v10" />],
+  [/wildlife/, <path key="c" d="M4 34c8-12 32-12 40 0 M10 30v10 M38 30v10 M4 40h40 M20 22c0-3 2-5 4-5s4 2 4 5 M18 16l2 2 M30 16l-2 2" />],
+  [/solarity|solarpunk/, GLYPHS['what-is-solarpunk']],
+  [/low-tech/, <path key="l" d="M10 38 28 20 M26 12a8 8 0 0 0 10 10l-4-4 2-4 4-2 4 4a8 8 0 0 0-10-10Z M8 40l4-4" />],
+  [/speculative/, GLYPHS['solarpunk-fiction']],
+  [/indigenous|futuris/, GLYPHS['imagining-futures']],
+];
+
+/** A line glyph for a Field Guide term, matched by keyword. */
+export function TermGlyph({ slug, className = 'h-10 w-10' }: { slug: string; className?: string }) {
+  const g = TERM_GLYPHS.find(([re]) => re.test(slug))?.[1] ?? GLYPHS['living-land'];
+  return (
+    <svg viewBox="0 0 48 48" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+      {g}
+    </svg>
+  );
+}
+
 /** A small sun-ray crown for the top of an arch. */
 export function ArchRays({ className = '' }: { className?: string }) {
   return (

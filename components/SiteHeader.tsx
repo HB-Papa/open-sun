@@ -46,6 +46,14 @@ export function SiteHeader() {
               {n.label}
             </Link>
           ))}
+          {/* On phones the footer is far away, so the menu also offers suggestions. */}
+          <Link
+            href="/suggest"
+            aria-current={isActive('/suggest') ? 'page' : undefined}
+            className="border-b-[3px] border-transparent py-2.5 text-ink no-underline hover:text-ink md:hidden"
+          >
+            Suggest a resource
+          </Link>
         </nav>
       </div>
     </header>

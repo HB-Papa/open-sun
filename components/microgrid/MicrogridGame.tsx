@@ -29,16 +29,17 @@ import {
 } from '@/lib/microgrid';
 import type { DailyGame } from '@/lib/progress';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
-import { ForecastChart, ResultChart } from './DayCharts';
+import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
+import { VillageLights } from './VillageLights';
 
-type Tool = Part | 'clear';
+type Tool = Part;
 
+// Tapping a placed part with its own tool removes it, so there is no separate Clear tool.
 const TOOLS: { id: Tool; label: string; key: string }[] = [
   { id: 'solar', label: 'Solar', key: '1' },
   { id: 'wind', label: 'Wind', key: '2' },
   { id: 'battery', label: 'Battery', key: '3' },
   { id: 'garden', label: 'Garden', key: '4' },
-  { id: 'clear', label: 'Clear', key: '5' },
 ];
 
 const PART_NAME: Record<Part, string> = { solar: 'Solar panel', wind: 'Wind turbine', battery: 'Battery', garden: 'Garden' };
@@ -115,6 +116,12 @@ function Board({
   const [offWarning, setOffWarning] = useState(false);
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  // The "How it works" link opens the rules before jumping to them.
+  function openHow() {
+    const d = document.getElementById('how');
+    if (d instanceof HTMLDetailsElement) d.open = true;
+  }
+
   const tries = history.length;
   const won = history.some((h) => h.every(Boolean));
   const done = won || tries >= MAX_TRIES;
@@ -147,7 +154,7 @@ function Board({
       return;
     }
     const next = layout.slice();
-    if (tool === 'clear' || next[i] === tool) next[i] = null;
+    if (next[i] === tool) next[i] = null;
     else {
       if (!next[i] && used >= puzzle.budget) {
         setNotice(`You have used all ${puzzle.budget} parts. Clear one first.`);
@@ -221,7 +228,10 @@ function Board({
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = e.target as HTMLElement | null;
+      // Leave typing alone: inputs, selects, text areas, and anything editable.
+      if (el && (el.isContentEditable || el.closest('input, textarea, select, [contenteditable], [role="combobox"], [role="textbox"]'))) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
       const t = TOOLS.find((x) => x.key === e.key);
       if (t) setTool(t.id);
     }
@@ -290,17 +300,11 @@ function Board({
       </div>
 
       <div className="play-layout">
-        {/* ---------- the forecast (first on phones, so you plan before you place) ---------- */}
+        {/* ---------- the full forecast (beside the board on wide screens; after the results on phones) ---------- */}
         <section data-area="forecast" aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
             <h2 className="font-serif text-[22px] font-semibold">Today’s forecast</h2>
             <ForecastChart puzzle={puzzle} demand={demand} />
-            <div className="hidden flex-col gap-2 md:flex">
-              <button type="button" onClick={run} disabled={!canRun} className={runClass}>
-                {runLabel}
-              </button>
-              {offWarning && <p className="text-[15px] font-bold text-terracotta">{offText(offCount)}</p>}
-            </div>
           </div>
           <HowToPlay open={firstVisit} />
         </section>
@@ -308,10 +312,13 @@ function Board({
         {/* ---------- the board ---------- */}
         <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-3.5">
           <p className="text-[17px] leading-normal">
-            Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot to place it.
+            Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
+            <a href="#how" onClick={openHow} className="font-bold">
+              How it works
+            </a>
           </p>
 
-          <div role="radiogroup" aria-label="Part to place" className="flex flex-wrap gap-2">
+          <div role="radiogroup" aria-label="Part to place" className="grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
             {TOOLS.map((t) => (
               <button
                 key={t.id}
@@ -320,16 +327,15 @@ function Board({
                 aria-checked={tool === t.id}
                 onClick={() => setTool(t.id)}
                 disabled={done}
-                className={`flex min-h-12 items-center gap-2 rounded-full border-2 px-3.5 font-bold disabled:opacity-50 ${
+                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-[14px] font-bold disabled:opacity-50 sm:flex-row sm:gap-2 sm:rounded-full sm:px-3.5 sm:text-base ${
                   tool === t.id ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
                 }`}
               >
-                <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: t.id === 'clear' ? 'transparent' : PART_BG[t.id as Part] }} aria-hidden="true">
+                <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: PART_BG[t.id] }} aria-hidden="true">
                   {t.id === 'solar' && <SolarIcon />}
                   {t.id === 'wind' && <WindIcon />}
                   {t.id === 'battery' && <BatteryIcon />}
                   {t.id === 'garden' && <GardenIcon />}
-                  {t.id === 'clear' && <span className="text-lg leading-none">×</span>}
                 </span>
                 {t.label}
                 <kbd className="hidden rounded border border-current px-1 text-[12px] font-normal leading-4 md:inline" aria-hidden="true">
@@ -339,10 +345,13 @@ function Board({
             ))}
           </div>
 
+          {/* A compact forecast right above the board on phones, so you can plan while you place. */}
+          <MiniForecast puzzle={puzzle} demand={demand} className="md:hidden" />
+
           <div
             role="grid"
             aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
-            className="grid max-w-[520px] grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
+            className="board grid max-w-[460px] grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
             style={{ background: 'var(--board)' }}
             onKeyDown={onGridKey}
           >
@@ -405,9 +414,12 @@ function Board({
               Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
             </span>
           </div>
-          <p className="text-[14px] text-muted">
-            Badges like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it.
-          </p>
+          <div className="hidden max-w-[460px] flex-col gap-2 md:flex">
+            <button type="button" onClick={run} disabled={!canRun} className={runClass}>
+              {runLabel}
+            </button>
+            {offWarning && <p className="text-[15px] font-bold text-terracotta">{offText(offCount)}</p>}
+          </div>
           <p className="sr-only" role="status" aria-live="polite">
             {notice}
           </p>
@@ -416,6 +428,8 @@ function Board({
 
         {/* ---------- results ---------- */}
         <section data-area="rest" aria-label="The day" className="flex min-w-0 flex-col gap-4">
+          {/* The peak of the day: the village lights up, house by house. */}
+          {won && !running && <VillageLights />}
           {lastLit && (
             <div className="on-forest flex flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
               <h2 className="font-serif text-[26px] font-semibold">
@@ -549,6 +563,9 @@ function HowToPlay({ open }: { open: boolean }) {
         </li>
         <li>
           You have <strong>three tries</strong>. After each run, the lights strip shows which hours went dark so you can adjust.
+        </li>
+        <li>
+          <strong>Badges</strong> like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it.
         </li>
       </ul>
     </details>
