@@ -63,7 +63,7 @@ The plain-language summary goes here (two or three sentences).
 
 You can edit in GitHub's web editor (the pencil icon), VS Code, or any text editor. When you push or merge to `main`, Vercel republishes the site in about a minute.
 
-**All 35 starting summaries are marked `summary_status: draft`.** They are accurate first drafts written from each work's abstract. Rewrite each one in your own words and flip it to `edited`; the `/dev/drafts` page tracks what's left. The site never shows an "AI-generated" label.
+**All 84 starting summaries are marked `summary_status: draft`.** They are accurate first drafts written from each work's abstract. Rewrite each one in your own words and flip it to `edited`; the `/dev/drafts` page tracks what's left. The site never shows an "AI-generated" label.
 
 Tips:
 
@@ -72,58 +72,19 @@ Tips:
 - **Items without a question.** If you leave out `field_note`, readers earn the note by scrolling to the end of the page.
 - **Pathways** are in `content/pathways/`, the **Field Guide** is `content/field-guide.md`, and the **About** page is `content/pages/about.md`. Add a line about who runs the site there; there's a placeholder comment.
 
-## 3. Put it on GitHub
+## 3. Where it lives (current setup)
 
-1. Create a free account at https://github.com, then a **new repository** called `open-sun`. Make it **Public** (GitHub Actions is free for public repos) and leave "Add a README" unchecked.
-2. In this folder, run these (GitHub shows the same commands on the new repo's page). Replace `YOUR-NAME`:
+- **Live site:** https://open-sun.vercel.app (Vercel project `open-sun`, team `hb-papa`, Hobby plan).
+- **Code:** https://github.com/HB-Papa/open-sun (public).
+- **Automatic deploys:** Vercel is connected to the repo. Every push or merge to `main` goes live in about a minute. Pull requests get a private preview link, visible only when signed in to Vercel.
+- **Launch settings:** `SITE_PUBLIC=true` is set for Production, which lets search engines index the site. Deployment Protection is **Standard**: production is public, previews stay private.
+- **Private files** (`solarpunk-library-design.md`, `open-sun-resources.md`, the handoff zip) are listed in `.gitignore` and `.vercelignore`, so they are never uploaded.
 
-```bash
-git remote add origin https://github.com/YOUR-NAME/open-sun.git
-```
-
-```bash
-git push -u origin main
-```
-
-The first push opens a browser window to sign in to GitHub.
-
-## 4a. Private preview (current setup)
-
-The site is on Vercel as a **private preview**. The project `open-sun` has **Deployment Protection → Vercel Authentication → All Deployments** turned on, so only someone signed in to your Vercel account can open it. Search engines are also told to stay away (`robots.txt` and a noindex tag) until launch.
-
-To publish a new private preview after editing:
-
-```bash
-vercel deploy
-```
-
-The command prints a preview address. Open it while signed in to vercel.com.
-
-**When you're ready to launch:**
-
-1. In Vercel, open **open-sun → Settings → Environment Variables**, add `SITE_PUBLIC` = `true` (Production), and add `NEXT_PUBLIC_SITE_URL` = your public address.
-2. Open **Settings → Deployment Protection** and change the scope from **All Deployments** to **Standard Protection** (previews stay private; production becomes public).
-3. Deploy to production:
-
-```bash
-vercel deploy --prod
-```
-
-Private files (`solarpunk-library-design.md`, `open-sun-resources.md`, the handoff zip) are listed in `.vercelignore` and `.gitignore`, so they are never uploaded.
-
-## 4. Deploy on Vercel (free)
-
-1. Go to https://vercel.com and choose **Sign Up → Continue with GitHub**. Pick the **Hobby** (free) plan.
-2. Click **Add New… → Project**, find `open-sun`, and click **Import**.
-3. Leave every setting as detected (Framework: Next.js) and click **Deploy**.
-4. After about a minute you'll get an address like `https://open-sun.vercel.app`. To change the name, go to **Settings → Domains**.
-5. Optional: under **Settings → Environment Variables**, add `NEXT_PUBLIC_SITE_URL` = your address (so the RSS feed uses it), then redeploy.
-6. Optional: turn on **Analytics** in the project for privacy-friendly page counts.
-
-From now on, every change merged into `main` deploys automatically.
+To publish an edit: save the file, then commit and push (or edit directly on GitHub). To take the site private again, set Deployment Protection back to **All Deployments** in Vercel.
 
 > Vercel's Hobby plan is for personal, non-commercial projects. A free library fits; check their terms if the site ever takes donations or sells anything.
 
+## 4. Optional features (already set up)
 ### Turn on "Suggest a resource"
 
 The form creates a GitHub issue labeled `suggestion` in your repo, so suggestions land in a review list and visitors don't need an account.
