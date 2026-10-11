@@ -22,7 +22,7 @@ export default function LibraryPage() {
           <h1 className="font-serif text-[40px] font-bold leading-none sm:text-[56px]">The Library</h1>
           <VineRule className="hidden sm:flex" />
         </div>
-        <p className="max-w-[720px] text-lg leading-normal text-body">
+        <p className="max-w-[60ch] text-lg leading-normal text-body">
           Every item here is free to read. Search by idea, or filter by type, topic, year, language, and license. Know something that belongs here?{' '}
           <Link href="/suggest" className="font-bold">
             Suggest a resource

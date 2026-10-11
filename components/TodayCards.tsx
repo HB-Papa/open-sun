@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { baseDemand, generatePuzzle, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
-import { currentStreak, MAX_BONUS_PER_DAY, notesToday, useProgress } from '@/lib/progress';
+import { useProgress } from '@/lib/progress';
 import { forecastSentence } from './microgrid/DayCharts';
 import { NouveauCorners } from './Ornaments';
 
@@ -24,7 +24,7 @@ export function TodayPuzzleCard() {
   const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length;
 
   return (
-    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.25),0_18px_40px_-18px_rgba(0,0,0,.8)]">
+    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
       <NouveauCorners />
       <div className="flex-[1_1_260px]">
         <h2 id="today" className="mb-2 font-serif text-[40px] font-bold leading-none sm:text-[48px]">
@@ -53,7 +53,7 @@ export function TodayPuzzleCard() {
           )}
         </div>
       </div>
-      <div className="grid flex-[0_1_220px] grid-cols-5 gap-1.5 rounded-2xl bg-forest-2 p-2 dark:bg-forest" aria-hidden="true">
+      <div className="hidden flex-[0_1_220px] grid-cols-5 gap-1.5 rounded-2xl bg-forest-2 p-2 sm:grid dark:bg-forest" aria-hidden="true">
         {/* Until the puzzle is drawn, the tiles wait as soft meadow green rather than dark gaps. */}
         {(puzzle?.terrain ?? new Array<Terrain>(25).fill('open')).map((t, i) => (
           <div key={i} className="aspect-square rounded-lg transition-[background-color,opacity] duration-500" style={{ background: TILE[t], opacity: puzzle ? 1 : 0.55 }} />
@@ -69,61 +69,30 @@ function shortForecast(p: Puzzle): string {
   return `Forecast: ${s.slice(1, 3).join('. ').replace(/\.$/, '')}.`;
 }
 
-/** Plants one flower per library page read. A record of curiosity, not a score. */
+/** Plants one flower per library page read. A record of curiosity, not a score: the counters live on the Play page. */
 export function GardenCard() {
   const progress = useProgress();
-  const today = localDateKey();
   const visited = progress ? Object.keys(progress.visited) : [];
-  const streak = progress ? currentStreak(progress, today).streak : 0;
-  const notes = progress ? Math.min(notesToday(progress, today), MAX_BONUS_PER_DAY) : 0;
-  const rest = progress?.restDays ?? 0;
-  // Counters only appear once there is something to count, so a first visit isn't a wall of zeros.
-  const showStats = streak > 0 || notes > 0 || rest > 0;
   return (
     <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-[28px] border border-line bg-card px-6 py-6 shadow-[0_18px_40px_-24px_rgba(30,51,40,.35)] sm:px-7">
       <h2 className="font-serif text-2xl font-semibold">Your garden</h2>
       <p className="text-base leading-normal text-body">
         {visited.length
           ? `You’ve read ${visited.length} ${visited.length === 1 ? 'page' : 'pages'} in the library. Each one planted something here.`
-          : 'Every page you read in the library plants something here. Reading also unlocks bonus grids.'}
+          : 'Every page you read in the library plants something here.'}
       </p>
       <div className="flex min-h-[64px] flex-wrap items-end gap-1.5 rounded-xl bg-chip-leaf px-3 pt-2" aria-hidden="true">
         {visited.length === 0 && <Sprout k={-1} />}
-        {visited.slice(0, 40).map((slug, k) => (
+        {visited.slice(0, 40).map((slug) => (
           <Sprout key={slug} k={hash(slug)} />
         ))}
       </div>
-      {showStats ? (
-        <>
-          <dl className="grid grid-cols-3 gap-2 text-center">
-            <div>
-              <dt className="text-[13px] text-muted">Day streak</dt>
-              <dd className="num text-[26px] font-bold">{streak}</dd>
-            </div>
-            <div>
-              <dt className="text-[13px] text-muted">Field notes today</dt>
-              <dd className="num text-[26px] font-bold">
-                {notes}/{MAX_BONUS_PER_DAY}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-[13px] text-muted">Rest days</dt>
-              <dd className="num text-[26px] font-bold">{rest}</dd>
-            </div>
-          </dl>
-          <p className="text-[14px] leading-snug text-muted">
-            Answer the question on a library page to earn a field note. Each one opens a bonus grid, and every three earn a rest day that covers a day you miss.
-          </p>
-        </>
-      ) : (
-        <Link href="/library" className="self-start font-bold">
-          Find something to read
-        </Link>
-      )}
+      <Link href="/library" className="self-start font-bold">
+        Find something to read
+      </Link>
     </div>
   );
 }
-
 function hash(s: string) {
   let h = 0;
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;

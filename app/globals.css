@@ -33,11 +33,11 @@
   /* Microgrid board. */
   --board: #a9c48e;
   --g-open: #cfe3d3;
-  --g-ridge: #bfd3a6;
+  --g-ridge: #d3c98f;
   --g-home: #f3e3b5;
   --g-green: #a9c48e;
   --g-solar: #1f6f78;
-  --g-wind: #fffdf7;
+  --g-wind: #d5e9ec;
   --g-battery: #2f6b45;
   --g-garden: #cfe3d3;
   /* Field-note answers. */
@@ -76,11 +76,11 @@
     /* A moonlit board: mid-tones, so the dark icon strokes still read. */
     --board: #5c7a55;
     --g-open: #9fb79f;
-    --g-ridge: #a3b58b;
+    --g-ridge: #b8ad78;
     --g-home: #e0cf9a;
     --g-green: #8fae78;
     --g-solar: #1f6f78;
-    --g-wind: #e6dfcb;
+    --g-wind: #b9d4d8;
     --g-battery: #2f6b45;
     --g-garden: #a9c9b0;
     --option-bg: #1b2c22;
@@ -200,6 +200,14 @@
 }
 .village-lights .pane {
   animation: os-light 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
+}
+/* After a loss only the first house keeps its lamps on. */
+.village-lights.is-dim .pane {
+  animation: none;
+  fill: #33464f;
+}
+.village-lights.is-dim [style*='0.2s'] .pane {
+  fill: #e8b547;
 }
 
 /* Arched "window" panels, after stained glass. */

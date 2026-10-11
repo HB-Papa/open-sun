@@ -77,7 +77,10 @@ function BonusList({ progress, today, activeId }: { progress: Progress; today: s
         Bonus grids from your reading
       </h2>
       <p className="text-[15px] text-body">
-        Answer a field note on any library page to open a themed bonus grid (up to {MAX_BONUS_PER_DAY} a day). Bonus grids are just for fun: they never change your streak or share result.
+        Answer a field note in the library to open a bonus grid, just for fun.{' '}
+        <a href="#rewards" className="font-bold">
+          How rewards work
+        </a>
       </p>
       {rounds.length === 0 ? (
         <Link href="/library" className="self-start font-bold">
@@ -155,8 +158,10 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
           ))}
         </ul>
       </div>
-      <p className="text-[13px] text-muted">
-        A day counts toward your streak when you play it. Earn rest days by collecting field notes (one for every three, hold up to two); they cover days you miss.
+      <p className="text-[14px] text-muted">
+        <a href="#rewards" className="font-bold">
+          How streaks and rest days work
+        </a>
       </p>
     </section>
   );

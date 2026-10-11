@@ -2,6 +2,18 @@ import Link from 'next/link';
 import type { Pathway } from '@/lib/types';
 import { ArchRays, PathwayGlyph } from './Ornaments';
 
+const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
+const word = (n: number) => WORDS[n] ?? String(n);
+
+/** "eight or nine", "nine", or "six to nine", from the pathways' real step counts. */
+export function readingsPhrase(pathways: Pick<Pathway, 'steps'>[]): string {
+  const counts = pathways.map((p) => p.steps.length);
+  const lo = Math.min(...counts);
+  const hi = Math.max(...counts);
+  if (lo === hi) return word(lo);
+  return hi - lo === 1 ? `${word(lo)} or ${word(hi)}` : `${word(lo)} to ${word(hi)}`;
+}
+
 /** A pathway as an arched, stained-glass window. */
 export function PathwayWindow({
   pathway,

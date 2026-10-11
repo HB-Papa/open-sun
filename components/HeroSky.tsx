@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -179,8 +178,6 @@ export function Hero() {
   const sunY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 50]);
   const farY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 20]);
   const midY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 10]);
-  const [puzzleNo, setPuzzleNo] = useState<number | null>(null);
-  useEffect(() => setPuzzleNo(puzzleNumber(localDateKey())), []);
 
   const p = PALETTES[phase];
   const night = phase === 'night';
@@ -195,17 +192,9 @@ export function Hero() {
     <section className="relative overflow-hidden md:min-h-[520px]" style={{ background: `linear-gradient(${p.sky}, ${p.sky2})`, transition: 'background 1s' }}>
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-6 pt-9 sm:px-6 md:pb-40 md:pt-16">
         <div className="max-w-[540px]" style={{ color: p.text }}>
-          <h1 className="mb-4 font-serif text-[40px] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[56px]">A free library for a brighter tomorrow</h1>
-          {/* On phones, today's puzzle is one tap away from the top of the page. */}
-          <Link
-            href="/play"
-            className="mb-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-forest px-5 font-bold text-on-forest no-underline shadow-[0_6px_16px_-8px_rgba(13,24,18,.6)] hover:text-on-forest md:hidden"
-          >
-            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-sun" />
-            Play today’s Microgrid{puzzleNo ? ` #${puzzleNo}` : ''}
-          </Link>
+          <h1 className="mb-4 font-serif text-[40px] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[56px]">A free library for a solarpunk tomorrow</h1>
           <p className="mb-6 max-w-[46ch] text-[17px] leading-normal sm:text-[19px]" style={{ color: p.soft }}>
-            Open access writing on solarpunk, solar power, living land, and the commons, gathered in one place and updated every week.
+            Solarpunk imagines a future powered by the sun, woven into living ecosystems, and built around community. Here is open access writing on it, gathered in one place and updated every week.
           </p>
           <form role="search" action="/library" className="flex flex-wrap gap-2.5">
             <label htmlFor="home-search" className="sr-only">

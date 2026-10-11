@@ -17,9 +17,7 @@ Solarpunk imagines a future powered by the sun, woven into living ecosystems, an
 
 ## How new items are found
 
-Once a week, an automated search checks three open scholarly databases (OpenAlex, the Directory of Open Access Journals, and Crossref) for newly published open access work on these topics. Anything promising is added to a review list. **A person reads every suggestion and edits every summary before it appears here.** Nothing is published automatically.
-
-You can also [suggest a resource](/suggest).
+Once a week, an automated search checks three open scholarly databases (OpenAlex, the Directory of Open Access Journals, and Crossref) for newly published open access work on these topics. Anything promising is reviewed by a person before being added to this site. You can also [suggest a resource](/suggest).
 
 ## The daily puzzle
 
