@@ -95,26 +95,21 @@ The form creates a GitHub issue labeled `suggestion` in your repo, so suggestion
 
 Until these are set, the form politely says suggestions aren't switched on yet.
 
-## 5. Turn on the weekly update agent
+## 5. The weekly update agent (set up, free)
 
-Every Monday, `.github/workflows/update-library.yml` searches OpenAlex, DOAJ, and Crossref for newly published open access work, drafts summaries with Claude, and opens a **pull request** with one Markdown file per candidate. New files are marked `reviewed: false`, so **nothing appears on the live site until you approve it.**
+Every Monday, `.github/workflows/update-library.yml` searches OpenAlex, DOAJ, and Crossref for newly published open access work, screens it with a keyword filter, and opens a **pull request** with one Markdown file per candidate. Each file holds the work's details and its abstract (in a hidden comment); the summary is left for you. New files are marked `reviewed: false`, so **nothing appears on the live site until you approve it.**
 
-1. Get a free OpenAlex API key at https://openalex.org (sign up, then copy the key from your account settings).
-2. Get an Anthropic API key at https://console.anthropic.com (**API Keys → Create Key**). Each weekly run drafts up to 12 summaries and costs a small amount. Without this key the agent still runs, but the drafts contain only the abstract.
-3. In your GitHub repo, go to **Settings → Secrets and variables → Actions → New repository secret** and add:
-   - `OPENALEX_API_KEY`
-   - `ANTHROPIC_API_KEY`
-4. Optional: on the **Variables** tab, add `CONTACT_EMAIL` (sent to OpenAlex and Crossref as a courtesy, which gets you faster responses).
-5. Go to **Settings → Actions → General**, scroll to **Workflow permissions**, select **Read and write permissions**, tick **Allow GitHub Actions to create and approve pull requests**, and save.
-6. To try it now: **Actions → Weekly library update → Run workflow**.
+It uses only free services. The repo secret `OPENALEX_API_KEY` is set and Actions may open pull requests. It does not use the paid Anthropic API: Claude plans (like Pro) don't include API usage, so summaries are drafted in the Claude app instead.
+
+To run it now instead of waiting for Monday: **Actions → Weekly library update → Run workflow**.
 
 **Reviewing a weekly pull request:**
 
-1. Open each new file (GitHub's **Files changed** tab, then the pencil to edit). The original abstract is in a hidden comment at the top for reference.
-2. Delete anything off-topic or not actually free to read, and add its DOI to `content/rejected.txt` so it isn't suggested again.
-3. Rewrite the summary, set `summary_status: edited`, check the field note, and set `reviewed: true`.
-4. **Merge** the pull request. Vercel publishes it.
+1. Ask Claude in the Claude app (Code tab, in this folder) to "draft the items in the latest library-update pull request". It reads each abstract, drops anything off-topic (adding its DOI to `content/rejected.txt`), and writes draft summaries and field notes on that branch.
+2. Read each file on GitHub (**Files changed** tab, then the pencil to edit). Rewrite the summary in your own words, set `summary_status: edited`, and set `reviewed: true`.
+3. **Merge** the pull request. Vercel publishes it automatically.
 
+Too many weak matches? Raise `RELEVANCE_MIN` near the top of `scripts/update-agent.mjs`. Missing good ones? Lower it or add keywords to `SIGNALS`.
 ## How Microgrid works
 
 - Each day's map, weather, and demand come from a seed built from the visitor's local date (`lib/microgrid.ts`), so everyone gets the same puzzle with no server.

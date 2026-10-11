@@ -1,8 +1,9 @@
 name: Weekly library update
 
 # Every Monday, look for newly published open access work and open a pull
-# request with draft entries. Nothing is published until a person reviews the
-# drafts, sets `reviewed: true`, and merges.
+# request with one file per item (abstract included, summary to be written).
+# Summaries are drafted in the Claude app, not through the paid API. Nothing is
+# published until a person reviews each file, sets `reviewed: true`, and merges.
 on:
   schedule:
     - cron: '0 14 * * 1' # Mondays, 14:00 UTC
@@ -37,7 +38,6 @@ jobs:
       - name: Find new open access items
         env:
           OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
           SINCE: ${{ inputs.since }}
           MAX_NEW: ${{ inputs.max_new || '12' }}

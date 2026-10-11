@@ -9,7 +9,9 @@
 //
 // Environment:
 //   OPENALEX_API_KEY   free key from openalex.org (recommended)
-//   ANTHROPIC_API_KEY  for draft summaries (optional; without it, drafts hold the abstract only)
+//   ANTHROPIC_API_KEY  optional, and not used by the weekly workflow (API usage is billed
+//                      separately from Claude plans). Without it, each file holds the
+//                      abstract and summaries are drafted in the Claude app instead.
 //   SINCE              YYYY-MM-DD to search from (default: 14 days ago)
 //   MAX_NEW            most items to add per run (default: 12)
 //   CONTACT_EMAIL      sent to OpenAlex/Crossref as a courtesy (optional)
@@ -52,22 +54,29 @@ const QUERIES = [
   '"utopian" climate futures',
 ];
 
-// Simple relevance scoring before anything is sent to Claude.
+// Keyword relevance scoring. Without Claude's on-topic check, this filter does
+// all the screening, so it favours social and cultural work over purely
+// technical engineering or crop-science papers. Items need RELEVANCE_MIN.
+const RELEVANCE_MIN = 6;
 const SIGNALS = [
   [/solarpunk/i, 10],
-  [/energy (justice|democracy|commons|sovereignty)/i, 5],
-  [/community (solar|energy|owned)/i, 5],
-  [/agrivoltaic/i, 5],
-  [/degrowth|post-?growth/i, 4],
-  [/multispecies|more-than-human/i, 4],
-  [/librar(y|ies) of things|tool librar/i, 5],
-  [/resilience hub/i, 5],
-  [/climate fiction|cli-?fi|speculative fiction|utopia/i, 3],
-  [/indigenous futur|decolonial futur/i, 4],
-  [/solar (power|energy|panel|photovoltaic)/i, 2],
-  [/commons/i, 2],
+  [/energy (justice|democracy|commons|sovereignty|poverty)|just (energy )?transition/i, 6],
+  [/community (solar|energy|owned)|energy communit/i, 6],
+  [/librar(y|ies) of things|tool librar/i, 6],
+  [/resilience hub/i, 6],
+  [/degrowth|post-?growth/i, 5],
+  [/multispecies|more-than-human/i, 5],
+  [/indigenous futur|decolonial futur/i, 5],
+  [/climate fiction|cli-?fi|speculative fiction|utopia/i, 4],
+  [/agrivoltaic/i, 3],
   [/low-?tech|permacomput/i, 3],
+  [/public (acceptance|opposition|support)|social acceptance|polari[sz]/i, 3],
+  [/solar (power|energy|panel|photovoltaic)/i, 1],
+  [/commons/i, 2],
   [/rewild|urban ecology|wildlife crossing/i, 2],
+  [/justice|equit|participat|democra|imaginar/i, 2],
+  // Technical work that matches energy keywords but isn't for this library.
+  [/genetic algorithm|linear programming|simplex method|thin-film|CdTe|perovskite|catalys|semiconductor|fertili[sz]er|efflux|cultivar|battery chemistr|inverter|MPPT/i, -6],
 ];
 
 // ---------- helpers ----------
@@ -374,7 +383,7 @@ async function main() {
     const t = normTitle(c.title);
     if ((c.doi && (seenDoi.has(c.doi) || batchDoi.has(c.doi))) || seenTitle.has(t) || batchTitle.has(t)) continue;
     const score = relevance(`${c.title} ${c.abstract}`);
-    if (score < 4) continue;
+    if (score < RELEVANCE_MIN) continue;
     if (c.doi) batchDoi.add(c.doi);
     batchTitle.add(t);
     candidates.push({ ...c, score, guessTopics: guessTopics(`${c.title} ${c.abstract}`) });
@@ -383,7 +392,7 @@ async function main() {
   console.log(`${candidates.length} new, on-topic candidates.`);
 
   const useClaude = await setupClaude();
-  if (!useClaude) console.log('ANTHROPIC_API_KEY not set: drafts will contain the abstract only.');
+  if (!useClaude) console.log('No ANTHROPIC_API_KEY: files will contain the abstract only, ready for drafting in the Claude app.');
 
   const added = [];
   const skipped = [];
@@ -406,7 +415,7 @@ async function main() {
     '',
     '**Before merging, for each file:**',
     '1. Open the link and check it is free to read and on topic. Delete the file if not (and add its DOI to `content/rejected.txt` so it isn’t suggested again).',
-    '2. Rewrite the summary and “Why it matters” in your own words, then set `summary_status: edited`.',
+    '2. Write the summary and “Why it matters” (the abstract is in a hidden comment at the top of each file; you can ask Claude in the Claude app to draft them from it), then set `summary_status: edited`.',
     '3. Check the field note question, then set `reviewed: true`. Items stay hidden on the live site until you do.',
     '',
     ...added.map(({ slug, c, drafted }) => `- [ ] \`content/library/${slug}.md\`: [${c.title}](${c.url}) (${c.source}${drafted ? '' : ', no draft summary'})`),
