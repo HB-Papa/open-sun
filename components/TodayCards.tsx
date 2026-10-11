@@ -1,0 +1,149 @@
+'use client';
+
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { baseDemand, generatePuzzle, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
+import { currentStreak, MAX_BONUS_PER_DAY, notesToday, useProgress } from '@/lib/progress';
+import { forecastSentence } from './microgrid/DayCharts';
+
+const TILE: Record<Terrain, string> = { open: '#5E9467', ridge: '#7C9A6A', home: '#F3E3B5', tree: '#2F6B45', pond: '#4F97A0' };
+
+export function TodayPuzzleCard() {
+  const progress = useProgress();
+  const [today, setToday] = useState<string | null>(null);
+  const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
+  useEffect(() => {
+    const d = localDateKey();
+    setToday(d);
+    const t = setTimeout(() => setPuzzle(generatePuzzle(d)), 50);
+    return () => clearTimeout(t);
+  }, []);
+
+  const game = today && progress ? progress.games[today] : undefined;
+  const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length;
+
+  return (
+    <div className="flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-6 rounded-3xl bg-forest px-6 py-7 text-on-forest sm:px-8">
+      <div className="flex-[1_1_260px]">
+        <p className="mb-1.5 text-[15px] font-bold uppercase tracking-[.08em] text-sun">Today’s puzzle</p>
+        <h2 id="today" className="mb-2.5 font-serif text-[36px] font-bold">
+          Microgrid {today ? `#${puzzleNumber(today)}` : ''}
+        </h2>
+        <p className="mb-[18px] text-lg leading-normal text-on-forest-muted">
+          Keep a small neighborhood lit for all 24 hours.{' '}
+          {puzzle ? shortForecast(puzzle) : 'Checking today’s forecast…'}
+        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            href="/play"
+            className="inline-flex min-h-12 items-center rounded-full bg-sun px-6 font-bold text-[#1E3328] no-underline hover:text-[#1E3328]"
+          >
+            {game?.done ? 'See today’s result' : game?.tries ? 'Keep playing' : 'Play today’s grid'}
+          </Link>
+          {game?.done ? (
+            <span className="text-on-forest-muted">
+              {game.won ? `Solved in ${game.tries} ${game.tries === 1 ? 'try' : 'tries'}` : `${lastLit}/24 hours lit`}
+            </span>
+          ) : (
+            <Link href="/play#how" className="inline-flex min-h-12 items-center px-2 text-on-forest hover:text-sun">
+              How to play
+            </Link>
+          )}
+        </div>
+      </div>
+      <div className="grid flex-[0_1_200px] grid-cols-5 gap-1.5" aria-hidden="true">
+        {(puzzle?.terrain ?? new Array<Terrain>(25).fill('open')).map((t, i) => (
+          <div key={i} className="aspect-square rounded-lg transition-colors duration-500" style={{ background: puzzle ? TILE[t] : '#2A4436' }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function shortForecast(p: Puzzle): string {
+  // The first two sentences of the full forecast: daylight and clouds.
+  const s = forecastSentence(p, baseDemand(p)).split('. ');
+  return `Forecast: ${s.slice(1, 3).join('. ').replace(/\.$/, '')}.`;
+}
+
+/** Plants one flower per library page read. A record of curiosity, not a score. */
+export function GardenCard() {
+  const progress = useProgress();
+  const today = localDateKey();
+  const visited = progress ? Object.keys(progress.visited) : [];
+  const streak = progress ? currentStreak(progress, today).streak : 0;
+  return (
+    <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-3xl border border-line bg-card px-6 py-6 sm:px-7">
+      <h2 className="font-serif text-2xl font-semibold">Your garden</h2>
+      <p className="text-base leading-normal text-body">
+        {visited.length
+          ? `You’ve read ${visited.length} ${visited.length === 1 ? 'page' : 'pages'} in the library. Each one planted something here.`
+          : 'Every page you read in the library plants something here. Reading also unlocks bonus grids.'}
+      </p>
+      <div className="flex min-h-[64px] flex-wrap items-end gap-1.5 rounded-xl bg-chip-leaf px-3 pt-2" aria-hidden="true">
+        {visited.length === 0 && <Sprout k={-1} />}
+        {visited.slice(0, 40).map((slug, k) => (
+          <Sprout key={slug} k={hash(slug)} />
+        ))}
+      </div>
+      <dl className="grid grid-cols-3 gap-2 text-center">
+        <div>
+          <dt className="text-[13px] text-muted">Day streak</dt>
+          <dd className="font-serif text-[26px] font-bold">{progress ? streak : '–'}</dd>
+        </div>
+        <div>
+          <dt className="text-[13px] text-muted">Field notes today</dt>
+          <dd className="font-serif text-[26px] font-bold">{progress ? `${Math.min(notesToday(progress, today), MAX_BONUS_PER_DAY)}/${MAX_BONUS_PER_DAY}` : '–'}</dd>
+        </div>
+        <div>
+          <dt className="text-[13px] text-muted">Rest days</dt>
+          <dd className="font-serif text-[26px] font-bold">{progress ? progress.restDays : '–'}</dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
+function hash(s: string) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+function Sprout({ k }: { k: number }) {
+  if (k < 0)
+    return (
+      <svg width="30" height="40" viewBox="0 0 46 60">
+        <path d="M23 60 V44" stroke="#2F6B45" strokeWidth="3" />
+        <path d="M23 48 C16 46 14 40 17 36 C22 38 24 42 23 48Z" fill="#A9C48E" />
+      </svg>
+    );
+  const kind = k % 4;
+  const h = 40 + (k % 17);
+  return (
+    <svg width="30" height={h} viewBox={`0 0 46 ${h * 1.5}`}>
+      <path d={`M23 ${h * 1.5} V${kind === 1 ? 22 : 28}`} stroke="#2F6B45" strokeWidth="3" />
+      {kind === 0 && (
+        <>
+          <path d="M23 40 C10 36 8 26 12 20 C20 22 24 30 23 40Z" fill="#5E9467" />
+          <path d="M23 34 C36 30 38 20 34 14 C26 16 22 24 23 34Z" fill="#3E7C4F" />
+        </>
+      )}
+      {kind === 1 && (
+        <>
+          <circle cx="23" cy="18" r="10" fill="#E3A72F" />
+          <circle cx="23" cy="18" r="4" fill="#6B4A2E" />
+        </>
+      )}
+      {kind === 2 && (
+        <>
+          <circle cx="17" cy="22" r="6" fill="#F0D6D0" />
+          <circle cx="29" cy="22" r="6" fill="#F0D6D0" />
+          <circle cx="23" cy="15" r="6" fill="#F0D6D0" />
+          <circle cx="23" cy="21" r="3.5" fill="#E3A72F" />
+        </>
+      )}
+      {kind === 3 && <path d="M23 30 C14 26 14 14 23 8 C32 14 32 26 23 30Z" fill="#1F6F78" />}
+    </svg>
+  );
+}

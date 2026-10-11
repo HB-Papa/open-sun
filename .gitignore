@@ -1,0 +1,18 @@
+node_modules/
+.next/
+out/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+.env*.local
+.env
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.claude/
+.update-agent-report.md
+
+# Private planning files (kept locally, not published)
+solarpunk-library-design.md
+open-sun-handoff.zip
+*.tsbuildinfo

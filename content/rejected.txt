@@ -1,0 +1,2 @@
+# Items the update agent should never suggest again.
+# One DOI (e.g. 10.1234/abcd) or exact title per line.
