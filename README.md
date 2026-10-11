@@ -87,6 +87,30 @@ git push -u origin main
 
 The first push opens a browser window to sign in to GitHub.
 
+## 4a. Private preview (current setup)
+
+The site is on Vercel as a **private preview**. The project `open-sun` has **Deployment Protection → Vercel Authentication → All Deployments** turned on, so only someone signed in to your Vercel account can open it. Search engines are also told to stay away (`robots.txt` and a noindex tag) until launch.
+
+To publish a new private preview after editing:
+
+```bash
+vercel deploy
+```
+
+The command prints a preview address. Open it while signed in to vercel.com.
+
+**When you're ready to launch:**
+
+1. In Vercel, open **open-sun → Settings → Environment Variables**, add `SITE_PUBLIC` = `true` (Production), and add `NEXT_PUBLIC_SITE_URL` = your public address.
+2. Open **Settings → Deployment Protection** and change the scope from **All Deployments** to **Standard Protection** (previews stay private; production becomes public).
+3. Deploy to production:
+
+```bash
+vercel deploy --prod
+```
+
+Private files (`solarpunk-library-design.md`, `open-sun-resources.md`, the handoff zip) are listed in `.vercelignore` and `.gitignore`, so they are never uploaded.
+
 ## 4. Deploy on Vercel (free)
 
 1. Go to https://vercel.com and choose **Sign Up → Continue with GitHub**. Pick the **Hobby** (free) plan.

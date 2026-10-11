@@ -1,0 +1,6 @@
+# Private planning files: never upload these to Vercel.
+solarpunk-library-design.md
+open-sun-resources.md
+open-sun-handoff.zip
+.claude
+.env*.local
