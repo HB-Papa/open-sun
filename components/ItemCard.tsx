@@ -19,13 +19,21 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
       className="card flex h-full flex-col gap-2.5 rounded-[18px] border border-line bg-card p-5 text-ink no-underline hover:text-ink"
     >
       <LeafSprout />
-      <div className="flex flex-wrap gap-2 pr-6">
-        <span className="rounded-full px-2.5 py-1 text-[13px] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
+      {/* Tags stay on one line; a long topic name shortens with an ellipsis rather than wrapping. */}
+      <div className="flex min-w-0 gap-2 pr-6">
+        <span className="shrink-0 rounded-full px-2.5 py-1 text-[13px] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
           {item.type}
         </span>
-        <span className="num rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{yearText(item.year)}</span>
-        {item.topics[0] && <span className="rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{topicLabel(item.topics[0])}</span>}
-        {item.language !== 'en' && <span className="rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{LANGUAGES[item.language] ?? item.language}</span>}
+        <span className="num shrink-0 rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{yearText(item.year)}</span>
+        {item.language !== 'en' ? (
+          <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{LANGUAGES[item.language] ?? item.language}</span>
+        ) : (
+          item.topics[0] && (
+            <span className="min-w-0 truncate rounded-full bg-chip px-2.5 py-1 text-[13px] text-body" title={topicLabel(item.topics[0])}>
+              {topicLabel(item.topics[0])}
+            </span>
+          )
+        )}
       </div>
       <H className="font-serif text-[20px] font-semibold leading-tight">{item.title}</H>
       <p className="text-[15px] text-muted">{authorsLine(item)}</p>

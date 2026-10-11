@@ -18,6 +18,8 @@ function resultMessage(r: NoteResult): string {
 const OPENED = (slug: string) => `opensun:opened:${slug}`;
 /** How long someone spends with the summary before the question appears without opening the reading. */
 const DWELL_MS = 30000;
+/** How long the choices pause after a wrong answer. */
+const REST_MS = 12000;
 
 /** "Read it free": opening the reading also opens this page's field note. */
 export function ReadItLink({ slug, href, children, className }: { slug: string; href: string; children: React.ReactNode; className?: string }) {
@@ -58,23 +60,34 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
     };
   }, [slug]);
   const unlocked = opened || !!already;
+  // After a wrong answer the choices rest for a moment, so the note rewards rereading rather than guessing.
+  const [resting, setResting] = useState(false);
 
   function pick(k: number) {
-    if (!note) return;
+    if (!note || resting) return;
     setPicked(k);
-    if (k === note.answer && !already) setResult(earnFieldNote(slug, title, topics));
+    if (k === note.answer) {
+      if (!already) setResult(earnFieldNote(slug, title, topics));
+    } else {
+      setResting(true);
+      setTimeout(() => setResting(false), REST_MS);
+    }
   }
 
   return (
     <section aria-labelledby="note-h" className="nouveau on-forest relative flex flex-col gap-3.5 rounded-[24px] bg-forest px-6 pb-7 pt-9 text-on-forest sm:px-9">
       <NouveauCorners />
+      {/* Tells screen readers when the question appears. */}
+      <p className="sr-only" role="status" aria-live="polite">
+        {note && unlocked && !already ? `Your field note question is ready: ${note.question}` : ''}
+      </p>
       {note && !unlocked ? (
         <>
           <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug">
             A field note is waiting
           </h2>
           <p className="max-w-[56ch] text-[16px] text-on-forest-muted">
-            Open the reading with “Read it free”, or spend a little time with the summary, and a short question will appear here. Answer it to open a bonus grid in Play.
+            Press “Read it free” to open the reading, or stay with the summary for about 30 seconds, and a short question will appear here. Answering it opens a bonus grid in Play.
           </p>
         </>
       ) : note ? (
@@ -95,6 +108,7 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                   role="radio"
                   onClick={() => pick(k)}
                   aria-checked={isPicked}
+                  aria-disabled={resting || undefined}
                   tabIndex={picked === null ? (k === 0 ? 0 : -1) : isPicked ? 0 : -1}
                   onKeyDown={(e) => {
                     const step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
@@ -104,7 +118,7 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                     const sibling = e.currentTarget.parentElement?.children[n] as HTMLElement | undefined;
                     sibling?.focus();
                   }}
-                  className="flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-base hover:border-sun"
+                  className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-base ${resting ? 'cursor-wait opacity-60' : 'hover:border-sun'}`}
                   style={{
                     color: right ? '#1E3328' : 'var(--option-ink)',
                     borderColor: right ? 'var(--sun)' : wrong ? 'var(--terracotta)' : 'var(--option-line)',
@@ -127,7 +141,11 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                 </Link>
               </p>
             )}
-            {picked !== null && picked !== note.answer && <p className="text-[15px] text-pale-sun">Not quite. The summary on this page has the answer.</p>}
+            {picked !== null && picked !== note.answer && (
+              <p className="text-[15px] text-pale-sun">
+                Not quite. Have another look at the summary{resting ? '; you can answer again in a few seconds.' : ', then try again.'}
+              </p>
+            )}
           </div>
           {already && picked === null && <p className="text-[14px] text-on-forest-muted">You’ve already earned the field note for this page.</p>}
         </>

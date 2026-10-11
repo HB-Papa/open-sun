@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { getPathways } from '@/lib/content';
 import { VineRule } from '@/components/Ornaments';
-import { PathwayWindow } from '@/components/PathwayWindow';
+import { PathwayWindow, readingsPhrase } from '@/components/PathwayWindow';
 import { PathwayCardProgress } from './PathwayProgress';
 import { PageSky } from '@/components/PageSky';
 
@@ -18,8 +18,8 @@ export default function PathwaysPage() {
           <h1 className="font-serif text-[44px] font-bold leading-none sm:text-[56px]">Pathways</h1>
           <VineRule className="hidden sm:flex" />
         </div>
-        <p className="max-w-[640px] text-lg leading-normal text-body">
-          Short routes through the library, eight or nine readings each. Each one grows a vine as you go.
+        <p className="max-w-[60ch] text-lg leading-normal text-body">
+          Short routes through the library, {readingsPhrase(pathways)} readings each. Each one grows a vine as you go.
         </p>
       </div>
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-5">

@@ -38,7 +38,7 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
           <PathwayGlyph slug={pathway.slug} className="relative h-14 w-14" />
         </span>
         <h1 className="font-serif text-[38px] font-bold leading-[1.05] text-balance sm:text-[52px]">{pathway.title}</h1>
-        <p className="text-[15px] text-muted">
+        <p className="text-[15px] text-body">
           <span className="num">{steps.length}</span> readings
         </p>
         <div className="prose-os text-left text-ink" dangerouslySetInnerHTML={{ __html: pathway.introHtml }} />

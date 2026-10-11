@@ -27,7 +27,7 @@ import {
   type Terrain,
   type Variant,
 } from '@/lib/microgrid';
-import type { DailyGame } from '@/lib/progress';
+import { MAX_BONUS_PER_DAY, type DailyGame } from '@/lib/progress';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
 import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
 import { VillageLights } from './VillageLights';
@@ -116,11 +116,20 @@ function Board({
   const [offWarning, setOffWarning] = useState(false);
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  // The "How it works" link opens the rules before jumping to them.
-  function openHow() {
-    const d = document.getElementById('how');
-    if (d instanceof HTMLDetailsElement) d.open = true;
+  // "How it works" links open the rules where they are, rather than jumping away from the board.
+  function openHow(e?: React.MouseEvent) {
+    e?.preventDefault();
+    showHow('how');
   }
+  useEffect(() => {
+    const go = () => {
+      const target = window.location.hash.slice(1);
+      if (target === 'how' || target === 'rewards') showHow(target);
+    };
+    go();
+    window.addEventListener('hashchange', go);
+    return () => window.removeEventListener('hashchange', go);
+  }, []);
 
   const tries = history.length;
   const won = history.some((h) => h.every(Boolean));
@@ -289,13 +298,14 @@ function Board({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      {/* On phones the title and tries share one line, so the board starts higher. */}
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:items-end">
         <div>
-          <h1 className="font-serif text-[40px] font-bold leading-tight sm:text-[52px]">{ranked ? `Microgrid #${num}` : info.name}</h1>
-          <p className="mt-1 text-[17px] text-body">{ranked ? `Today’s puzzle, ${formatDate(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
+          <h1 className="font-serif text-[30px] font-bold leading-tight sm:text-[52px]">{ranked ? `Microgrid #${num}` : info.name}</h1>
+          <p className={`mt-1 text-[17px] text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
         </div>
-        <p className="text-[17px]">
-          Tries left: <strong className="num text-[22px]">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
+        <p className="text-[16px] sm:text-[17px]">
+          Tries left: <strong className="num text-[20px] sm:text-[22px]">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
         </p>
       </div>
 
@@ -306,11 +316,13 @@ function Board({
             <h2 className="font-serif text-[22px] font-semibold">Today’s forecast</h2>
             <ForecastChart puzzle={puzzle} demand={demand} />
           </div>
-          <HowToPlay open={firstVisit} />
+          <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />
         </section>
 
         {/* ---------- the board ---------- */}
         <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-3.5">
+          {/* Rules first on phones: open on a first visit, folded away after that. */}
+          <HowToPlay open={firstVisit} id="how" className="md:hidden" />
           <p className="text-[17px] leading-normal">
             Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
             <a href="#how" onClick={openHow} className="font-bold">
@@ -318,7 +330,7 @@ function Board({
             </a>
           </p>
 
-          <div role="radiogroup" aria-label="Part to place" className="grid grid-cols-4 gap-1.5 sm:flex sm:flex-wrap sm:gap-2">
+          <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[360px]">
             {TOOLS.map((t) => (
               <button
                 key={t.id}
@@ -327,7 +339,7 @@ function Board({
                 aria-checked={tool === t.id}
                 onClick={() => setTool(t.id)}
                 disabled={done}
-                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-[14px] font-bold disabled:opacity-50 sm:flex-row sm:gap-2 sm:rounded-full sm:px-3.5 sm:text-base ${
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-[14px] font-bold disabled:opacity-50 sm:text-[15px] ${
                   tool === t.id ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
                 }`}
               >
@@ -338,7 +350,7 @@ function Board({
                   {t.id === 'garden' && <GardenIcon />}
                 </span>
                 {t.label}
-                <kbd className="hidden rounded border border-current px-1 text-[12px] font-normal leading-4 md:inline" aria-hidden="true">
+                <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-[12px] font-normal leading-4 md:inline" aria-hidden="true">
                   {t.key}
                 </kbd>
               </button>
@@ -351,7 +363,7 @@ function Board({
           <div
             role="grid"
             aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
-            className="board grid max-w-[460px] grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
+            className="board grid max-w-[460px] grid-cols-5 md:max-w-[360px] gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
             style={{ background: 'var(--board)' }}
             onKeyDown={onGridKey}
           >
@@ -414,7 +426,7 @@ function Board({
               Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
             </span>
           </div>
-          <div className="hidden max-w-[460px] flex-col gap-2 md:flex">
+          <div className="hidden max-w-[360px] flex-col gap-2 md:flex">
             <button type="button" onClick={run} disabled={!canRun} className={runClass}>
               {runLabel}
             </button>
@@ -465,6 +477,8 @@ function Board({
 
           {done && share && !running && <SharePanel share={share} />}
 
+          {/* A loss ends in the village too: some windows dark, and a reading that helps. */}
+          {done && !won && !running && <VillageLights dim />}
           {done && !won && !running && (
             <div className="rounded-[20px] border border-line bg-card p-5">
               <button type="button" className="font-bold text-sky underline" onClick={() => setShowSolution((s) => !s)} aria-expanded={showSolution}>
@@ -541,9 +555,20 @@ function TerrainKey() {
   );
 }
 
-function HowToPlay({ open }: { open: boolean }) {
+/** Opens every copy of the rules (one for phones, one for wide screens) and scrolls to the visible one. */
+function showHow(target: 'how' | 'rewards') {
+  const all = Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-how]'));
+  all.forEach((d) => (d.open = true));
+  const visible = all.find((d) => d.offsetParent !== null);
+  const rewards = visible?.querySelector<HTMLDetailsElement>('details[data-rewards]');
+  if (target === 'rewards' && rewards) rewards.open = true;
+  const el = target === 'rewards' ? rewards : visible;
+  el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+
+function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; className?: string }) {
   return (
-    <details id="how" open={open} className="rounded-[20px] border border-line bg-card p-5">
+    <details id={id} data-how open={open} className={`scroll-mt-4 rounded-[20px] border border-line bg-card p-5 ${className}`}>
       <summary className="cursor-pointer font-serif text-[20px] font-semibold">How it works</summary>
       <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-[16px] leading-normal text-body">
         <li>
@@ -568,6 +593,27 @@ function HowToPlay({ open }: { open: boolean }) {
           <strong>Badges</strong> like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it.
         </li>
       </ul>
+      {/* The one place the extras are explained; everywhere else links here. */}
+      <details data-rewards id={id === 'how' ? 'rewards' : undefined} className="mt-5 scroll-mt-4 border-t border-line pt-4">
+        <summary className="cursor-pointer font-serif text-[18px] font-semibold">How rewards work</summary>
+        <ul className="mt-2 flex list-disc flex-col gap-2 pl-5 text-[16px] leading-normal text-body">
+          <li>
+            <strong>Your streak</strong> counts the days you play the daily grid. Your score and share result only ever come from that grid.
+          </li>
+          <li>
+            <strong>Field notes</strong> come from library pages: open a reading (or spend a little time with its summary) and answer one short question.
+          </li>
+          <li>
+            Each field note opens a <strong>bonus grid</strong> themed on what you read, up to {MAX_BONUS_PER_DAY} a day. Bonus grids are just for fun.
+          </li>
+          <li>
+            Every three field notes earn a <strong>rest day</strong> (hold up to two). A rest day keeps your streak going on a day you miss.
+          </li>
+          <li>
+            <strong>Your garden</strong> on the home page grows a plant for every page you read. It is a record of curiosity, not a score.
+          </li>
+        </ul>
+      </details>
     </details>
   );
 }

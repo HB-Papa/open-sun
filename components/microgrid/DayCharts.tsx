@@ -88,10 +88,22 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
           <Axis />
         </div>
       </div>
-      <p className="mt-2 min-h-[1.5em] text-[14px] text-body" aria-hidden="true">
-        {hover === null
-          ? 'Hover or tap an hour to see its numbers.'
-          : `${cap(hourLabel(hover))}: sun ${pct(puzzle.sun[hover])} (${puzzle.sky[hover]}), wind ${pct(puzzle.wind[hover])}, demand ${demand[hover].toFixed(1)} units.`}
+      {/* A keyboard-friendly way to step through the hours, alongside hover and tap. */}
+      <label className="mt-2 grid grid-cols-[58px_1fr] items-center gap-2 text-[13px] font-bold text-muted">
+        Hour
+        <input
+          type="range"
+          min={0}
+          max={HOURS - 1}
+          value={hover ?? 12}
+          onChange={(e) => setHover(Number(e.target.value))}
+          onFocus={() => setHover((h) => h ?? 12)}
+          aria-valuetext={hover === null ? undefined : hourReadout(puzzle, demand, hover)}
+          className="h-6 w-full accent-[var(--leaf)]"
+        />
+      </label>
+      <p className="mt-1 min-h-[1.5em] text-[14px] text-body" aria-hidden="true">
+        {hover === null ? 'Hover, tap, or use the slider to see an hour’s numbers.' : hourReadout(puzzle, demand, hover)}
       </p>
       <figcaption className="text-[15px] leading-snug text-body">{forecastSentence(puzzle, demand)}</figcaption>
       <table className="sr-only">
@@ -128,12 +140,12 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
   const rows: [string, number[], number, string, boolean[] | undefined][] = [
     ['Sun', puzzle.sun, 1, 'var(--sun)', cloudy],
     ['Wind', puzzle.wind, 1, 'var(--sky)', undefined],
-    ['Use', demand, maxDemand, 'var(--terracotta)', undefined],
+    ['Demand', demand, maxDemand, 'var(--terracotta)', undefined],
   ];
   return (
     <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2.5 ${className}`} aria-hidden="true">
       {rows.map(([label, values, max, color, dim]) => (
-        <div key={label} className="grid grid-cols-[40px_1fr] items-end gap-2">
+        <div key={label} className="grid grid-cols-[58px_1fr] items-end gap-2">
           <span className="text-[12px] font-bold text-muted">{label}</span>
           <div className="flex h-5 items-end gap-[2px]">
             {values.map((v, h) => (
@@ -146,7 +158,7 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
           </div>
         </div>
       ))}
-      <div className="grid grid-cols-[40px_1fr] gap-2">
+      <div className="grid grid-cols-[58px_1fr] gap-2">
         <span />
         <div className="flex justify-between text-[12px] text-muted">
           <span>12 am</span>
@@ -214,6 +226,8 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
 }
 
 const pct = (v: number) => `${Math.round(v * 100)}%`;
+const hourReadout = (p: Puzzle, demand: number[], h: number) =>
+  `${cap(hourLabel(h))}: sun ${pct(p.sun[h])} (${p.sky[h]}), wind ${pct(p.wind[h])}, demand ${demand[h].toFixed(1)} units.`;
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 function ranges(flags: boolean[]): string[] {
