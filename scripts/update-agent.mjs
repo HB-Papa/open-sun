@@ -33,7 +33,7 @@ const TOPICS = [
   'agriculture', 'urban', 'design', 'technology', 'indigenous-futures', 'commons', 'libraries', 'resilience', 'education',
   'justice', 'governance',
 ];
-const TYPES = ['Article', 'Book', 'Chapter', 'Essay', 'Fiction', 'Guide', 'Report', 'Journal', 'Thesis'];
+const TYPES = ['Article', 'Book', 'Chapter', 'Essay', 'Fiction', 'Guide', 'Report', 'Journal', 'Thesis', 'Preprint'];
 
 // Searches sent to each database.
 const QUERIES = [

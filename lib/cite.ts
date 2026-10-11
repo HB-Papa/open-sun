@@ -1,4 +1,4 @@
-import type { LibraryItem } from './types';
+import { yearText, type LibraryItem } from './types';
 
 const PARTICLES = new Set(['de', 'van', 'von', 'der', 'den', 'du', 'da', 'del', 'la', 'le', 'di', 'dos', 'das']);
 
@@ -135,14 +135,14 @@ export function apa(item: LibraryItem): { text: string; html: string } {
     // Skip the publisher when it's the same as the group author.
     const pub = item.organization && item.authors[0] === item.venue ? '' : ` ${dot(item.venue)}`;
     return {
-      text: `${authors} (${item.year}). ${title}${pub} ${url}`,
-      html: `${esc(authors)} (${item.year}). <em>${esc(title)}</em>${esc(pub)} ${esc(url)}`,
+      text: `${authors} (${yearText(item.year)}). ${title}${pub} ${url}`,
+      html: `${esc(authors)} (${yearText(item.year)}). <em>${esc(title)}</em>${esc(pub)} ${esc(url)}`,
     };
   }
   if (!item.volume && !item.issue) {
     return {
-      text: `${authors} (${item.year}). ${title} ${dot(item.venue)} ${url}`,
-      html: `${esc(authors)} (${item.year}). ${esc(title)} <em>${esc(item.venue)}</em>. ${esc(url)}`,
+      text: `${authors} (${yearText(item.year)}). ${title} ${dot(item.venue)} ${url}`,
+      html: `${esc(authors)} (${yearText(item.year)}). ${esc(title)} <em>${esc(item.venue)}</em>. ${esc(url)}`,
     };
   }
   let tail = '';
@@ -163,8 +163,8 @@ export function apa(item: LibraryItem): { text: string; html: string } {
     tailHtml += `, ${esc(pg)}`;
   }
   return {
-    text: `${authors} (${item.year}). ${title} ${item.venue}${tail}. ${url}`,
-    html: `${esc(authors)} (${item.year}). ${esc(title)} <em>${esc(item.venue)}</em>${tailHtml}. ${esc(url)}`,
+    text: `${authors} (${yearText(item.year)}). ${title} ${item.venue}${tail}. ${url}`,
+    html: `${esc(authors)} (${yearText(item.year)}). ${esc(title)} <em>${esc(item.venue)}</em>${tailHtml}. ${esc(url)}`,
   };
 }
 
@@ -186,15 +186,15 @@ export function chicago(item: LibraryItem): { text: string; html: string } {
   const url = link(item);
   if (BOOK_LIKE.includes(item.type)) {
     return {
-      text: `${authors} ${dot(item.title)} ${item.venue}, ${item.year}. ${url}.`,
-      html: `${esc(authors)} <em>${esc(dot(item.title))}</em> ${esc(item.venue)}, ${item.year}. ${esc(url)}.`,
+      text: `${authors} ${dot(item.title)} ${item.venue}, ${yearText(item.year)}. ${url}.`,
+      html: `${esc(authors)} <em>${esc(dot(item.title))}</em> ${esc(item.venue)}, ${yearText(item.year)}. ${esc(url)}.`,
     };
   }
   let vol = '';
   if (item.volume) vol += ` ${item.volume}`;
   if (item.issue) vol += `${item.volume ? ',' : ''} no. ${item.issue}`;
   const pages = item.pages ? `: ${item.pages}` : '';
-  const yearPart = item.volume || item.issue ? ` (${item.year})${pages}` : `, ${item.year}`;
+  const yearPart = item.volume || item.issue ? ` (${yearText(item.year)})${pages}` : `, ${yearText(item.year)}`;
   return {
     text: `${authors} “${dot(item.title)}” ${item.venue}${vol}${yearPart}. ${url}.`,
     html: `${esc(authors)} “${esc(dot(item.title))}” <em>${esc(item.venue)}</em>${esc(vol)}${esc(yearPart)}. ${esc(url)}.`,

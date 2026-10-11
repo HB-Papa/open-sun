@@ -2,7 +2,7 @@
 title: "A Solarpunk Manifesto: Turning Imaginary into Reality"
 authors: ["William Joseph Gillam"]
 year: 2023
-type: Article
+type: Essay
 venue: "Philosophies"
 volume: "8"
 issue: "4"

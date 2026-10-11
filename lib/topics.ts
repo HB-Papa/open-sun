@@ -24,7 +24,7 @@ export const TOPICS = {
 export type Topic = keyof typeof TOPICS;
 export const topicLabel = (t: string) => (TOPICS as Record<string, string>)[t] ?? t;
 
-export const TYPES = ['Article', 'Book', 'Chapter', 'Essay', 'Fiction', 'Guide', 'Report', 'Journal', 'Thesis'] as const;
+export const TYPES = ['Article', 'Book', 'Chapter', 'Essay', 'Fiction', 'Guide', 'Report', 'Journal', 'Thesis', 'Preprint'] as const;
 
 export const TYPE_COLORS: Record<string, string> = {
   Article: 'var(--color-chip-leaf)',
@@ -36,6 +36,7 @@ export const TYPE_COLORS: Record<string, string> = {
   Chapter: 'var(--color-chip-sky)',
   Journal: 'var(--color-chip-leaf)',
   Thesis: 'var(--color-chip-leaf)',
+  Preprint: 'var(--color-chip-rose)',
 };
 
 export const LANGUAGES: Record<string, string> = {

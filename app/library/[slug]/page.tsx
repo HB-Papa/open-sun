@@ -4,21 +4,23 @@ import { notFound } from 'next/navigation';
 import { getAllItems, getItem, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
 import { LANGUAGES, topicLabel, TYPE_COLORS } from '@/lib/topics';
+import { yearText } from '@/lib/types';
 import { ExternalIcon } from '@/components/icons';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
 import { FieldNoteCard, ReadToEnd } from './FieldNote';
 
+// Pages are built ahead of time; a slug added while `npm run dev` is running is
+// still found (unknown slugs fall through to notFound below).
 export function generateStaticParams() {
   return getAllItems().map((i) => ({ slug: i.slug }));
 }
-export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = getItem(slug);
   if (!item) return {};
-  return { title: `${item.title} (${shortAuthors(item)}, ${item.year})`, description: item.summary.slice(0, 200) };
+  return { title: `${item.title} (${shortAuthors(item)}, ${yearText(item.year)})`, description: item.summary.slice(0, 200) };
 }
 
 export default async function ResourcePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -48,7 +50,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             {item.type}
           </span>
           <span className="rounded-full bg-chip-leaf px-3 py-1 text-[13px] font-bold">Open access · {item.license}</span>
-          <span className="rounded-full bg-chip px-3 py-1 text-[13px]">{item.year}</span>
+          <span className="rounded-full bg-chip px-3 py-1 text-[13px]">{yearText(item.year)}</span>
           {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-[13px]">In {LANGUAGES[item.language] ?? item.language}</span>}
         </div>
         <h1 className="font-serif text-[34px] font-bold leading-[1.1] sm:text-[44px]">{item.title}</h1>
@@ -102,7 +104,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
       </article>
 
       <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5">
-        <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${item.year})`} topics={item.topics} note={item.fieldNote} />
+        <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
         {related.length > 0 && (
           <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
             <h2 id="rel" className="font-serif text-[22px] font-semibold">
@@ -114,7 +116,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
                   <Link href={`/library/${r.slug}`} className="flex flex-col gap-1 text-ink no-underline hover:text-ink">
                     <span className="text-base font-bold hover:underline">{r.title}</span>
                     <span className="text-[14px] text-muted">
-                      {shortAuthors(r)}, {r.year} · {r.type}
+                      {shortAuthors(r)}, {yearText(r.year)} · {r.type}
                     </span>
                   </Link>
                 </li>

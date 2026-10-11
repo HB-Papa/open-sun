@@ -46,7 +46,7 @@ export function getAllItems(): LibraryItem[] {
     .map((file) => parseItem(file.replace(/\.md$/, ''), readFileSync(join(dir, file), 'utf8')))
     // Items marked `reviewed: false` (fresh from the update agent) only show up locally.
     .filter((i) => i.reviewed || process.env.NODE_ENV !== 'production')
-    .sort((a, b) => (a.dateAdded === b.dateAdded ? b.year - a.year : b.dateAdded.localeCompare(a.dateAdded)));
+    .sort((a, b) => (a.dateAdded === b.dateAdded ? (b.year ?? 0) - (a.year ?? 0) : b.dateAdded.localeCompare(a.dateAdded)));
   itemsCache = items;
   return items;
 }
@@ -63,7 +63,7 @@ function parseItem(slug: string, raw: string): LibraryItem {
     organization: !!data.organization,
     edited: !!data.edited,
     editors: data.editors?.map(String),
-    year: Number(data.year),
+    year: data.year == null || data.year === '' ? null : Number(data.year),
     type: String(data.type ?? 'Article'),
     venue: String(data.venue ?? ''),
     volume: asStr(data.volume),
@@ -115,7 +115,7 @@ export function relatedItems(item: LibraryItem, n = 3): LibraryItem[] {
     .filter((i) => i.slug !== item.slug)
     .map((i) => ({ i, score: i.topics.filter((t) => item.topics.includes(t)).length + (i.type === item.type ? 0.1 : 0) }))
     .filter((x) => x.score >= 1)
-    .sort((a, b) => b.score - a.score || b.i.year - a.i.year)
+    .sort((a, b) => b.score - a.score || (b.i.year ?? 0) - (a.i.year ?? 0))
     .slice(0, n)
     .map((x) => x.i);
 }

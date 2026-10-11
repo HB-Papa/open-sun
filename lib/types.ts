@@ -12,7 +12,7 @@ export interface LibraryItem {
   organization?: boolean;
   edited?: boolean;
   editors?: string[];
-  year: number;
+  year: number | null; // null when the work is undated
   type: string;
   venue: string;
   volume?: string;
@@ -38,6 +38,9 @@ export type ItemCard = Pick<
   LibraryItem,
   'slug' | 'title' | 'authors' | 'year' | 'type' | 'topics' | 'language' | 'license' | 'dateAdded' | 'summary' | 'edited' | 'organization'
 >;
+
+/** "2023", or "n.d." (no date) for undated works. */
+export const yearText = (y: number | null) => (y ? String(y) : 'n.d.');
 
 export interface Pathway {
   slug: string;

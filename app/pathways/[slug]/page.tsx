@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getItem, getPathway, getPathways } from '@/lib/content';
 import { authorsLine } from '@/components/ItemCard';
+import { yearText } from '@/lib/types';
 import { PathwayVine, StepStatus } from '../PathwayProgress';
 
 export function generateStaticParams() {
@@ -41,7 +42,7 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
               <span className="sr-only">Stop {k + 1}: </span>
               <span className="font-serif text-[20px] font-semibold leading-snug">{s.item!.title}</span>
               <span className="text-[14px] text-muted">
-                {authorsLine(s.item!)} · {s.item!.year} · {s.item!.type}
+                {authorsLine(s.item!)} · {yearText(s.item!.year)} · {s.item!.type}
               </span>
               {s.note && <span className="text-base text-body">{s.note}</span>}
               <span className="mt-1">

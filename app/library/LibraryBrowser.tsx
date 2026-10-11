@@ -7,6 +7,8 @@ import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { LANGUAGES, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
 
+const yr = (y: number | null) => y ?? 0;
+
 type Sort = 'relevance' | 'added' | 'newest' | 'oldest';
 type LicenseFilter = 'any' | 'cc' | 'cc-by' | 'other';
 
@@ -66,7 +68,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
   const allTypes = useMemo(() => countBy(items.map((i) => i.type)), [items]);
   const allLangs = useMemo(() => countBy(items.map((i) => i.language)), [items]);
   const years = useMemo(() => {
-    const ys = items.map((i) => i.year);
+    const ys = items.map((i) => i.year).filter((y): y is number => y !== null);
     const min = Math.min(...ys);
     const opts = [2025, 2023, 2020, 2015, 2010].filter((y) => y > min);
     return opts;
@@ -85,16 +87,16 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
       (i) =>
         (!topics.length || topics.some((t) => i.topics.includes(t))) &&
         (!types.length || types.includes(i.type)) &&
-        (since === 'any' || i.year >= Number(since)) &&
+        (since === 'any' || yr(i.year) >= Number(since)) &&
         (language === 'any' || i.language === language) &&
         (license === 'any' || (license === 'cc' ? licenseGroup(i.license) !== 'other' : licenseGroup(i.license) === license)),
     );
     const s = sort === 'relevance' && !scores ? 'added' : sort;
     return [...list].sort((a, b) => {
       if (s === 'relevance') return scores!.get(b.slug)! - scores!.get(a.slug)!;
-      if (s === 'added') return b.dateAdded.localeCompare(a.dateAdded) || b.year - a.year;
-      if (s === 'newest') return b.year - a.year;
-      return a.year - b.year;
+      if (s === 'added') return b.dateAdded.localeCompare(a.dateAdded) || yr(b.year) - yr(a.year);
+      if (s === 'newest') return yr(b.year) - yr(a.year);
+      return yr(a.year) - yr(b.year);
     });
   }, [items, index, query, topics, types, since, language, license, sort]);
 

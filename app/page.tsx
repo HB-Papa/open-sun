@@ -12,7 +12,7 @@ export default function HomePage() {
       (a, b) =>
         b.dateAdded.localeCompare(a.dateAdded) ||
         Number(b.summaryStatus === 'edited') - Number(a.summaryStatus === 'edited') ||
-        b.year - a.year,
+        (b.year ?? 0) - (a.year ?? 0),
     )
     .slice(0, 3);
   const pathways = getPathways();

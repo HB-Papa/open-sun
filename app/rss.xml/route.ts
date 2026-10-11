@@ -1,5 +1,6 @@
 import { getAllItems } from '@/lib/content';
 import { SITE } from '@/lib/site';
+import { yearText } from '@/lib/types';
 
 export const dynamic = 'force-static';
 
@@ -22,7 +23,7 @@ ${items
 <link>${SITE.url}/library/${i.slug}</link>
 <guid isPermaLink="true">${SITE.url}/library/${i.slug}</guid>
 <pubDate>${new Date(`${i.dateAdded}T12:00:00Z`).toUTCString()}</pubDate>
-<description>${esc(`${i.authors.join(', ')} (${i.year}). ${i.summary}`)}</description>
+<description>${esc(`${i.authors.join(', ')} (${yearText(i.year)}). ${i.summary}`)}</description>
 </item>`,
   )
   .join('\n')}

@@ -21,7 +21,7 @@ async function check(url) {
       // Some publishers reject HEAD or bots (403) but work in a browser.
       if (method === 'GET') return { ok: false, status: res.status, final: res.url };
     } catch (e) {
-      if (method === 'GET') return { ok: false, status: String(e.cause?.code || e.name), final: url };
+      if (method === 'GET') return { ok: false, status: String(e.cause?.code || e.cause?.message || e.name), final: url };
     }
   }
 }
@@ -34,9 +34,10 @@ const results = await Promise.all(
     return { f, url: data.url, ...r };
   }),
 );
-// Blocked bots (403) and servers with incomplete certificate chains usually
-// still open fine in a browser, so they are warnings rather than failures.
-const isWarning = (r) => r.status === 403 || /CERT|VERIFY|SELF_SIGNED/.test(String(r.status));
+// Blocked bots (403), servers with incomplete certificate chains, and
+// cookie-based redirects usually still open fine in a browser, so they are
+// warnings rather than failures.
+const isWarning = (r) => r.status === 403 || /CERT|VERIFY|SELF_SIGNED|redirect count/i.test(String(r.status));
 for (const r of results.sort((a, b) => a.f.localeCompare(b.f))) {
   const mark = r.ok ? 'ok  ' : isWarning(r) ? 'warn' : 'BAD ';
   if (!r.ok && !isWarning(r)) failed++;

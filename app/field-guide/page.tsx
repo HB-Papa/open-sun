@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getGlossary, getItem } from '@/lib/content';
 import { shortAuthors } from '@/lib/cite';
+import { yearText } from '@/lib/types';
 
 export const metadata: Metadata = { title: 'Field Guide', description: 'Short, plain definitions of solarpunk ideas, each linked to readings in the library.' };
 
@@ -36,7 +37,7 @@ export default function FieldGuidePage() {
                     <span key={r.slug}>
                       {k > 0 && ' · '}
                       <Link href={`/library/${r.slug}`}>
-                        {shortAuthors(r)} ({r.year})
+                        {shortAuthors(r)} ({yearText(r.year)})
                       </Link>
                     </span>
                   ))}
