@@ -7,8 +7,8 @@ import { NextResponse } from 'next/server';
 const recent = new Map<string, number[]>(); // simple per-instance rate limit
 
 export async function POST(req: Request) {
-  const repo = process.env.GITHUB_REPO;
-  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.GITHUB_REPO?.trim();
+  const token = process.env.GITHUB_TOKEN?.trim();
   if (!repo || !token) {
     return NextResponse.json({ error: 'Suggestions aren’t switched on yet. Please check back soon.' }, { status: 503 });
   }
