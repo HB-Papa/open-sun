@@ -8,8 +8,12 @@ steps:
     note: How young people around the world feel about climate change.
   - slug: de-meyer-2020-transforming-climate-stories
     note: Why stories of action beat stories of fear.
+  - slug: moore-2020-imagination-transformations
+    note: The research case for imagination as a tool for change.
   - slug: malpas-2021-climate-fiction-vital-tool
     note: A short case for climate fiction.
+  - slug: wood-2022-just-stories-climate-apartheid
+    note: Why climate stories are a question of justice.
   - slug: cheok-2025-indigenous-futures-thinking
     note: How Indigenous peoples lead futures thinking.
   - slug: sinha-2023-speculative-fictions-decolonial

@@ -12,7 +12,7 @@ export default function PathwaysPage() {
       <div className="flex flex-col gap-2.5">
         <h1 className="font-serif text-[40px] font-bold sm:text-[44px]">Pathways</h1>
         <p className="max-w-[720px] text-lg leading-normal text-body">
-          Short routes through the library, five to seven readings each. Each one grows a vine as you go.
+          Short routes through the library, eight to nine readings each. Each one grows a vine as you go.
         </p>
       </div>
       <ul className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5">

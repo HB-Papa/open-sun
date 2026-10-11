@@ -6,6 +6,10 @@ order: 1
 steps:
   - slug: flynn-2014-solarpunk-notes-manifesto
     note: Start with the short essay that helped give solarpunk its shape.
+  - slug: hamilton-2017-solarpunk-optimistic-radical
+    note: A quick explainer on how an optimistic movement can still be punk.
+  - slug: solarpunk-community-solarpunk-manifesto
+    note: The community's own statement of what it stands for.
   - slug: reina-rozo-2021-art-energy-technology
     note: A tour of the movement's history, anthologies, and scholarship.
   - slug: gillam-2023-solarpunk-manifesto
@@ -18,4 +22,4 @@ steps:
     note: A friendly critique of solarpunk's love of gadgets.
 ---
 
-Solarpunk began as an internet word around 2008 and grew into fiction, art, design, scholarship, and activism. These six readings move from an early manifesto to the debates scholars are having now.
+Solarpunk began as an internet word around 2008 and grew into fiction, art, design, scholarship, and activism. These readings move from early manifestos to the debates scholars are having now.

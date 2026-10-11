@@ -6,6 +6,9 @@ export const SITE = {
   url:
     process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000'),
+  // Search engines are asked to stay away until launch. To launch, set
+  // SITE_PUBLIC=true in Vercel and turn off Deployment Protection (see README).
+  public: process.env.SITE_PUBLIC === 'true',
 };
 
 export const NAV = [

@@ -77,7 +77,7 @@ export default function HomePage() {
             Pathways: guided reading
           </h2>
           <p className="max-w-[720px] text-lg leading-normal text-body">
-            Short routes through the library, five to seven readings each. Every stop with a field note can unlock a bonus grid.
+            Short routes through the library, eight to nine readings each. Every stop with a field note can unlock a bonus grid.
           </p>
           <ul className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4">
             {pathways.map((p) => (

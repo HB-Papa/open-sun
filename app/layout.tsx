@@ -14,6 +14,7 @@ export const metadata: Metadata = {
   description: SITE.description,
   alternates: { types: { 'application/rss+xml': [{ url: '/rss.xml', title: `${SITE.name}: new arrivals` }] } },
   openGraph: { siteName: SITE.name, type: 'website' },
+  robots: SITE.public ? undefined : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
