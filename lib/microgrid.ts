@@ -1,4 +1,4 @@
-﻿// Microgrid: the daily Open Sun puzzle.
+// Microgrid: the daily Open Sun puzzle.
 //
 // Everything here is pure and deterministic. A puzzle comes from a seed string
 // (the local date plus an optional bonus variant), so every player gets the
@@ -49,7 +49,7 @@ export const RULES = {
 };
 
 export const VARIANT_INFO: Record<Variant, { name: string; blurb: string }> = {
-  daily: { name: 'Daily grid', blurb: 'Todayâ€™s ranked puzzle.' },
+  daily: { name: 'Daily grid', blurb: 'Today’s ranked puzzle.' },
   commons: {
     name: 'Commons Day',
     blurb: 'The neighborhood pools its storage: every battery holds twice as much.',
@@ -469,12 +469,12 @@ export function generatePuzzle(dateKey: string, variant: Variant = 'daily', extr
 // ---------- sharing ----------
 
 export function shareText(num: number, won: boolean, tries: number, lit: boolean[], bonusName?: string) {
-  const title = bonusName ? `Open Sun Â· ${bonusName} (bonus) Â· Microgrid #${num}` : `Open Sun Â· Microgrid #${num}`;
+  const title = bonusName ? `Open Sun · ${bonusName} (bonus) · Microgrid #${num}` : `Open Sun · Microgrid #${num}`;
   const hours = lit.filter(Boolean).length;
   const line = won
-    ? `â˜€ï¸ ${hours}/24 hours lit in ${tries} ${tries === 1 ? 'try' : 'tries'}`
-    : `ðŸŒ™ ${hours}/24 hours lit after ${tries} tries`;
-  const strip = lit.map((ok) => (ok ? 'ðŸŸ¨' : 'â¬›')).join('');
+    ? `☀️ ${hours}/24 hours lit in ${tries} ${tries === 1 ? 'try' : 'tries'}`
+    : `🌙 ${hours}/24 hours lit after ${tries} tries`;
+  const strip = lit.map((ok) => (ok ? '🟨' : '⬛')).join('');
   const plain = won
     ? `Open Sun Microgrid #${num}: kept all 24 hours lit on try ${tries} of ${MAX_TRIES}.`
     : `Open Sun Microgrid #${num}: lit ${hours} of 24 hours after ${tries} tries.`;

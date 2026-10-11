@@ -549,7 +549,7 @@ function SharePanel({ share }: { share: { emoji: string; plain: string } }) {
   return (
     <div className="flex flex-col gap-3 rounded-[18px] border border-line bg-card p-5">
       <h2 className="font-serif text-[22px] font-semibold">Share your day</h2>
-      <pre className="whitespace-pre-wrap rounded-xl bg-chip p-3 font-sans text-[15px] leading-normal" aria-hidden="true">
+      <pre className="overflow-hidden whitespace-pre-wrap break-words rounded-xl bg-chip p-3 font-sans text-[15px] leading-normal" aria-hidden="true">
         {share.emoji}
       </pre>
       <p className="text-[15px] text-body">

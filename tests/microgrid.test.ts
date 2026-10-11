@@ -9,6 +9,7 @@ import {
   mulberry32,
   PART_ORDER,
   simulate,
+  shareText,
   buildable,
   type Layout,
   type Variant,
@@ -36,6 +37,16 @@ test('bonus variants are solvable', () => {
       assert.equal(simulate(p, p.solution).litCount, HOURS, `${v} day ${d}`);
     }
   }
+});
+
+test('share text uses real emoji, not garbled characters', () => {
+  const lit = Array.from({ length: HOURS }, (_, h) => h < 21);
+  const { emoji, plain } = shareText(1, false, 3, lit);
+  assert.match(emoji, /^Open Sun · Microgrid #1\n🌙 21\/24 hours lit after 3 tries\n/);
+  assert.ok(emoji.includes('🟨'.repeat(12)) && emoji.includes('⬛'));
+  assert.equal(plain, 'Open Sun Microgrid #1: lit 21 of 24 hours after 3 tries.');
+  // Typical signs of text decoded with the wrong character set.
+  assert.doesNotMatch(emoji + plain, /[ÃÂâð]/);
 });
 
 test('generation is deterministic', () => {
