@@ -24,6 +24,124 @@ function phaseFor(h: number): Phase {
 
 const r1 = (n: number) => Math.round(n * 10) / 10;
 
+const INK = '#1E3328';
+
+/** A window with a cross mullion; the glass follows the time of day. */
+function Pane({ x, y, w, h, glass }: { x: number; y: number; w: number; h: number; glass: string }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
+      <path d={`M${x + w / 2} ${y} V${y + h} M${x} ${y + h / 2} H${x + w}`} stroke={INK} strokeWidth="1.4" />
+    </g>
+  );
+}
+
+/** Little clumps of grass and wildflowers for living roofs and planters. */
+function Tufts({ points, leaf, flowers = true }: { points: [number, number][]; leaf: string; flowers?: boolean }) {
+  return (
+    <g>
+      {points.map(([x, y], k) => (
+        <g key={k}>
+          <path d={`M${x - 4} ${y} q2 -7 4 -9 q1 5 1 9 q2 -6 5 -7 q-1 4 -2 7 Z`} fill={leaf} />
+          {flowers && k % 2 === 0 && <circle cx={x + 1} cy={y - 8} r="1.8" fill={k % 4 === 0 ? '#E3A72F' : '#F0D6D0'} />}
+        </g>
+      ))}
+    </g>
+  );
+}
+
+/** Three eco homes: a green-roofed cottage, a gabled house with a living roof, and a two-storey house with a roof garden and a climbing vine. */
+function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: string; leaf: string; turf: string }) {
+  const wood = night ? '#A88C66' : '#D9B98C';
+  const cream = night ? '#CDBF97' : '#F3E3B5';
+  const clay = night ? '#B89D8A' : '#E6CBB5';
+  return (
+    <g strokeLinejoin="round">
+      {/* Cottage with a sloping sod roof, a big window and a flower box. */}
+      <rect x="664" y="262" width="66" height="42" fill={wood} stroke={INK} strokeWidth="2" />
+      <path d="M672 266 V302 M682 266 V302 M720 266 V302" stroke={INK} strokeOpacity="0.18" strokeWidth="1.5" />
+      <path d="M656 266 L738 252 L738 245 L656 259 Z" fill={turf} stroke={INK} strokeWidth="2" />
+      <Tufts leaf={leaf} points={[[662, 258], [674, 256], [688, 254], [702, 251], [716, 249], [730, 247]]} />
+      <Pane x={670} y={272} w={28} h={18} glass={glass} />
+      <path d="M708 304 V286 a7 7 0 0 1 14 0 V304 Z" fill="#6B4A2E" stroke={INK} strokeWidth="2" />
+      <rect x="668" y="291" width="32" height="6" fill="#6B4A2E" stroke={INK} strokeWidth="1.5" />
+      <Tufts leaf={leaf} points={[[673, 291], [683, 291], [693, 291]]} />
+
+      {/* Gabled house with a living roof and a round window under the ridge. */}
+      <rect x="762" y="254" width="82" height="46" fill={cream} stroke={INK} strokeWidth="2" />
+      <path d="M754 258 L803 214 L852 258 L844 258 L803 222 L762 258 Z" fill={turf} stroke={INK} strokeWidth="2" />
+      <path d="M762 258 L803 222 L844 258 Z" fill={cream} />
+      <path d="M762 258 L803 222 L844 258" fill="none" stroke={INK} strokeWidth="2" />
+      <Tufts leaf={leaf} points={[[764, 252], [776, 241], [788, 230], [818, 230], [830, 241], [842, 252]]} />
+      <circle cx="803" cy="241" r="7" fill={glass} stroke={INK} strokeWidth="2" style={{ transition: 'fill 1s' }} />
+      <Pane x={770} y={264} w={18} h={26} glass={glass} />
+      <Pane x={818} y={264} w={18} h={26} glass={glass} />
+      <path d="M795 300 V280 a8 8 0 0 1 16 0 V300 Z" fill="#6B4A2E" stroke={INK} strokeWidth="2" />
+      <circle cx="758" cy="294" r="7" fill={leaf} />
+      <circle cx="849" cy="295" r="6" fill={leaf} />
+
+      {/* Two-storey house with a roof garden, wide windows and a climbing vine. */}
+      <rect x="868" y="238" width="62" height="56" fill={clay} stroke={INK} strokeWidth="2" />
+      <rect x="863" y="232" width="72" height="7" fill={wood} stroke={INK} strokeWidth="2" />
+      <circle cx="874" cy="229" r="6" fill={leaf} />
+      <circle cx="886" cy="227" r="7" fill={turf} />
+      <circle cx="914" cy="228" r="6" fill={leaf} />
+      <circle cx="926" cy="229" r="5" fill={turf} />
+      <Pane x={876} y={245} w={46} h={16} glass={glass} />
+      <Pane x={876} y={270} w={20} h={16} glass={glass} />
+      <path d="M904 294 V276 a6 6 0 0 1 12 0 V294 Z" fill="#6B4A2E" stroke={INK} strokeWidth="2" />
+      <path d="M931 294 C925 282 935 272 929 262 S933 248 928 238" fill="none" stroke={leaf} strokeWidth="2.5" strokeLinecap="round" />
+      {[[930, 284], [929, 270], [931, 256], [928, 244]].map(([x, y], k) => (
+        <path key={k} d={k % 2 ? `M${x} ${y} c-6 -1 -8 -6 -6 -9 c4 1 6 5 6 9Z` : `M${x} ${y} c6 -1 8 -6 6 -9 c-4 1 -6 5 -6 9Z`} fill={leaf} />
+      ))}
+    </g>
+  );
+}
+
+/** A small community solar array on racks, with wildflowers growing underneath. */
+function SolarArray({ panel, night }: { panel: string; night: boolean }) {
+  const frame = night ? '#7E9CA2' : '#FFFDF7';
+  const leg = night ? '#3E4F45' : '#4A5A50';
+  const rows = [
+    { y: 276, w: 32, h: 12, xs: [972, 1010, 1048, 1086] },
+    { y: 298, w: 38, h: 15, xs: [956, 999, 1042, 1085] },
+  ];
+  return (
+    <g>
+      {rows.map((r, ri) => (
+        <g key={ri}>
+          {/* The shared rack rail that ties each row together. */}
+          <path d={`M${r.xs[0] + 2} ${r.y + 4} H${r.xs[r.xs.length - 1] + r.w - 2}`} stroke={leg} strokeWidth="2.5" strokeLinecap="round" />
+          {r.xs.map((x) => {
+            // A module tilted toward the sun: the top edge leans back and up.
+            const lean = r.h * 0.45;
+            const top = r.y - r.h;
+            return (
+              <g key={x}>
+                <path d={`M${x + 5} ${r.y} v8 M${x + r.w - 5} ${r.y} v8`} stroke={leg} strokeWidth="2" strokeLinecap="round" />
+                <path d={`M${x} ${r.y} L${x + r.w} ${r.y} L${x + r.w + lean} ${top} L${x + lean} ${top} Z`} fill={panel} stroke={frame} strokeWidth="1.6" strokeLinejoin="round" />
+                <path
+                  d={`M${r1(x + r.w / 3)} ${r.y} L${r1(x + r.w / 3 + lean)} ${top} M${r1(x + (2 * r.w) / 3)} ${r.y} L${r1(x + (2 * r.w) / 3 + lean)} ${top} M${r1(x + lean / 2)} ${r1(r.y - r.h / 2)} L${r1(x + r.w + lean / 2)} ${r1(r.y - r.h / 2)}`}
+                  stroke={frame}
+                  strokeOpacity="0.55"
+                  strokeWidth="1"
+                />
+              </g>
+            );
+          })}
+          {/* Grazing grass and flowers between the rows (agrivoltaics). */}
+          {r.xs.map((x, k) => (
+            <g key={`f${x}`}>
+              <path d={`M${x + 12} ${r.y + 9} q2 -6 3 -8 q1 4 1 8 Z`} fill={night ? '#4F7F5A' : '#5E9467'} />
+              <circle cx={x + 22} cy={r.y + 6} r="1.8" fill={k % 2 ? '#F0D6D0' : '#E3A72F'} />
+            </g>
+          ))}
+        </g>
+      ))}
+    </g>
+  );
+}
+
 /**
  * The home page header: a small solarpunk village whose sky follows the visitor's
  * local time (and stays at night in dark mode). The headline sits on open sky.
@@ -52,7 +170,10 @@ export function Hero() {
   const night = phase === 'night';
   const lit = night || phase === 'dusk';
   const sun = phase === 'dawn' ? { x: 990, y: 190 } : phase === 'dusk' ? { x: 1000, y: 196 } : phase === 'night' ? { x: 980, y: 96 } : { x: 975, y: 110 };
-  const windows = lit ? '#E3A72F' : '#CFC4A6';
+  // Glass reflects the sky by day and glows gold once the lamps come on.
+  const glass = lit ? '#E8B547' : '#CDE4E6';
+  const leaf = night ? '#4F7F5A' : '#5E9467';
+  const turf = night ? '#2F5A3C' : '#3E7C4F';
 
   return (
     <section className="relative overflow-hidden md:min-h-[520px]" style={{ background: `linear-gradient(${p.sky}, ${p.sky2})`, transition: 'background 1s' }}>
@@ -148,33 +269,8 @@ export function Hero() {
           <rect x="634" y="276" width="6" height="24" fill="#6B4A2E" />
           <circle cx="637" cy="268" r="17" fill={p.near} />
 
-          {/* Homes, with rooftop panels and windows that glow after dark. */}
-          <g stroke="#1E3328" strokeWidth="2" strokeLinejoin="round">
-            <path d="M660 300 v-30 l30 -24 l30 24 v30 Z" fill="#F3E3B5" />
-            <path d="M762 296 v-38 l38 -30 l38 30 v38 Z" fill="#EAD9C9" />
-            <path d="M880 290 v-28 l28 -22 l28 22 v28 Z" fill="#F0D6D0" />
-          </g>
-          <g fill={p.panel} stroke="#FFFDF7" strokeWidth="1.5">
-            <path d="M694 250 l20 16 l-8 4 l-20 -16 Z" />
-            <path d="M806 230 l26 20 l-9 5 l-26 -20 Z" />
-          </g>
-          <g fill={windows} style={{ transition: 'fill 1s' }}>
-            <rect x="682" y="278" width="14" height="22" />
-            <rect x="782" y="270" width="14" height="14" />
-            <rect x="806" y="270" width="14" height="14" />
-            <rect x="900" y="268" width="14" height="22" />
-          </g>
-
-          {/* A row of panels on the slope, softened by a vine. */}
-          <g fill={p.panel} stroke="#FFFDF7" strokeWidth="2">
-            <path d="M944 286 l46 -11 l11 16 l-46 11 Z" />
-            <path d="M1006 274 l46 -11 l11 16 l-46 11 Z" />
-            <path d="M1068 262 l46 -11 l11 16 l-46 11 Z" />
-          </g>
-          <path d="M942 306 C962 296 980 312 1002 300 S1040 288 1062 294 S1100 280 1128 284" stroke={night ? '#5E9467' : '#A9C48E'} strokeWidth="3" fill="none" strokeLinecap="round" />
-          {[960, 1004, 1048, 1092].map((x, k) => (
-            <path key={x} d={`M${x} ${300 - k * 4} c-2 -8 4 -12 10 -12 c0 7 -4 11 -10 12Z`} fill={night ? '#5E9467' : '#A9C48E'} />
-          ))}
+          <EcoHomes night={night} glass={glass} leaf={leaf} turf={turf} />
+          <SolarArray panel={p.panel} night={night} />
         </motion.g>
 
         {/* Garden rows in the front field. */}
