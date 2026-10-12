@@ -18,7 +18,7 @@ export function PageSky() {
       <svg
         viewBox="0 0 1200 120"
         preserveAspectRatio="xMaxYMax slice"
-        className="absolute inset-0 h-full w-full transition-opacity duration-700"
+        className="absolute inset-0 h-full w-full transition-opacity duration-300"
         style={{ opacity: ready ? 1 : 0 }}
       >
         {night && (

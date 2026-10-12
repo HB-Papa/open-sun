@@ -285,6 +285,16 @@
 .village-lights .pane {
   animation: os-light 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--d, 0s) both;
 }
+.village-glow {
+  opacity: 0.32;
+  filter: blur(16px);
+  animation: os-village-glow 1.4s ease-out 1.8s backwards;
+}
+@keyframes os-village-glow {
+  from {
+    opacity: 0;
+  }
+}
 /* After a loss only the first house keeps its lamps on. */
 .village-lights.is-dim .pane {
   animation: none;

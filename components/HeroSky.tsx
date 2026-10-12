@@ -274,7 +274,7 @@ export function Hero() {
         preserveAspectRatio="xMaxYMax slice"
         // On desktop the scene sits along the bottom at its own proportions (not stretched to the copy's height),
         // so the village stays below and to the right of the search, whatever the text wraps to.
-        className="block h-[120px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-x-0 md:bottom-0 md:h-auto md:max-h-full"
+        className="block h-[60px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-x-0 md:bottom-0 md:h-auto md:max-h-full"
         style={{ opacity: ready ? 1 : 0 }}
         aria-hidden="true"
       >

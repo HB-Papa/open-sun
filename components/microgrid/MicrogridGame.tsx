@@ -351,9 +351,6 @@ function Board({
                   <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
                     Got it
                   </button>
-                  <a href="#how" onClick={openHow} className="font-bold">
-                    Full rules
-                  </a>
                 </div>
               </div>
             )}
@@ -510,17 +507,18 @@ function Board({
         </p>
       )}
       <h2 className="font-serif text-heading font-semibold">
-        <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : viewLit.filter(Boolean).length}</span> of 24 hours lit
+        {/* The run's animation drives the panel only while it plays; afterwards the chosen try does. */}
+        <span className="num">{running && shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : viewLit.filter(Boolean).length}</span> of 24 hours lit
       </h2>
       <ResultChart
-        lit={shownSim ? shownSim.lit : viewLit}
-        sim={shownSim ?? viewSim ?? (done ? lastSim ?? undefined : undefined)}
-        upTo={shownSim ? shownHour : HOURS - 1}
+        lit={running && shownSim ? shownSim.lit : viewLit}
+        sim={(running ? shownSim : null) ?? viewSim ?? shownSim ?? (done ? lastSim ?? undefined : undefined)}
+        upTo={running ? shownHour : HOURS - 1}
       />
       {!running &&
         (viewing !== null ? (
           <p className="text-copy leading-normal text-on-forest-muted">
-            <Nums text={describeHours(viewLit)} />
+            <Nums text={darkHours(viewLit)} />
           </p>
         ) : won ? (
           <p className="text-copy leading-normal text-on-forest-muted">
@@ -533,12 +531,12 @@ function Board({
               {ranked ? 'That’s today’s grid done. A new one arrives tomorrow.' : 'That’s this bonus grid done.'}
             </p>
             <p className="text-small leading-normal text-on-forest-muted">
-              <Nums text={`${describeHours(lastLit)} For next time: ${hint(puzzle, lastLit, layout)}`} />
+              <Nums text={`${darkHours(lastLit)} For next time: ${hint(puzzle, lastLit, layout)}`} />
             </p>
           </>
         ) : (
           <p className="text-copy leading-normal text-on-forest-muted">
-            <Nums text={`${describeHours(lastLit)} ${hint(puzzle, lastLit, layout)}`} />
+            <Nums text={`${darkHours(lastLit)} ${hint(puzzle, lastLit, layout)}`} />
           </p>
         ))}
       {history.length > 1 && (
@@ -553,6 +551,7 @@ function Board({
                     <button
                       type="button"
                       aria-pressed={current}
+                      aria-label={`Try ${k + 1}, ${h.filter(Boolean).length} of 24 hours lit`}
                       onClick={() => viewTry(k)}
                       className={`inline-flex min-h-9 items-center rounded-full px-3 font-bold ${current ? 'bg-sun text-[#1E3328]' : 'bg-forest-2 text-on-forest hover:bg-forest-2/70'}`}
                     >
@@ -561,7 +560,8 @@ function Board({
                       </span>
                     </button>
                   ) : (
-                    <span className="inline-flex min-h-9 items-center rounded-full bg-forest-2 px-3">
+                    // Older saved games kept only the score, so these are plain labels, not buttons.
+                    <span className="inline-flex min-h-9 items-center px-1" aria-label={`Try ${k + 1}, ${h.filter(Boolean).length} of 24 hours lit`}>
                       <span>
                         Try <span className="num">{k + 1}</span> · <span className="num">{h.filter(Boolean).length}/24</span>
                       </span>
@@ -584,7 +584,7 @@ function Board({
               {showSolution && <SolutionPreview puzzle={puzzle} />}
             </div>
           )) || null;
-  const winVillageEl = won && !running ? <VillageLights /> : null;
+  const winVillageEl = won && !running ? <VillageLights carried={carriedBy(puzzle, layout)} /> : null;
   const shareEl = done && share && !running ? <SharePanel share={share} /> : null;
   // A loss ends in the village too: some windows dark, and a reading that matches what went wrong.
   const dimVillageEl = done && !won && !running && lastLit ? <VillageLights dim shortfall={shortfall(puzzle, lastLit)} /> : null;
@@ -663,7 +663,13 @@ function Board({
             <>
               {boardEl}
               {resultEl}
-              {forecastEl(true)}
+              {/* The small forecast sits above the board; the full one waits behind a tap. */}
+              <details className="rounded-[20px] border border-line bg-card p-5">
+                <summary className="cursor-pointer font-serif text-heading font-semibold">Today’s forecast, hour by hour</summary>
+                <div className="mt-3">
+                  <ForecastChart puzzle={puzzle} demand={demand} />
+                </div>
+              </details>
             </>
           )}
         </div>
@@ -755,10 +761,30 @@ function offText(n: number): string {
   return `${n === 1 ? 'One part is' : `${n} parts are`} off grid and won’t make power. Connect ${n === 1 ? 'it' : 'them'} to a home, or press again to run anyway.`;
 }
 
+/** "Dark: 3 am to 5 am, 9 pm." The heading already gives the count, so the sentence starts at the gaps. */
+function darkHours(lit: boolean[]): string {
+  return describeHours(lit).replace(/^\d+ of 24 hours lit\. /, '');
+}
+
+/** A hint that names what went wrong on this board, most specific first. */
 function hint(p: Puzzle, lit: boolean[], layout: Layout): string {
-  const hasBattery = layout.includes('battery');
-  if (shortfall(p, lit) === 'night') return hasBattery ? 'Nights are the hard part: more storage or wind could help.' : 'Batteries carry daytime sun into the night.';
-  return 'Daytime gaps: try more panels, or move them out of the shade.';
+  const dark = lit.filter((x) => !x).length;
+  const touchingTurbines = layout.some((part, i) => part === 'wind' && neighbors(i).some((n) => layout[n] === 'wind'));
+  if (touchingTurbines) return 'Your turbines sit side by side and slow each other, so try spreading them out.';
+  if (dark <= 2) return `Only ${dark === 1 ? 'one hour' : 'two hours'} short, so one more battery or panel could do it.`;
+  if (shortfall(p, lit) === 'night') {
+    return layout.includes('battery') ? 'Nights are the hard part, so more storage or wind could help.' : 'Batteries carry daytime sun into the night.';
+  }
+  const shaded = layout.some((part, i) => part === 'solar' && neighbors(i).some((n) => p.terrain[n] === 'tree'));
+  return shaded ? 'Some panels sit in a tree’s shade, so move them into the open.' : 'The days fall short, so try more panels, or a garden beside them.';
+}
+
+/** What carried a winning day, for the reading the village offers. */
+function carriedBy(p: Puzzle, layout: Layout): 'storage' | 'wind' | 'gardens' | 'sun' {
+  if (layout.includes('battery')) return 'storage';
+  if (layout.some((part, i) => part === 'wind' && p.terrain[i] === 'ridge')) return 'wind';
+  if (layout.some((part, i) => part === 'garden' && neighbors(i).some((n) => layout[n] === 'solar'))) return 'gardens';
+  return 'sun';
 }
 
 function fmt(m: number) {
@@ -788,6 +814,10 @@ function TerrainKey({ terrain }: { terrain: Terrain[] }) {
     ['rock', 'Rocky ground (can’t build)', <RockIcon key="k" />],
   ];
   const items = all.filter(([t]) => terrain.includes(t)).map(([t, label, icon]) => [label, icon, TERRAIN_BG[t]] as [string, React.ReactNode, string]);
+  // Two windy ridges sit together on many boards, so say plainly what a turbine on each costs.
+  if (terrain.filter((t) => t === 'ridge').length > 1) {
+    items.push(['Turbines side by side: ×0.6 each', <WindIcon key="w" />, 'var(--g-wind)']);
+  }
   // The ×0.5 / ×1.5 badges on panels and turbines, so their numbers are never a mystery.
   items.push([
     'Badge: how much a part makes (×1 is normal)',
@@ -836,7 +866,7 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
           <strong>Wind turbines</strong> work day and night, whenever the wind blows. On a windy ridge they make <span className="num-i">{Math.round((RULES.ridgeBoost - 1) * 100)}%</span> more, but two turbines side by side slow each other down.
         </li>
         <li>
-          <strong>Batteries</strong> save extra power for later. Each one holds a few hours of evening use and starts the day half full.
+          <strong>Batteries</strong> save extra power for later. Each one holds a few hours of evening use and starts the day half full. During a run, each battery on the board fills and empties to show its charge.
         </li>
         <li>
           <strong>Gardens</strong> make no power, but they cool the panels beside them and shade homes, cutting those homes’ afternoon use by a quarter.
