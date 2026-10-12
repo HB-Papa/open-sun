@@ -205,14 +205,14 @@ export function Hero() {
           {/* On phones, today's puzzle comes first. */}
           <Link
             href="/play"
-            className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-current px-4 text-[0.9375rem] font-bold no-underline md:hidden"
+            className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-current px-4 text-small font-bold no-underline md:hidden"
             style={{ color: ready ? p.text : 'var(--ink)' }}
           >
             <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-sun" />
             Daily puzzle: keep a village lit · Play{puzzleNo ? ` #${puzzleNo}` : ''}
           </Link>
-          <h1 className="mb-4 font-serif text-[2.5rem] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[3.5rem]">A free library for a solarpunk tomorrow</h1>
-          <p className="mb-6 max-w-[46ch] text-[1.0625rem] leading-normal sm:text-[1.1875rem]" style={{ color: ready ? p.soft : 'var(--body)' }}>
+          <h1 className="mb-4 font-serif text-page font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-hero">A free library for a solarpunk tomorrow</h1>
+          <p className="mb-6 max-w-[46ch] text-copy leading-normal sm:text-lede" style={{ color: ready ? p.soft : 'var(--body)' }}>
             <span className="sm:hidden">Free writing on a future powered by the sun and built around community.</span>
             <span className="hidden sm:inline">
               Solarpunk imagines a future powered by the sun, woven into living ecosystems, and built around community. Here is open access writing on it, gathered in one
@@ -228,13 +228,13 @@ export function Hero() {
               name="q"
               type="search"
               placeholder="Try: agrivoltaics"
-              className="min-h-12 flex-[1_1_220px] rounded-full border-2 border-line-strong bg-input px-4 text-[1.0625rem] text-ink shadow-[0_2px_10px_rgba(30,51,40,.08)] placeholder:text-muted"
+              className="min-h-12 flex-[1_1_220px] rounded-full border-2 border-line-strong bg-input px-4 text-copy text-ink shadow-[0_2px_10px_rgba(30,51,40,.08)] placeholder:text-muted"
             />
             <button type="submit" className="min-h-12 rounded-full bg-leaf px-[22px] font-bold text-white">
               Search
             </button>
           </form>
-          <p className="mt-4 text-[1rem]">
+          <p className="mt-4 text-copy">
             <Link href="/library/flynn-2014-solarpunk-notes-manifesto" className="font-bold underline decoration-2" style={{ color: ready ? p.text : 'var(--ink)' }}>
               New to solarpunk? Start with one short essay
             </Link>

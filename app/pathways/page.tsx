@@ -15,10 +15,10 @@ export default function PathwaysPage() {
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-[1200px] flex-col gap-8 px-4 pb-20 pt-10 sm:px-6">
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-5">
-          <h1 className="font-serif text-[2.75rem] font-bold leading-none sm:text-[3.5rem]">Pathways</h1>
+          <h1 className="font-serif text-page-lg font-bold leading-none sm:text-hero">Pathways</h1>
           <VineRule className="hidden sm:flex" />
         </div>
-        <p className="max-w-[35rem] text-lg leading-normal text-body">
+        <p className="max-w-[35rem] text-lede leading-normal text-body">
           Short routes through the library, {readingsPhrase(pathways)} readings each. Each one grows a vine as you go.
         </p>
       </div>

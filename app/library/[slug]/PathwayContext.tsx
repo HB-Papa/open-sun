@@ -21,7 +21,7 @@ export function PathwayStrip({ m }: { m: Membership }) {
       style={{ background: m.pathway.color }}
     >
       <PathwayGlyph slug={m.pathway.slug} className="h-7 w-7 shrink-0 text-leaf-ink" />
-      <span className="text-[0.9375rem]">
+      <span className="text-small">
         <span className="font-bold">{m.pathway.title}</span>
         <span className="text-body">
           {' '}
@@ -40,7 +40,7 @@ export function NextStop({ m, related = [] }: { m: Membership; related?: { slug:
   const nextItem = nextStep ? getItem(nextStep.slug) : undefined;
   const more =
     related.length > 0 ? (
-      <p className="text-[0.9375rem] text-body">
+      <p className="text-small text-body">
         Also related:{' '}
         {related.map((r, k) => (
           <span key={r.slug}>
@@ -68,12 +68,12 @@ export function NextStop({ m, related = [] }: { m: Membership; related?: { slug:
       className="card nouveau flex flex-col gap-1.5 rounded-[22px] px-6 py-5 text-ink no-underline hover:text-ink sm:px-8"
       style={{ background: m.pathway.color }}
     >
-      <span className="text-[0.9375rem] text-body">
+      <span className="text-small text-body">
         Next stop on <strong className="text-ink">{m.pathway.title}</strong> · <span className="num">{m.index + 2}</span> of{' '}
         <span className="num">{steps.length}</span>
       </span>
-      <span className="font-serif text-[1.375rem] font-semibold leading-snug">{nextItem.title}</span>
-      {nextStep.note && <span className="text-[1rem] text-body">{nextStep.note}</span>}
+      <span className="font-serif text-heading font-semibold leading-snug">{nextItem.title}</span>
+      {nextStep.note && <span className="text-copy text-body">{nextStep.note}</span>}
     </Link>
     {more}
     </div>

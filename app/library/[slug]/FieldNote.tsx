@@ -24,7 +24,7 @@ export function FieldNoteChip({ slug }: { slug: string }) {
   if (!progress) return null;
   const earned = !!progress.notes[slug];
   return (
-    <a href="#note-h" className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[0.875rem] font-bold no-underline ${earned ? 'bg-chip-leaf text-ink' : 'bg-pale-sun text-ink'}`}>
+    <a href="#note-h" className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-small font-bold no-underline ${earned ? 'bg-chip-leaf text-ink' : 'bg-pale-sun text-ink'}`}>
       <span aria-hidden="true">{earned ? '✓' : '✎'}</span>
       {earned ? 'Field note earned' : 'Field note waiting below'}
     </a>
@@ -116,19 +116,19 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
       </p>
       {note && !unlocked ? (
         <>
-          <h2 id="note-h" className="font-serif text-[1.5rem] font-semibold leading-snug">
+          <h2 id="note-h" className="font-serif text-heading font-semibold leading-snug">
             A field note is waiting
           </h2>
-          <p className="max-w-[56ch] text-[1rem] text-on-forest-muted">
+          <p className="max-w-[56ch] text-copy text-on-forest-muted">
             Press “Read it free” to open the reading, or stay with the summary for about <span className="num-i">30</span> seconds, and a short question will appear here. Answering it opens a bonus grid in Play.
           </p>
         </>
       ) : note ? (
         <>
-          <h2 id="note-h" className="font-serif text-[1.5rem] font-semibold leading-snug text-balance">
+          <h2 id="note-h" className="font-serif text-heading font-semibold leading-snug text-balance">
             {note.question}
           </h2>
-          <p className="-mt-1 text-[0.9375rem] text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
+          <p className="-mt-1 text-small text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
           {/* Each answer is a plain button: pressing one answers the question, so it shouldn't pose as a radio choice. */}
           <div role="group" aria-labelledby="note-h" className="flex max-w-[560px] flex-col gap-2">
             {note.options.map((o, k) => {
@@ -142,7 +142,7 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                   onClick={() => pick(k)}
                   aria-disabled={resting || undefined}
                   aria-describedby={isPicked ? `note-result` : undefined}
-                  className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-base ${resting ? 'cursor-wait opacity-60' : 'hover:border-sun'}`}
+                  className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-copy ${resting ? 'cursor-wait opacity-60' : 'hover:border-sun'}`}
                   style={{
                     color: right ? '#1E3328' : 'var(--option-ink)',
                     borderColor: right ? 'var(--sun)' : wrong ? 'var(--terracotta)' : 'var(--option-line)',
@@ -150,15 +150,15 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                   }}
                 >
                   <span>{o}</span>
-                  {right && <span className="text-[0.875rem] font-bold">✓ Correct</span>}
-                  {wrong && <span className="text-[0.875rem] font-bold">✗ Not this one</span>}
+                  {right && <span className="text-small font-bold">✓ Correct</span>}
+                  {wrong && <span className="text-small font-bold">✗ Not this one</span>}
                 </button>
               );
             })}
           </div>
           <div id="note-result" role="status" aria-live="polite">
             {picked !== null && picked === note.answer && (
-              <p className="rounded-xl bg-leaf px-3.5 py-3 text-base text-white">
+              <p className="rounded-xl bg-leaf px-3.5 py-3 text-copy text-white">
                 {result?.earned ? resultMessage(result) : 'Correct! You already have a field note from this page.'}{' '}
                 <Link href="/play" className="font-bold text-white underline hover:text-pale-sun">
                   Go to Play
@@ -166,19 +166,19 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
               </p>
             )}
             {picked !== null && picked !== note.answer && (
-              <p className="text-[0.9375rem] text-pale-sun">
+              <p className="text-small text-pale-sun">
                 Not quite. Have another look at the summary{resting ? '; you can answer again in a few seconds.' : ', then try again.'}
               </p>
             )}
           </div>
-          {already && picked === null && <p className="text-[0.875rem] text-on-forest-muted">You’ve already earned the field note for this page.</p>}
+          {already && picked === null && <p className="text-small text-on-forest-muted">You’ve already earned the field note for this page.</p>}
         </>
       ) : (
         <>
-          <h2 id="note-h" className="font-serif text-[1.375rem] font-semibold leading-snug">
+          <h2 id="note-h" className="font-serif text-heading font-semibold leading-snug">
             Read to the end
           </h2>
-          <p className="text-base text-on-forest-muted">
+          <p className="text-copy text-on-forest-muted">
             {already ? 'You’ve earned the field note for this page.' : 'Scroll to the end of this page to earn a field note and unlock a bonus grid.'}
           </p>
         </>
@@ -245,7 +245,7 @@ export function ReadToEnd({ slug, title, topics, hasQuestion }: { slug: string; 
   return (
     <div ref={ref} className="min-h-1">
       {msg && (
-        <p role="status" className="rounded-xl bg-leaf px-3.5 py-3 text-base text-white">
+        <p role="status" className="rounded-xl bg-leaf px-3.5 py-3 text-copy text-white">
           {msg}{' '}
           <Link href="/play" className="font-bold text-white underline">
             Go to Play

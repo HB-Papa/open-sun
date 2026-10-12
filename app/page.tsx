@@ -34,7 +34,7 @@ export default function HomePage() {
           <SectionHeading
             id="new"
             action={
-              <Link href="/new" className="text-[1.0625rem] font-bold">
+              <Link href="/new" className="text-copy font-bold">
                 See all new arrivals
               </Link>
             }
@@ -52,7 +52,7 @@ export default function HomePage() {
 
         <section id="pathways" aria-labelledby="paths" className="flex flex-col gap-5">
           <SectionHeading id="paths">Pathways: guided reading</SectionHeading>
-          <p className="max-w-[35rem] text-lg leading-normal text-body">
+          <p className="max-w-[35rem] text-lede leading-normal text-body">
             Short routes through the library, {readingsPhrase(pathways)} readings each. Every stop with a field note can unlock a bonus grid.
           </p>
           <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] sm:overflow-visible sm:px-0 sm:pb-0">
@@ -65,14 +65,14 @@ export default function HomePage() {
         </section>
 
         <section aria-labelledby="what" className="flex flex-col gap-3 border-t border-line pt-12">
-          <h2 id="what" className="font-serif text-[2rem] font-semibold">
+          <h2 id="what" className="font-serif text-section font-semibold">
             Where solarpunk came from
           </h2>
-          <p className="max-w-[35rem] text-lg leading-relaxed text-body">
+          <p className="max-w-[35rem] text-lede leading-relaxed text-body">
             Solarpunk began as an internet word around <span className="num">2008</span> and has grown into fiction, art, design, scholarship, and activism. The Field Guide
             explains the ideas you’ll meet here, from agrivoltaics to the commons.
           </p>
-          <Link href="/field-guide" className="self-start text-[1.0625rem] font-bold">
+          <Link href="/field-guide" className="self-start text-copy font-bold">
             Read the Field Guide
           </Link>
         </section>

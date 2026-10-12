@@ -48,7 +48,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
       <PageSky />
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-8 px-4 pb-16 pt-7 sm:px-6">
       <article className="flex min-w-0 flex-[999_1_560px] flex-col gap-5">
-        <nav aria-label="Breadcrumb" className="text-[0.9375rem]">
+        <nav aria-label="Breadcrumb" className="text-small">
           <Link href="/library">Library</Link>
           {item.topics[0] && (
             <>
@@ -61,15 +61,15 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           <PathwayStrip key={m.pathway.slug} m={m} />
         ))}
         <div className="flex flex-wrap gap-2">
-          <span className="rounded-full px-3 py-1 text-[0.8125rem] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
+          <span className="rounded-full px-3 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
             {item.type}
           </span>
-          <span className="rounded-full bg-chip-leaf px-3 py-1 text-[0.8125rem] font-bold">Open access · {item.license}</span>
-          <span className="num rounded-full bg-chip px-3 py-1 text-[0.8125rem]">{yearText(item.year)}</span>
-          {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-[0.8125rem]">In {LANGUAGES[item.language] ?? item.language}</span>}
+          <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
+          <span className="num rounded-full bg-chip px-3 py-1 text-caption">{yearText(item.year)}</span>
+          {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {LANGUAGES[item.language] ?? item.language}</span>}
         </div>
-        <h1 className="font-serif text-[2.125rem] font-bold leading-[1.1] sm:text-[2.75rem]">{item.title}</h1>
-        <p className="text-lg text-body">
+        <h1 className="font-serif text-section font-bold leading-[1.1] sm:text-page-lg">{item.title}</h1>
+        <p className="text-lede text-body">
           {authorsLine(item)} · <em>{venueLine}</em>
         </p>
         <div className="flex flex-wrap items-center gap-3">
@@ -91,7 +91,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
 
         <section aria-labelledby="sum" className="flex flex-col gap-3 rounded-[22px] border border-line bg-card px-6 py-7 sm:px-8">
           <div className="flex items-center gap-4">
-            <h2 id="sum" className="font-serif text-2xl font-semibold">
+            <h2 id="sum" className="font-serif text-heading font-semibold">
               In plain language
             </h2>
             <VineRule />
@@ -99,8 +99,8 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           <div className="prose-os" dangerouslySetInnerHTML={{ __html: numHtml(item.summaryHtml) }} />
           {item.why && (
             <>
-              <h3 className="mt-1.5 text-[1.0625rem] font-bold">Why it matters</h3>
-              <p className="max-w-[35rem] text-[1.0625rem] leading-relaxed text-body"><Nums text={item.why} /></p>
+              <h3 className="mt-1.5 text-copy font-bold">Why it matters</h3>
+              <p className="max-w-[35rem] text-copy leading-relaxed text-body"><Nums text={item.why} /></p>
             </>
           )}
         </section>
@@ -112,7 +112,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             <li key={t}>
               <Link
                 href={`/library?topic=${t}`}
-                className="inline-block rounded-full border border-line bg-card px-3 py-1.5 text-[0.875rem] text-ink no-underline hover:bg-chip-hover hover:text-ink"
+                className="inline-block rounded-full border border-line bg-card px-3 py-1.5 text-small text-ink no-underline hover:bg-chip-hover hover:text-ink"
               >
                 {topicLabel(t)}
               </Link>
@@ -130,15 +130,15 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
         {/* On a pathway, the Next stop card does this job; related reading folds into it. */}
         {related.length > 0 && memberships.length === 0 && (
           <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
-            <h2 id="rel" className="font-serif text-[1.375rem] font-semibold">
+            <h2 id="rel" className="font-serif text-heading font-semibold">
               Read next
             </h2>
             <ul className="flex flex-col gap-3.5">
               {related.map((r) => (
                 <li key={r.slug}>
                   <Link href={`/library/${r.slug}`} className="flex flex-col gap-1 text-ink no-underline hover:text-ink">
-                    <span className="text-base font-bold hover:underline">{r.title}</span>
-                    <span className="text-[0.875rem] text-muted">
+                    <span className="text-copy font-bold hover:underline">{r.title}</span>
+                    <span className="text-small text-muted">
                       {shortAuthors(r)}, <span className="num">{yearText(r.year)}</span> · {r.type}
                     </span>
                   </Link>

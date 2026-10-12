@@ -22,26 +22,26 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
       <LeafSprout />
       {/* Tags stay on one line; a long topic name shortens with an ellipsis rather than wrapping. */}
       <div className="flex min-w-0 gap-2 pr-6">
-        <span className="shrink-0 rounded-full px-2.5 py-1 text-[0.8125rem] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
+        <span className="shrink-0 rounded-full px-2.5 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
           {item.type}
         </span>
         {item.language !== 'en' ? (
-          <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-[0.8125rem] text-body">{LANGUAGES[item.language] ?? item.language}</span>
+          <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-caption text-body">{LANGUAGES[item.language] ?? item.language}</span>
         ) : (
           item.topics[0] && (
-            <span className="min-w-0 truncate rounded-full bg-chip px-2.5 py-1 text-[0.8125rem] text-body" title={topicLabel(item.topics[0])}>
+            <span className="min-w-0 truncate rounded-full bg-chip px-2.5 py-1 text-caption text-body" title={topicLabel(item.topics[0])}>
               {topicLabel(item.topics[0])}
             </span>
           )
         )}
       </div>
-      <H className="font-serif text-[1.25rem] font-semibold leading-tight">{item.title}</H>
+      <H className="font-serif text-title font-semibold leading-tight">{item.title}</H>
       {/* The year joins the byline, which leaves the tag row room for the topic. */}
-      <p className="text-[0.9375rem] text-muted">
+      <p className="text-small text-muted">
         {authorsLine(item)} · <span className="num">{yearText(item.year)}</span>
       </p>
       {!compact && (
-        <p className="line-clamp-4 text-[0.9375rem] leading-normal text-body">
+        <p className="line-clamp-4 text-small leading-normal text-body">
           <Nums text={item.summary} />
         </p>
       )}
@@ -52,8 +52,8 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
 export function ItemRow({ item }: { item: Card }) {
   return (
     <Link href={`/library/${item.slug}`} className="flex flex-col gap-1 rounded-[14px] border border-line bg-card px-5 py-4 text-ink no-underline hover:border-leaf hover:text-ink">
-      <span className="font-serif text-[1.1875rem] font-semibold leading-snug">{item.title}</span>
-      <span className="text-[0.875rem] text-muted">
+      <span className="font-serif text-lede font-semibold leading-snug">{item.title}</span>
+      <span className="text-small text-muted">
         {authorsLine(item)} · <span className="num">{yearText(item.year)}</span> · {item.type}
         {item.language !== 'en' ? ` · ${LANGUAGES[item.language] ?? item.language}` : ''}
       </span>

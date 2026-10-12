@@ -41,8 +41,8 @@ export function PlayClient({ suggestions = [] }: { suggestions?: Suggestion[] })
     <>
       {bonusId && !bonus ? (
         <div className="rounded-[18px] border border-line bg-card p-6">
-          <h1 className="font-serif text-3xl font-bold">That bonus grid isn’t available</h1>
-          <p className="mt-2 text-lg">
+          <h1 className="font-serif text-section font-bold">That bonus grid isn’t available</h1>
+          <p className="mt-2 text-lede">
             Bonus grids last for the day they were earned. <Link href="/play">Play today’s grid</Link> instead.
           </p>
         </div>
@@ -81,10 +81,10 @@ function BonusList({ progress, today, activeId, suggestions }: { progress: Progr
   const next = suggestions.filter((s) => !progress.notes[s.slug]).slice(0, 3);
   return (
     <section aria-labelledby="bonus-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
-      <h2 id="bonus-h" className="font-serif text-[1.375rem] font-semibold">
+      <h2 id="bonus-h" className="font-serif text-heading font-semibold">
         Bonus grids from your reading
       </h2>
-      <p className="text-[0.9375rem] text-body">
+      <p className="text-small text-body">
         Answer a field note in the library to open a bonus grid, just for fun.{' '}
         <a href="#rewards" className="font-bold">
           How rewards work
@@ -92,13 +92,13 @@ function BonusList({ progress, today, activeId, suggestions }: { progress: Progr
       </p>
       {rounds.length < MAX_BONUS_PER_DAY && next.length > 0 && (
         <div className="flex flex-col gap-2">
-          <p className="text-[0.9375rem] font-bold">Readings with a field note waiting:</p>
+          <p className="text-small font-bold">Readings with a field note waiting:</p>
           <ul className="flex flex-col gap-2">
             {next.map((s) => (
               <li key={s.slug}>
                 <Link href={`/library/${s.slug}`} className="flex flex-col gap-0.5 rounded-[14px] border border-line p-3 text-ink no-underline hover:border-leaf hover:text-ink">
                   <span className="font-bold leading-snug">{s.title}</span>
-                  <span className="text-[0.875rem] text-muted">On the pathway {s.pathway}</span>
+                  <span className="text-small text-muted">On the pathway {s.pathway}</span>
                 </Link>
               </li>
             ))}
@@ -118,12 +118,12 @@ function BonusList({ progress, today, activeId, suggestions }: { progress: Progr
                 {VARIANT_INFO[b.variant].name}
                 {b.game?.done ? (b.game.won ? ' · solved' : ' · played') : ''}
               </strong>
-              <span className="text-[0.875rem]">Unlocked by your field note on {b.title}</span>
+              <span className="text-small">Unlocked by your field note on {b.title}</span>
             </Link>
           </li>
         ))}
         {rounds.length < MAX_BONUS_PER_DAY && (
-          <li className="flex-[1_1_200px] self-center text-[0.9375rem] text-body">
+          <li className="flex-[1_1_200px] self-center text-small text-body">
             <strong className="num">{MAX_BONUS_PER_DAY - rounds.length}</strong> more can open today.
           </li>
         )}
@@ -140,7 +140,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
   const labels = ['1 try', '2 tries', '3 tries', 'Not yet'];
   return (
     <section aria-labelledby="stats-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-4 rounded-[20px] border border-line bg-card p-5">
-      <h2 id="stats-h" className="font-serif text-[1.375rem] font-semibold">
+      <h2 id="stats-h" className="font-serif text-heading font-semibold">
         Your stats
       </h2>
       <dl className="grid grid-cols-2 gap-2.5 text-center sm:grid-cols-5">
@@ -151,18 +151,18 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
         <Stat label="Rest days" value={progress.restDays} />
       </dl>
       {coveredByRest > 0 && (
-        <p className="text-[0.9375rem] text-body">
+        <p className="text-small text-body">
           You missed {coveredByRest === 1 ? 'a day' : `${coveredByRest} days`}, but a rest day will keep your streak going when you play today.
         </p>
       )}
       {progress.lastDone && streak === 0 && (
-        <p className="text-[0.9375rem] text-body">Welcome back! Every day is a fresh start. Your best streak is safe in your stats.</p>
+        <p className="text-small text-body">Welcome back! Every day is a fresh start. Your best streak is safe in your stats.</p>
       )}
       <div>
-        <h3 className="mb-2 text-[0.9375rem] font-bold">Tries needed</h3>
+        <h3 className="mb-2 text-small font-bold">Tries needed</h3>
         <ul className="flex flex-col gap-1.5" aria-label="Tries histogram">
           {progress.histogram.map((n, k) => (
-            <li key={k} className="grid grid-cols-[70px_1fr] items-center gap-2 text-[0.875rem]">
+            <li key={k} className="grid grid-cols-[70px_1fr] items-center gap-2 text-small">
               <span>{labels[k]}</span>
               <span className="flex items-center gap-2">
                 <span className="block h-5 rounded-[4px] bg-leaf" style={{ width: `${Math.max(n ? 8 : 2, (n / maxBar) * 100)}%` }} aria-hidden="true" />
@@ -172,7 +172,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
           ))}
         </ul>
       </div>
-      <p className="text-[0.875rem] text-muted">
+      <p className="text-small text-muted">
         <a href="#rewards" className="font-bold">
           How streaks and rest days work
         </a>
@@ -184,8 +184,8 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div>
-      <dt className="text-[0.8125rem] text-muted">{label}</dt>
-      <dd className="num text-[1.625rem] font-bold">{value}</dd>
+      <dt className="text-caption text-muted">{label}</dt>
+      <dd className="num text-heading font-bold">{value}</dd>
     </div>
   );
 }

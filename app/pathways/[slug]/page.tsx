@@ -30,7 +30,7 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
     <>
       <PageSky />
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-[860px] flex-col gap-8 px-4 pb-20 pt-7 sm:px-6">
-      <nav aria-label="Breadcrumb" className="text-[0.9375rem]">
+      <nav aria-label="Breadcrumb" className="text-small">
         <Link href="/pathways">Pathways</Link>
       </nav>
       <div className="arch nouveau relative flex flex-col items-center gap-4 px-6 pb-8 pt-10 text-center sm:px-12" style={{ background: pathway.color }}>
@@ -38,8 +38,8 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
           <ArchRays className="absolute inset-x-0 top-0 h-12 w-[140px] text-sun" />
           <PathwayGlyph slug={pathway.slug} className="relative h-14 w-14" />
         </span>
-        <h1 className="font-serif text-[2.375rem] font-bold leading-[1.05] text-balance sm:text-[3.25rem]">{pathway.title}</h1>
-        <p className="text-[0.9375rem] text-body">
+        <h1 className="font-serif text-page font-bold leading-[1.05] text-balance sm:text-page-lg">{pathway.title}</h1>
+        <p className="text-small text-body">
           <span className="num">{steps.length}</span> readings
         </p>
         <div className="prose-os text-left text-ink" dangerouslySetInnerHTML={{ __html: numHtml(pathway.introHtml) }} />
@@ -55,11 +55,11 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
               className="card mb-5 flex flex-1 flex-col gap-1.5 rounded-[20px] border border-line bg-card p-5 text-ink no-underline hover:text-ink sm:p-6"
             >
               <span className="sr-only">Stop {k + 1}: </span>
-              <span className="font-serif text-[1.3125rem] font-semibold leading-snug">{s.item!.title}</span>
-              <span className="text-[0.875rem] text-muted">
+              <span className="font-serif text-heading font-semibold leading-snug">{s.item!.title}</span>
+              <span className="text-small text-muted">
                 {authorsLine(s.item!)} · <span className="num">{yearText(s.item!.year)}</span> · {s.item!.type}
               </span>
-              {s.note && <span className="text-base text-body">{s.note}</span>}
+              {s.note && <span className="text-copy text-body">{s.note}</span>}
               <span className="mt-1">
                 <StepStatus slug={s.slug} />
               </span>

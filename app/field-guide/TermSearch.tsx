@@ -36,9 +36,9 @@ export function TermSearch({ total }: { total: number }) {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder="Search terms and definitions"
-        className="min-h-12 w-full max-w-[35rem] rounded-full border-2 border-line-strong bg-input px-[18px] text-[1.0625rem] text-ink placeholder:text-muted"
+        className="min-h-12 w-full max-w-[35rem] rounded-full border-2 border-line-strong bg-input px-[18px] text-copy text-ink placeholder:text-muted"
       />
-      <p className="text-[0.875rem] text-muted" role="status" aria-live="polite">
+      <p className="text-small text-muted" role="status" aria-live="polite">
         {q.trim() ? (shown ? `${shown} of ${total} terms` : 'No terms match. Try a shorter word.') : ''}
       </p>
     </div>

@@ -15,7 +15,7 @@ const AXIS = [
 
 function Axis() {
   return (
-    <div className="relative mt-1 h-4 text-[0.75rem] text-muted" aria-hidden="true">
+    <div className="relative mt-1 h-4 text-micro text-muted" aria-hidden="true">
       {AXIS.map((a) => (
         <span
           key={a.h}
@@ -48,7 +48,7 @@ function Strip({
 }) {
   return (
     <div className="grid grid-cols-[64px_1fr] items-end gap-2">
-      <span className="pb-0.5 text-[0.8125rem] font-bold text-muted">{label}</span>
+      <span className="pb-0.5 text-caption font-bold text-muted">{label}</span>
       <div className="flex h-10 items-end gap-[2px]" onMouseLeave={() => setHover(null)}>
         {values.map((v, h) => (
           <div
@@ -90,7 +90,7 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
         </div>
       </div>
       {/* A keyboard-friendly way to step through the hours, alongside hover and tap. */}
-      <label className="mt-2 grid grid-cols-[58px_1fr] items-center gap-2 text-[0.8125rem] font-bold text-muted">
+      <label className="mt-2 grid grid-cols-[58px_1fr] items-center gap-2 text-caption font-bold text-muted">
         Hour
         <input
           type="range"
@@ -103,10 +103,10 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
           className="h-6 w-full accent-[var(--leaf)]"
         />
       </label>
-      <p className="mt-1 min-h-[1.5em] text-[0.875rem] text-body" aria-hidden="true">
+      <p className="mt-1 min-h-[1.5em] text-small text-body" aria-hidden="true">
         {hover === null ? 'Hover, tap, or use the slider to see an hour’s numbers.' : <Nums text={hourReadout(puzzle, demand, hover)} />}
       </p>
-      <figcaption className="text-[0.9375rem] leading-snug text-body">
+      <figcaption className="text-small leading-snug text-body">
         <Nums text={forecastSentence(puzzle, demand)} />
       </figcaption>
       <table className="sr-only">
@@ -149,7 +149,7 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
     <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2 ${className}`} aria-hidden="true">
       {rows.map(([label, values, max, color, dim]) => (
         <div key={label} className="grid grid-cols-[58px_1fr] items-end gap-2">
-          <span className="text-[0.75rem] font-bold text-muted">{label}</span>
+          <span className="text-micro font-bold text-muted">{label}</span>
           <div className="flex h-4 items-end gap-[2px]">
             {values.map((v, h) => (
               <div
@@ -163,7 +163,7 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
       ))}
       <div className="grid grid-cols-[58px_1fr] gap-2">
         <span />
-        <div className="flex justify-between text-[0.75rem] text-muted">
+        <div className="flex justify-between text-micro text-muted">
           <span>12 am</span>
           <span>Noon</span>
           <span>11 pm</span>
@@ -180,7 +180,7 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
     <figure className="m-0">
       <div aria-hidden="true" className="flex flex-col gap-1.5">
         <div className="grid grid-cols-[64px_1fr] items-center gap-2">
-          <span className="text-[0.8125rem] font-bold text-on-forest-muted">Lights</span>
+          <span className="text-caption font-bold text-on-forest-muted">Lights</span>
           <div className="flex gap-[2px]" onMouseLeave={() => setHover(null)}>
             {lit.map((ok, h) => (
               <div
@@ -199,7 +199,7 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
         </div>
         {sim && sim.capacity > 0 && (
           <div className="grid grid-cols-[64px_1fr] items-end gap-2">
-            <span className="text-[0.8125rem] font-bold text-on-forest-muted">Battery</span>
+            <span className="text-caption font-bold text-on-forest-muted">Battery</span>
             <div className="flex h-8 items-end gap-[2px]">
               {sim.storage.map((s, h) => (
                 <div key={h} className="flex h-full flex-1 items-end rounded-[3px] bg-forest-2">
@@ -213,7 +213,7 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
           </div>
         )}
       </div>
-      <p className="mt-2 min-h-[1.5em] text-[0.875rem] text-on-forest-muted" aria-hidden="true">
+      <p className="mt-2 min-h-[1.5em] text-small text-on-forest-muted" aria-hidden="true">
         {hover === null || hover > upTo
           ? 'A sun means that hour stayed lit; a moon means it went dark.'
           : `${cap(hourLabel(hover))}: ${lit[hover] ? 'lit' : 'dark'}.${

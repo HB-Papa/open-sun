@@ -33,7 +33,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-2 gap-y-4 px-4 py-3 min-[400px]:gap-x-3 sm:px-6 sm:py-4">
         <Link href="/" className="mr-auto flex min-w-0 items-center gap-2 text-ink no-underline hover:text-ink min-[400px]:gap-2.5 md:mr-0">
           <Logo size={32} />
-          <span className="font-serif text-[1.3125rem] font-bold min-[360px]:text-[1.4375rem] min-[400px]:text-[1.625rem]">Open Sun</span>
+          <span className="font-serif text-heading font-bold min-[360px]:text-heading min-[400px]:text-heading">Open Sun</span>
         </Link>
         {/* The home hero has its own Play row, and /play is the game itself. */}
         {pathname !== '/play' && pathname !== '/' && <PlayPill />}
@@ -50,7 +50,7 @@ export function SiteHeader() {
         <nav
           id="main-nav"
           aria-label="Main"
-          className={`${open ? 'flex' : 'hidden'} w-full flex-col gap-1 text-[1.0625rem] md:flex md:w-auto md:flex-row md:flex-wrap md:gap-x-5`}
+          className={`${open ? 'flex' : 'hidden'} w-full flex-col gap-1 text-copy md:flex md:w-auto md:flex-row md:flex-wrap md:gap-x-5`}
         >
           {NAV.map((n) => (
             <Link
