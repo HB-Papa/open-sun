@@ -25,7 +25,7 @@ export default function HomePage() {
 
       <div className="mx-auto flex max-w-[1200px] flex-col gap-16 px-4 pb-20 sm:px-6">
         {/* Today's puzzle rises out of the front hill. */}
-        <section aria-labelledby="today" className="relative z-10 -mt-10 flex flex-wrap gap-6 md:-mt-28">
+        <section aria-labelledby="today" className="relative z-10 -mt-10 flex flex-wrap gap-6 xl:-mt-28">
           <TodayPuzzleCard />
           <GardenCard />
         </section>

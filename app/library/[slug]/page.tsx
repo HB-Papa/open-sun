@@ -46,109 +46,108 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
   return (
     <>
       <PageSky />
-      <main id="main" tabIndex={-1} className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-8 px-4 pb-16 pt-7 sm:px-6">
-      <article className="flex min-w-0 flex-[999_1_560px] flex-col gap-5">
-        <nav aria-label="Breadcrumb" className="text-small">
-          <Link href="/library">Library</Link>
-          {item.topics[0] && (
-            <>
-              {' '}
-              <span aria-hidden="true">/</span> <Link href={`/library?topic=${item.topics[0]}`}>{topicLabel(item.topics[0])}</Link>
-            </>
-          )}
-        </nav>
-        {memberships.map((m) => (
-          <PathwayStrip key={m.pathway.slug} m={m} />
-        ))}
-        <div className="flex flex-wrap gap-2">
-          <span className="rounded-full px-3 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
-            {item.type}
-          </span>
-          <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
-          <span className="num rounded-full bg-chip px-3 py-1 text-caption">{yearText(item.year)}</span>
-          {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {LANGUAGES[item.language] ?? item.language}</span>}
-        </div>
-        <h1 className="font-serif text-section font-bold leading-[1.1] sm:text-page-lg">{item.title}</h1>
-        <p className="text-lede text-body">
-          {authorsLine(item)} · <em>{venueLine}</em>
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <ReadItLink
-            slug={item.slug}
-            href={item.url}
-            className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-[22px] font-bold text-white no-underline hover:text-white"
-          >
-            Read it free <ExternalIcon />
-            <span className="sr-only">(opens the publisher’s site in a new tab)</span>
-          </ReadItLink>
-          {item.fieldNote && <FieldNoteChip slug={item.slug} />}
-          {item.doi && item.url !== `https://doi.org/${item.doi}` && (
-            <a href={`https://doi.org/${item.doi}`} className="inline-flex min-h-12 items-center px-2 font-bold" rel="noopener">
-              Publisher’s page (DOI)
-            </a>
-          )}
-        </div>
-
-        <section aria-labelledby="sum" className="flex flex-col gap-3 rounded-[22px] border border-line bg-card px-6 py-7 sm:px-8">
-          <div className="flex items-center gap-4">
-            <h2 id="sum" className="font-serif text-heading font-semibold">
-              In plain language
-            </h2>
-            <VineRule />
-          </div>
-          <div className="prose-os" dangerouslySetInnerHTML={{ __html: numHtml(item.summaryHtml) }} />
-          {item.why && (
-            <>
-              <h3 className="mt-1.5 text-copy font-bold">Why it matters</h3>
-              <p className="max-w-[35rem] text-copy leading-relaxed text-body"><Nums text={item.why} /></p>
-            </>
-          )}
-        </section>
-
-        <CitationBox apa={cites.apa} chicago={cites.chicago} />
-
-        <ul className="flex flex-wrap gap-2" aria-label="Topics">
-          {item.topics.map((t) => (
-            <li key={t}>
-              <Link
-                href={`/library?topic=${t}`}
-                className="inline-block rounded-full border border-line bg-card px-3 py-1.5 text-small text-ink no-underline hover:bg-chip-hover hover:text-ink"
-              >
-                {topicLabel(t)}
-              </Link>
-            </li>
+      <main id="main" tabIndex={-1} className="mx-auto grid max-w-[1200px] gap-x-14 gap-y-5 px-4 pb-16 pt-7 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        {/* The title runs the full width; below it, the reading on the left and its references on the right. */}
+        <header className="flex min-w-0 flex-col gap-5 lg:col-span-2">
+          <nav aria-label="Breadcrumb" className="text-small">
+            <Link href="/library">Library</Link>
+            {item.topics[0] && (
+              <>
+                {' '}
+                <span aria-hidden="true">/</span> <Link href={`/library?topic=${item.topics[0]}`}>{topicLabel(item.topics[0])}</Link>
+              </>
+            )}
+          </nav>
+          {memberships.map((m) => (
+            <PathwayStrip key={m.pathway.slug} m={m} />
           ))}
-        </ul>
-        {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
-        <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
-        <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
-        {memberships[0] && <NextStop m={memberships[0]} related={related.slice(0, 2).map((r) => ({ slug: r.slug, title: r.title }))} />}
-      </article>
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full px-3 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
+              {item.type}
+            </span>
+            <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
+            <span className="num rounded-full bg-chip px-3 py-1 text-caption">{yearText(item.year)}</span>
+            {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {LANGUAGES[item.language] ?? item.language}</span>}
+          </div>
+          <h1 className="font-serif text-section font-bold leading-[1.1] sm:text-page-lg">{item.title}</h1>
+          <p className="text-lede text-body">
+            {authorsLine(item)} · <em>{venueLine}</em>
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <ReadItLink
+              slug={item.slug}
+              href={item.url}
+              className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-[22px] font-bold text-white no-underline hover:text-white"
+            >
+              Read it free <ExternalIcon />
+              <span className="sr-only">(opens the publisher’s site in a new tab)</span>
+            </ReadItLink>
+            {item.fieldNote && <FieldNoteChip slug={item.slug} />}
+            {item.doi && item.url !== `https://doi.org/${item.doi}` && (
+              <a href={`https://doi.org/${item.doi}`} className="inline-flex min-h-12 items-center px-2 font-bold" rel="noopener">
+                Publisher’s page (DOI)
+              </a>
+            )}
+          </div>
+        </header>
 
-      {related.length > 0 && memberships.length === 0 && (
-      <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5 lg:sticky lg:top-6">
-        {/* On a pathway, the Next stop card does this job; related reading folds into it. */}
-        {related.length > 0 && memberships.length === 0 && (
-          <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
-            <h2 id="rel" className="font-serif text-heading font-semibold">
-              Read next
-            </h2>
-            <ul className="flex flex-col gap-3.5">
-              {related.map((r) => (
-                <li key={r.slug}>
-                  <Link href={`/library/${r.slug}`} className="flex flex-col gap-1 text-ink no-underline hover:text-ink">
-                    <span className="text-copy font-bold hover:underline">{r.title}</span>
-                    <span className="text-small text-muted">
-                      {shortAuthors(r)}, <span className="num">{yearText(r.year)}</span> · {r.type}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <article aria-labelledby="sum" className="flex min-w-0 flex-col gap-5">
+          <section aria-labelledby="sum" className="flex flex-col gap-3 rounded-[22px] border border-line bg-card px-6 py-7 sm:px-8">
+            <div className="flex items-center gap-4">
+              <h2 id="sum" className="font-serif text-heading font-semibold">
+                In plain language
+              </h2>
+              <VineRule />
+            </div>
+            <div className="prose-os" dangerouslySetInnerHTML={{ __html: numHtml(item.summaryHtml) }} />
+            {item.why && (
+              <>
+                <h3 className="mt-1.5 text-copy font-bold">Why it matters</h3>
+                <p className="max-w-[35rem] text-copy leading-relaxed text-body"><Nums text={item.why} /></p>
+              </>
+            )}
           </section>
-        )}
-      </aside>
-      )}
+          {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
+          <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
+          <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
+          {memberships[0] && <NextStop m={memberships[0]} related={related.slice(0, 2).map((r) => ({ slug: r.slug, title: r.title }))} />}
+        </article>
+
+        <aside aria-label="Cite and explore" className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-6 lg:self-start">
+          <CitationBox apa={cites.apa} chicago={cites.chicago} />
+          <ul className="flex flex-wrap gap-2" aria-label="Topics">
+            {item.topics.map((t) => (
+              <li key={t}>
+                <Link
+                  href={`/library?topic=${t}`}
+                  className="inline-block rounded-full border border-line bg-card px-3 py-1.5 text-small text-ink no-underline hover:bg-chip-hover hover:text-ink"
+                >
+                  {topicLabel(t)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {/* On a pathway, the Next stop card does this job; related reading folds into it. */}
+          {related.length > 0 && memberships.length === 0 && (
+            <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
+              <h2 id="rel" className="font-serif text-heading font-semibold">
+                Read next
+              </h2>
+              <ul className="flex flex-col gap-3.5">
+                {related.map((r) => (
+                  <li key={r.slug}>
+                    <Link href={`/library/${r.slug}`} className="flex flex-col gap-1 text-ink no-underline hover:text-ink">
+                      <span className="text-copy font-bold hover:underline">{r.title}</span>
+                      <span className="text-small text-muted">
+                        {shortAuthors(r)}, <span className="num">{yearText(r.year)}</span> · {r.type}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </aside>
       </main>
     </>
   );

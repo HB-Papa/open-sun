@@ -31,7 +31,7 @@ export function PathwayWindow({
   return (
     <Link
       href={`/pathways/${pathway.slug}`}
-      className={`card arch nouveau flex h-full min-h-[300px] flex-col items-center gap-2 px-6 pb-6 pt-7 text-center text-ink no-underline hover:text-ink ${
+      className={`card arch nouveau flex h-full flex-col items-center gap-2 px-6 pb-6 pt-7 sm:min-h-[300px] text-center text-ink no-underline hover:text-ink ${
         featured ? 'ring-2 ring-sun ring-offset-2 ring-offset-paper' : ''
       }`}
       style={{ background: pathway.color }}

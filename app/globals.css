@@ -333,12 +333,14 @@
 .play-layout > [data-area='rest'] {
   grid-area: rest;
 }
+/* Wide screens: the board column is as wide as the board, and each run's results land right under it,
+   so cause and effect read together. The forecast and rules fill the rest of the row. */
 @media (min-width: 900px) {
   .play-layout {
-    gap: 20px 28px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px 48px;
+    grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
     grid-template-rows: auto 1fr;
-    grid-template-areas: 'board forecast' 'board rest';
+    grid-template-areas: 'board forecast' 'rest forecast';
     align-items: start;
   }
 }

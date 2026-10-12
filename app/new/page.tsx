@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { ItemRow } from '@/components/ItemCard';
+import { NewArrivalsList } from './NewArrivalsList';
 import { getAllItems, toCard } from '@/lib/content';
 import { PageSky } from '@/components/PageSky';
 
@@ -7,9 +7,6 @@ export const metadata: Metadata = { title: 'New arrivals', description: 'Everyth
 
 export default function NewArrivalsPage() {
   const items = getAllItems();
-  const byDate = new Map<string, typeof items>();
-  for (const i of items) byDate.set(i.dateAdded, [...(byDate.get(i.dateAdded) ?? []), i]);
-  const dates = [...byDate.keys()].sort().reverse();
 
   return (
     <>
@@ -21,26 +18,8 @@ export default function NewArrivalsPage() {
           Everything added to the library, newest first. Follow along with the <a href="/rss.xml" className="whitespace-nowrap">RSS feed</a>.
         </p>
       </div>
-      {dates.map((d) => (
-        <section key={d} aria-labelledby={`d-${d}`} className="flex flex-col gap-3">
-          <h2 id={`d-${d}`} className="font-serif text-heading font-semibold">
-            Added {formatDate(d)} <span className="text-copy font-normal text-muted">({byDate.get(d)!.length})</span>
-          </h2>
-          <ul className="flex flex-col gap-2.5">
-            {byDate.get(d)!.map((i) => (
-              <li key={i.slug}>
-                <ItemRow item={toCard(i)} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+      <NewArrivalsList items={items.map(toCard)} />
       </main>
     </>
   );
-}
-
-function formatDate(key: string) {
-  const [y, m, d] = key.split('-').map(Number);
-  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 }
