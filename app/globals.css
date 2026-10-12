@@ -56,6 +56,8 @@
   --rock-dark: light-dark(#6f675a, #4e4840);
   --g-home: light-dark(#f3e3b5, #e0cf9a);
   --g-green: light-dark(#a9c48e, #8fae78);
+  /* Tree and pond plots: their own tile, so they don't read as holes in the board. */
+  --g-wild: light-dark(#bcd4a0, #7f9c6c);
   --g-solar: light-dark(#1f6f78, #1f6f78);
   --g-wind: light-dark(#d5e9ec, #b9d4d8);
   --g-battery: light-dark(#2f6b45, #2f6b45);

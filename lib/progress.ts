@@ -15,6 +15,7 @@ export interface DailyGame {
   tries: number;
   history: boolean[][]; // lit hours for each try
   layout: Layout; // the board as the player left it
+  layouts?: Layout[]; // the board as it was for each try (games saved before this was added have none)
   won: boolean;
   done: boolean;
 }

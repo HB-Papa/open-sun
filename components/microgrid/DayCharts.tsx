@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { hourLabel, HOURS, RULES, type Puzzle, type SimResult } from '@/lib/microgrid';
-import { MoonGlyph, SunGlyph } from '@/components/icons';
+import { MoonGlyph } from '@/components/icons';
 import { Nums } from '@/lib/nums';
 
 const AXIS = [
@@ -182,18 +182,22 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
       <div aria-hidden="true" className="flex flex-col gap-1.5">
         <div className="grid grid-cols-[64px_1fr] items-center gap-2">
           <span className="text-caption font-bold text-on-forest-muted">Lights</span>
-          <div className="flex gap-[2px]" onMouseLeave={() => setHover(null)}>
+          {/* Lit hours stand tall in gold; dark hours sit low with a moon. The height says it without colour, and
+              min-w-0 lets all 24 cells share the width evenly on the narrowest phones. */}
+          <div className="flex h-7 items-end gap-[2px]" onMouseLeave={() => setHover(null)}>
             {lit.map((ok, h) => (
               <div
                 key={h}
                 onMouseEnter={() => setHover(h)}
-                className="flex h-7 flex-1 items-center justify-center rounded-[4px] transition-colors duration-200"
+                className={`flex min-w-0 flex-1 items-center justify-center rounded-[4px] transition-[background-color,height] duration-200 ${
+                  h <= upTo && !ok ? 'h-4' : 'h-7'
+                }`}
                 style={{
                   background: h > upTo ? 'var(--forest-2)' : ok ? '#E3A72F' : '#4A5A50',
                   outline: hover === h ? '2px solid #F6F1E4' : undefined,
                 }}
               >
-                {h <= upTo && (ok ? <SunGlyph className="hidden h-3 w-3 sm:block" /> : <MoonGlyph className="h-3 w-3" />)}
+                {h <= upTo && !ok && <MoonGlyph className="h-auto w-full max-w-3" />}
               </div>
             ))}
           </div>
@@ -216,7 +220,7 @@ export function ResultChart({ lit, sim, upTo }: { lit: boolean[]; sim?: SimResul
       </div>
       <p className="mt-2 min-h-[1.5em] text-small text-on-forest-muted" aria-hidden="true">
         {hover === null || hover > upTo
-          ? 'A sun means that hour stayed lit; a moon means it went dark.'
+          ? 'Tall gold bars are hours that stayed lit; short bars with a moon went dark.'
           : `${cap(hourLabel(hover))}: ${lit[hover] ? 'lit' : 'dark'}.${
               sim
                 ? ` Made ${sim.supply[hover].toFixed(1)}, needed ${sim.demand[hover].toFixed(1)}${

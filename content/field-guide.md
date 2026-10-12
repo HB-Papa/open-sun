@@ -24,7 +24,7 @@ terms:
     related: [sareen-2023-solidaric-solarities, reina-rozo-2024-technologies-embrace-sun]
   - term: Battery storage
     definition: Batteries that save surplus electricity, often from sunny afternoons, so it can be used later, such as after sunset. In the Microgrid puzzle they are what carry sunshine into the night.
-    related: [de-decker-2018-low-tech-website]
+    related: [umich-css-2026-us-renewable-energy-factsheet, de-decker-2018-low-tech-website]
   - term: Wind wake
     definition: The slower, choppier air behind a wind turbine. Turbines placed too close together steal wind from each other, which is why the Microgrid puzzle weakens turbines that touch.
     related: []

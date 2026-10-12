@@ -268,24 +268,45 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
             <p className="sr-only" role="status" aria-live="polite">
               {announced}
             </p>
-            <Select
-              id="sort"
-              label="Sort by"
-              inline
-              value={sort}
-              onChange={(v) => setSort(v as Sort)}
-              options={[
-                ['relevance', query ? 'Most relevant' : 'Newest added'],
-                ...(query ? ([['added', 'Newest added']] as [string, string][]) : []),
-                ['newest', 'Newest published'],
-                ['oldest', 'Oldest published'],
-              ]}
-            />
+            {/* Nothing to sort when nothing matches. */}
+            {results.length > 0 && (
+              <Select
+                id="sort"
+                label="Sort by"
+                inline
+                value={sort}
+                onChange={(v) => setSort(v as Sort)}
+                options={[
+                  ['relevance', query ? 'Most relevant' : 'Newest added'],
+                  ...(query ? ([['added', 'Newest added']] as [string, string][]) : []),
+                  ['newest', 'Newest published'],
+                  ['oldest', 'Oldest published'],
+                ]}
+              />
+            )}
           </div>
           {results.length === 0 ? (
             <div className="rounded-[18px] border border-line bg-card p-6 text-lede">
               <p>Nothing matches yet. Try a shorter search or fewer filters.</p>
-              <p className="mt-2 text-copy text-muted">
+              {/* Ways forward, not just a dead end. */}
+              <div className="mt-4 flex flex-wrap gap-3 text-copy">
+                {(query || activeFilters > 0) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setQuery('');
+                      clearAll();
+                    }}
+                    className="min-h-11 rounded-full bg-leaf px-5 font-bold text-white"
+                  >
+                    Show all items
+                  </button>
+                )}
+                <a href="/field-guide" className="inline-flex min-h-11 items-center rounded-full border-2 border-line-strong px-5 font-bold text-ink no-underline hover:text-ink">
+                  Look it up in the Field Guide
+                </a>
+              </div>
+              <p className="mt-4 text-copy text-muted">
                 Know something that belongs here? <a href="/suggest">Suggest a resource</a>.
               </p>
             </div>
