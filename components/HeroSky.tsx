@@ -200,7 +200,6 @@ export function Hero() {
       style={{ background: ready ? `linear-gradient(${p.sky}, ${p.sky2})` : 'var(--paper)' }}
     >
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-4 pt-7 sm:px-6 sm:pb-6 sm:pt-9 md:pb-40 md:pt-16">
-        {/* Narrower on desktop so the search stays clear of the cottages. */}
         <div className="max-w-[540px] md:max-w-[480px]" style={{ color: ready ? p.text : 'var(--ink)' }}>
           {/* On phones, today's puzzle comes first. */}
           <Link
@@ -245,7 +244,9 @@ export function Hero() {
       <svg
         viewBox="0 0 1200 400"
         preserveAspectRatio="xMaxYMax slice"
-        className="block h-[120px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-0 md:h-full"
+        // On desktop the scene sits along the bottom at its own proportions (not stretched to the copy's height),
+        // so the village stays below and to the right of the search, whatever the text wraps to.
+        className="block h-[120px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-x-0 md:bottom-0 md:h-auto md:max-h-full"
         style={{ opacity: ready ? 1 : 0 }}
         aria-hidden="true"
       >
