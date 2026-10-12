@@ -525,11 +525,12 @@ export function shareText(num: number, won: boolean, tries: number, lit: boolean
   const line = won
     ? `☀️ ${hours}/24 hours lit in ${tries} ${tries === 1 ? 'try' : 'tries'}`
     : `🌙 ${hours}/24 hours lit after ${tries} tries`;
-  const strip = lit.map((ok) => (ok ? '🟨' : '⬛')).join('');
+  // Two rows of 12 hours. Split by hour, never by string index: 🟨 is two UTF-16 units and ⬛ is one.
+  const row = (hours: boolean[]) => hours.map((ok) => (ok ? '🟨' : '⬛')).join('');
   const plain = won
     ? `Open Sun Microgrid #${num}: kept all 24 hours lit on try ${tries} of ${MAX_TRIES}.`
     : `Open Sun Microgrid #${num}: lit ${hours} of 24 hours after ${tries} tries.`;
-  return { emoji: `${title}\n${line}\n${strip.slice(0, 12)}\n${strip.slice(12)}`, plain };
+  return { emoji: `${title}\n${line}\n${row(lit.slice(0, 12))}\n${row(lit.slice(12))}`, plain };
 }
 
 /** Describe the dark hours in words, for screen readers and color-blind players. */

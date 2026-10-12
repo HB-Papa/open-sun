@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { Pages } from '@/components/Pages';
-import { LANGUAGES, topicLabel } from '@/lib/topics';
+import { languageName, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
 
 const yr = (y: number | null) => y ?? 0;
@@ -159,7 +159,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search titles, authors, summaries, and topics"
+          placeholder="Title, author, or idea"
           className="min-h-[52px] flex-[1_1_320px] rounded-full border-2 border-line-strong bg-input px-[18px] text-lede text-ink placeholder:text-muted"
         />
         <div className="hidden flex-wrap gap-2 sm:flex" role="group" aria-label="View">
@@ -222,7 +222,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
             label="Language"
             value={language}
             onChange={setLanguage}
-            options={[['any', 'Any language'], ...allLangs.map(([l, n]) => [l, `${LANGUAGES[l] ?? l} (${n})`] as [string, string])]}
+            options={[['any', 'Any language'], ...allLangs.map(([l, n]) => [l, `${languageName(l)} (${n})`] as [string, string])]}
           />
           <Select
             id="license"

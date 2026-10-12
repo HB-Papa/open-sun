@@ -29,7 +29,7 @@ export function VillageLights({ dim = false }: { dim?: boolean }) {
         {dim && (
           <span className="text-copy text-on-forest-muted">
             Storage is usually what carries a village through the night.{' '}
-            <Link href="/library?q=storage" className="font-bold text-pale-sun underline hover:text-sun">
+            <Link href="/library?q=storage" className="font-bold text-on-forest-gold underline hover:text-sun">
               Read about energy storage
             </Link>
           </span>

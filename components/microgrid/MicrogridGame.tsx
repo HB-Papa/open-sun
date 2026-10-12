@@ -317,165 +317,156 @@ function Board({
         </p>
       </div>
 
+      {/* Two columns on wide screens that end at about the same height: the board and each run's result on the left;
+          the forecast, rules and the end-of-day panels on the right. On phones the columns dissolve into one, in
+          source order (board, result, sharing, then the full forecast), so focus order always matches the screen. */}
       <div className="play-layout">
-        {/* ---------- the full forecast (beside the board on wide screens; after the results on phones) ---------- */}
-        <section data-area="forecast" aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
-          <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
-            <h2 className="font-serif text-heading font-semibold">Today’s forecast</h2>
-            <ForecastChart puzzle={puzzle} demand={demand} />
-          </div>
-          <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />
-        </section>
+        <div className="play-col">
+          {/* ---------- the board ---------- */}
+          <section aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-2.5 sm:gap-3.5">
+            {/* Rules first on phones: a short version on a first visit; the full rules sit below the board. */}
+            {firstVisit && !rulesDismissed && (
+              <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
+                <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
+                  <li>Connect every part to a home, directly or through other parts.</li>
+                  <li>Trees shade panels; gardens and windy ridges boost them.</li>
+                  <li>Batteries carry daytime sun into the night. Then run the day.</li>
+                </ol>
+                <div className="flex gap-4 text-small">
+                  <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
+                    Got it
+                  </button>
+                  <a href="#how" onClick={openHow} className="font-bold">
+                    Full rules
+                  </a>
+                </div>
+              </div>
+            )}
+            <p className="text-small leading-snug sm:text-copy sm:leading-normal">
+              <span className="sm:hidden">
+                Light every hour with up to <strong>{puzzle.budget} parts</strong>. Tap a plot to place; tap again to remove.{' '}
+              </span>
+              <span className="hidden sm:inline">
+                Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
+              </span>
+              <a href="#how" onClick={openHow} className="font-bold">
+                How it works
+              </a>
+            </p>
 
-        {/* ---------- the board ---------- */}
-        <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-2.5 sm:gap-3.5">
-          {/* Rules first on phones: a short version on a first visit; the full rules sit below the board. */}
-          {firstVisit && !rulesDismissed && (
-            <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
-              <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
-                <li>Connect every part to a home, directly or through other parts.</li>
-                <li>Trees shade panels; gardens and windy ridges boost them.</li>
-                <li>Batteries carry daytime sun into the night. Then run the day.</li>
-              </ol>
-              <div className="flex gap-4 text-small">
-                <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
-                  Got it
+            <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
+              {TOOLS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={tool === t.id}
+                  onClick={() => setTool(t.id)}
+                  disabled={done}
+                  className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-small font-bold disabled:opacity-50 sm:text-small ${
+                    tool === t.id ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
+                  }`}
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: PART_BG[t.id] }} aria-hidden="true">
+                    {t.id === 'solar' && <SolarIcon />}
+                    {t.id === 'wind' && <WindIcon />}
+                    {t.id === 'battery' && <BatteryIcon />}
+                    {t.id === 'garden' && <GardenIcon />}
+                  </span>
+                  {t.label}
+                  <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-micro font-normal leading-4 md:inline" aria-hidden="true">
+                    {t.key}
+                  </kbd>
                 </button>
-                <a href="#how" onClick={openHow} className="font-bold">
-                  Full rules
-                </a>
-              </div>
+              ))}
             </div>
-          )}
-          <p className="text-small leading-snug sm:text-copy sm:leading-normal">
-            <span className="sm:hidden">
-              Light every hour with up to <strong>{puzzle.budget} parts</strong>. Tap a plot to place; tap again to remove.{' '}
-            </span>
-            <span className="hidden sm:inline">
-              Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
-            </span>
-            <a href="#how" onClick={openHow} className="font-bold">
-              How it works
-            </a>
-          </p>
 
-          <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
-            {TOOLS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                role="radio"
-                aria-checked={tool === t.id}
-                onClick={() => setTool(t.id)}
-                disabled={done}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-small font-bold disabled:opacity-50 sm:text-small ${
-                  tool === t.id ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
-                }`}
-              >
-                <span className="flex h-6 w-6 items-center justify-center rounded-md" style={{ background: PART_BG[t.id] }} aria-hidden="true">
-                  {t.id === 'solar' && <SolarIcon />}
-                  {t.id === 'wind' && <WindIcon />}
-                  {t.id === 'battery' && <BatteryIcon />}
-                  {t.id === 'garden' && <GardenIcon />}
-                </span>
-                {t.label}
-                <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-micro font-normal leading-4 md:inline" aria-hidden="true">
-                  {t.key}
-                </kbd>
+            {/* A compact forecast right above the board on phones, so you can plan while you place. */}
+            <MiniForecast puzzle={puzzle} demand={demand} className="md:hidden" />
+
+            <div
+              role="grid"
+              aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
+              className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
+              style={{ background: 'var(--board)' }}
+              onKeyDown={onGridKey}
+            >
+              {Array.from({ length: SIZE }, (_, r) => (
+                <div role="row" key={r} className="contents">
+                  {Array.from({ length: SIZE }, (_, c) => {
+                    const i = r * SIZE + c;
+                    const t = puzzle.terrain[i];
+                    const part = layout[i];
+                    const off = part && !connected[i];
+                    const m = mult[i];
+                    return (
+                      <div role="gridcell" key={i} className="contents">
+                        <button
+                          ref={(el) => {
+                            cellRefs.current[i] = el;
+                          }}
+                          type="button"
+                          tabIndex={i === focus ? 0 : -1}
+                          onFocus={() => setFocus(i)}
+                          onClick={() => place(i)}
+                          aria-label={cellLabel(i)}
+                          aria-disabled={!buildable(t) || done}
+                          className={`relative flex aspect-square min-h-11 items-center justify-center rounded-xl border-0 p-0 transition-transform duration-150 ${
+                            buildable(t) && !done ? 'cursor-pointer hover:scale-[1.04]' : 'cursor-default'
+                          } ${off ? 'outline-2 outline-dashed outline-terracotta' : ''}`}
+                          style={{ background: part ? PART_BG[part] : TERRAIN_BG[t], opacity: off ? 0.6 : 1 }}
+                        >
+                          {t === 'ridge' && <RidgeMark />}
+                          {t === 'home' && <HomeIcon lit={lightsHour} />}
+                          {t === 'tree' && <TreeIcon />}
+                          {t === 'pond' && <PondIcon />}
+                          {t === 'rock' && <RockIcon />}
+                          {part === 'solar' && <SolarIcon tilt={running} />}
+                          {part === 'wind' && <WindIcon spin={running && !reduceMotion} />}
+                          {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
+                          {part === 'garden' && <GardenIcon />}
+                          {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
+                            <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-micro font-bold leading-[18px] text-ink shadow-sm">
+                              ×{fmt(m)}
+                            </span>
+                          )}
+                          {off && (
+                            <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-micro font-bold leading-4 text-terracotta">
+                              off grid
+                            </span>
+                          )}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-small">
+              <span>
+                Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
+              </span>
+              <span className="hidden text-muted sm:inline">
+                Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
+              </span>
+            </div>
+            <div className="hidden max-w-[400px] flex-col gap-2 md:flex">
+              <button type="button" onClick={run} disabled={!canRun} className={runClass}>
+                {runLabel}
               </button>
-            ))}
-          </div>
+              {offWarning && <p className="text-small font-bold text-terracotta">{offText(offCount)}</p>}
+            </div>
+            <p className="sr-only" role="status" aria-live="polite">
+              {notice}
+            </p>
+            <TerrainKey hasRock={puzzle.terrain.includes('rock')} />
+            {/* On phones the full rules live below the board, one tap away from the "How it works" links. */}
+            <HowToPlay open={false} id="how" className="md:hidden" />
+          </section>
 
-          {/* A compact forecast right above the board on phones, so you can plan while you place. */}
-          <MiniForecast puzzle={puzzle} demand={demand} className="md:hidden" />
-
-          <div
-            role="grid"
-            aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
-            className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
-            style={{ background: 'var(--board)' }}
-            onKeyDown={onGridKey}
-          >
-            {Array.from({ length: SIZE }, (_, r) => (
-              <div role="row" key={r} className="contents">
-                {Array.from({ length: SIZE }, (_, c) => {
-                  const i = r * SIZE + c;
-                  const t = puzzle.terrain[i];
-                  const part = layout[i];
-                  const off = part && !connected[i];
-                  const m = mult[i];
-                  return (
-                    <div role="gridcell" key={i} className="contents">
-                      <button
-                        ref={(el) => {
-                          cellRefs.current[i] = el;
-                        }}
-                        type="button"
-                        tabIndex={i === focus ? 0 : -1}
-                        onFocus={() => setFocus(i)}
-                        onClick={() => place(i)}
-                        aria-label={cellLabel(i)}
-                        aria-disabled={!buildable(t) || done}
-                        className={`relative flex aspect-square min-h-11 items-center justify-center rounded-xl border-0 p-0 transition-transform duration-150 ${
-                          buildable(t) && !done ? 'cursor-pointer hover:scale-[1.04]' : 'cursor-default'
-                        } ${off ? 'outline-2 outline-dashed outline-terracotta' : ''}`}
-                        style={{ background: part ? PART_BG[part] : TERRAIN_BG[t], opacity: off ? 0.6 : 1 }}
-                      >
-                        {t === 'ridge' && <RidgeMark />}
-                        {t === 'home' && <HomeIcon lit={lightsHour} />}
-                        {t === 'tree' && <TreeIcon />}
-                        {t === 'pond' && <PondIcon />}
-                        {t === 'rock' && <RockIcon />}
-                        {part === 'solar' && <SolarIcon tilt={running} />}
-                        {part === 'wind' && <WindIcon spin={running && !reduceMotion} />}
-                        {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
-                        {part === 'garden' && <GardenIcon />}
-                        {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
-                          <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-micro font-bold leading-[18px] text-ink shadow-sm">
-                            ×{fmt(m)}
-                          </span>
-                        )}
-                        {off && (
-                          <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-micro font-bold leading-4 text-terracotta">
-                            off grid
-                          </span>
-                        )}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-small">
-            <span>
-              Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
-            </span>
-            <span className="hidden text-muted sm:inline">
-              Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
-            </span>
-          </div>
-          <div className="hidden max-w-[400px] flex-col gap-2 md:flex">
-            <button type="button" onClick={run} disabled={!canRun} className={runClass}>
-              {runLabel}
-            </button>
-            {offWarning && <p className="text-small font-bold text-terracotta">{offText(offCount)}</p>}
-          </div>
-          <p className="sr-only" role="status" aria-live="polite">
-            {notice}
-          </p>
-          <TerrainKey hasRock={puzzle.terrain.includes('rock')} />
-          {/* On phones the full rules live below the board, one tap away from the "How it works" links. */}
-          <HowToPlay open={false} id="how" className="md:hidden" />
-        </section>
-
-        {/* ---------- results ---------- */}
-        <section data-area="rest" aria-label="The day" className="flex min-w-0 flex-col gap-4">
-          {/* The peak of the day: the village lights up, house by house. */}
-          {won && !running && <VillageLights />}
           {lastLit && (
-            <div className="on-forest flex flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
+            <section aria-label="The day" className="on-forest flex flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
               <h2 className="font-serif text-heading font-semibold">
                 <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : lastLit.filter(Boolean).length}</span> of 24 hours lit
               </h2>
@@ -504,13 +495,9 @@ function Board({
                   ))}
                 </ol>
               )}
-            </div>
+            </section>
           )}
-
-          {done && share && !running && <SharePanel share={share} />}
-
-          {/* A loss ends in the village too: some windows dark, and a reading that helps. */}
-          {done && !won && !running && <VillageLights dim />}
+          {/* The worked solution is a small board, so it sits under the real one. */}
           {done && !won && !running && (
             <div className="rounded-[20px] border border-line bg-card p-5">
               <button type="button" className="font-bold text-sky underline" onClick={() => setShowSolution((s) => !s)} aria-expanded={showSolution}>
@@ -519,13 +506,32 @@ function Board({
               {showSolution && <SolutionPreview puzzle={puzzle} />}
             </div>
           )}
-        </section>
+        </div>
+
+        <div className="play-col">
+          {/* The peak of the day: the village lights up, house by house. */}
+          {won && !running && <VillageLights />}
+
+          {done && share && !running && <SharePanel share={share} />}
+
+          {/* A loss ends in the village too: some windows dark, and a reading that helps. */}
+          {done && !won && !running && <VillageLights dim />}
+
+          {/* ---------- the full forecast (last on phones; moved to the top of the right column on wide screens) ---------- */}
+          <section aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4 min-[900px]:-order-1">
+            <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
+              <h2 className="font-serif text-heading font-semibold">Today’s forecast</h2>
+              <ForecastChart puzzle={puzzle} demand={demand} />
+            </div>
+            <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />
+          </section>
+        </div>
       </div>
 
       {/* On phones, the run button stays within thumb's reach while you place parts. */}
       {!done && (
         <div className="run-bar on-forest fixed inset-x-0 bottom-0 z-30 border-t-2 border-sun/70 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest shadow-[0_-8px_24px_-12px_rgba(13,24,18,.5)] md:hidden">
-          {offWarning && <p className="mb-2 text-small font-bold text-pale-sun">{offText(offCount)}</p>}
+          {offWarning && <p className="mb-2 text-small font-bold text-on-forest-gold">{offText(offCount)}</p>}
           <div className="flex items-center gap-3">
             <p className="shrink-0 text-small">
               Parts <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
@@ -557,7 +563,7 @@ export function BoardSkeleton({ label }: { label: string }) {
       </p>
       <div className="h-[40px] w-[220px] rounded-xl bg-chip sm:h-[62px] sm:w-[340px]" aria-hidden="true" />
       <div className="play-layout" aria-hidden="true">
-        <div data-area="board" className="flex min-w-0 flex-col gap-3.5">
+        <div className="play-col flex min-w-0 flex-col gap-3.5">
           <div className="h-[52px] rounded-xl bg-chip" />
           <div className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
             {Array.from({ length: 4 }, (_, k) => (
@@ -570,7 +576,9 @@ export function BoardSkeleton({ label }: { label: string }) {
             ))}
           </div>
         </div>
-        <div data-area="forecast" className="hidden h-[340px] rounded-[20px] border border-line bg-card md:block" />
+        <div className="play-col">
+          <div className="hidden h-[340px] rounded-[20px] border border-line bg-card min-[900px]:block" />
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllItems, getItem, getPathways, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
-import { LANGUAGES, topicLabel, TYPE_COLORS } from '@/lib/topics';
+import { languageName, topicLabel, TYPE_COLORS } from '@/lib/topics';
 import { yearText } from '@/lib/types';
 import { ExternalIcon } from '@/components/icons';
 import { VineRule } from '@/components/Ornaments';
@@ -67,7 +67,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             </span>
             <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
             <span className="num rounded-full bg-chip px-3 py-1 text-caption">{yearText(item.year)}</span>
-            {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {LANGUAGES[item.language] ?? item.language}</span>}
+            {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {languageName(item.language)}</span>}
           </div>
           <h1 className="font-serif text-section font-bold leading-[1.1] sm:text-page-lg">{item.title}</h1>
           <p className="text-lede text-body">

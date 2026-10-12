@@ -160,13 +160,13 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
             {picked !== null && picked === note.answer && (
               <p className="rounded-xl bg-leaf px-3.5 py-3 text-copy text-white">
                 {result?.earned ? resultMessage(result) : 'Correct! You already have a field note from this page.'}{' '}
-                <Link href="/play" className="font-bold text-white underline hover:text-pale-sun">
+                <Link href="/play" className="font-bold text-white underline hover:text-on-forest-gold">
                   Go to Play
                 </Link>
               </p>
             )}
             {picked !== null && picked !== note.answer && (
-              <p className="text-small text-pale-sun">
+              <p className="text-small text-on-forest-gold">
                 Not quite. Have another look at the summary{resting ? '; you can answer again in a few seconds.' : ', then try again.'}
               </p>
             )}

@@ -7,6 +7,7 @@ import { localDateKey } from '@/lib/microgrid';
 import { useProgress } from '@/lib/progress';
 import { NAV } from '@/lib/site';
 import { Logo } from './icons';
+import { ThemeToggle } from './ThemeToggle';
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -31,7 +32,7 @@ export function SiteHeader() {
   return (
     <header className="border-b border-line bg-card">
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-2 gap-y-4 px-4 py-3 min-[400px]:gap-x-3 sm:px-6 sm:py-4">
-        <Link href="/" className="mr-auto flex min-w-0 items-center gap-2 text-ink no-underline hover:text-ink min-[400px]:gap-2.5 md:mr-0">
+        <Link href="/" className="mr-auto flex min-w-0 items-center gap-2 text-ink no-underline hover:text-ink min-[400px]:gap-2.5">
           <Logo size={32} />
           <span className="font-serif text-heading font-bold min-[360px]:text-heading min-[400px]:text-heading">Open Sun</span>
         </Link>
@@ -45,7 +46,8 @@ export function SiteHeader() {
           aria-controls="main-nav"
           onClick={() => setOpen((o) => !o)}
         >
-          {open ? 'Close menu' : 'Menu'}
+          {/* "Close" keeps the button the same width as "Menu", so the header never wraps; aria-expanded gives the state. */}
+          {open ? 'Close' : 'Menu'}
         </button>
         <nav
           id="main-nav"
@@ -72,7 +74,9 @@ export function SiteHeader() {
           >
             Suggest a resource
           </Link>
+          <ThemeToggle variant="menu" className="md:hidden" />
         </nav>
+        <ThemeToggle className="hidden md:ml-3 md:inline-flex" />
       </div>
     </header>
   );

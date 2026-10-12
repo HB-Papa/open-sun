@@ -100,7 +100,8 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
           onChange={(e) => setHover(Number(e.target.value))}
           onFocus={() => setHover((h) => h ?? 12)}
           aria-valuetext={hover === null ? undefined : hourReadout(puzzle, demand, hover)}
-          className="h-6 w-full accent-[var(--leaf)]"
+          className="hour-range h-6 w-full"
+          style={{ ['--fill' as string]: `${(((hover ?? 12) / (HOURS - 1)) * 100).toFixed(1)}%` }}
         />
       </label>
       <p className="mt-1 min-h-[1.5em] text-small text-body" aria-hidden="true">

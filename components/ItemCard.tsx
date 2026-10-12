@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { yearText, type ItemCard as Card } from '@/lib/types';
-import { topicLabel, TYPE_COLORS, LANGUAGES } from '@/lib/topics';
+import { topicLabel, TYPE_COLORS, languageName } from '@/lib/topics';
 import { naturalName } from '@/lib/cite';
 import { LeafSprout } from './icons';
 import { Nums } from '@/lib/nums';
@@ -26,7 +26,7 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
           {item.type}
         </span>
         {item.language !== 'en' ? (
-          <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-caption text-body">{LANGUAGES[item.language] ?? item.language}</span>
+          <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-caption text-body">{languageName(item.language)}</span>
         ) : (
           item.topics[0] && (
             <span className="min-w-0 truncate rounded-full bg-chip px-2.5 py-1 text-caption text-body" title={topicLabel(item.topics[0])}>
@@ -55,7 +55,7 @@ export function ItemRow({ item }: { item: Card }) {
       <span className="font-serif text-lede font-semibold leading-snug">{item.title}</span>
       <span className="text-small text-muted">
         {authorsLine(item)} · <span className="num">{yearText(item.year)}</span> · {item.type}
-        {item.language !== 'en' ? ` · ${LANGUAGES[item.language] ?? item.language}` : ''}
+        {item.language !== 'en' ? ` · ${languageName(item.language)}` : ''}
       </span>
     </Link>
   );
