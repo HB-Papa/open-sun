@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 import { currentTheme, subscribeTheme } from '@/lib/theme';
 import { useProgress } from '@/lib/progress';
+import { dayStatus } from '@/lib/dayStatus';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -208,11 +209,9 @@ export function Hero() {
   // The phone pill says where today's game stands: not started, under way, or done (with the result).
   const progress = useProgress();
   const game = today ? progress?.games[today] : undefined;
-  const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length ?? 0;
-  const pill = game?.done
-    ? game.won
-      ? 'Today: solved · see your day'
-      : `Today: ${lastLit}/24 lit · see your day`
+  const status = dayStatus(game);
+  const pill = status
+    ? `${status.line} · see your day`
     : game?.tries
       ? `Daily puzzle: keep going · Microgrid${puzzleNo ? ` #${puzzleNo}` : ''}`
       : `Daily puzzle: keep a village lit · Play${puzzleNo ? ` #${puzzleNo}` : ''}`;

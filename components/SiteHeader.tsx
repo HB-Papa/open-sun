@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { localDateKey } from '@/lib/microgrid';
 import { useProgress } from '@/lib/progress';
+import { dayStatus } from '@/lib/dayStatus';
 import { NAV } from '@/lib/site';
 import { Logo } from './icons';
 import { ThemeToggle } from './ThemeToggle';
@@ -87,18 +88,24 @@ function PlayPill() {
   const progress = useProgress();
   const [today, setToday] = useState<string | null>(null);
   useEffect(() => setToday(localDateKey()), []);
-  const played = !!(today && progress?.games[today]?.done);
+  const status = dayStatus(today ? progress?.games[today] : undefined);
   return (
     <Link
       href="/play"
-      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 font-bold min-[360px]:px-3.5 text-on-forest no-underline hover:text-on-forest md:hidden"
+      className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 font-bold ${status ? '' : 'min-[360px]:px-3.5'} text-on-forest no-underline hover:text-on-forest md:hidden`}
     >
-      <span aria-hidden="true" className="hidden h-2.5 w-2.5 rounded-full bg-sun min-[360px]:block" />
-      {/* After today's game, a short tick keeps the header on one line; screen readers hear the full words. */}
-      {played ? (
+      {!status && <span aria-hidden="true" className="hidden h-2.5 w-2.5 rounded-full bg-sun min-[360px]:block" />}
+      {/* After today's game, the pill shows how it went in a few characters; screen readers hear the full words. */}
+      {status ? (
         <>
-          <span aria-hidden="true">✓</span>
-          <span className="sr-only">Played today</span>
+          {/* The score where it fits; the narrowest phones get a tick so the header stays on one line. */}
+          <span aria-hidden="true" className="min-[360px]:hidden">
+            ✓
+          </span>
+          <span aria-hidden="true" className="num hidden min-[360px]:inline">
+            {status.short}
+          </span>
+          <span className="sr-only">{status.spoken}, see your day</span>
         </>
       ) : (
         'Play'

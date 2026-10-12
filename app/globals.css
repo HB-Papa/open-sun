@@ -269,7 +269,7 @@
 /* While the phone run bar is pinned, the page keeps room for it so it never covers the footer. */
 @media (max-width: 767px) {
   body:has(.run-bar) {
-    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px));
   }
 }
 

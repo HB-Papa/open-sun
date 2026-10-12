@@ -37,6 +37,15 @@ export function PlayClient({ suggestions = [] }: { suggestions?: Suggestion[] })
   const rounds = progress.bonus[today] ?? [];
   const bonus = bonusId ? rounds.find((b) => b.id === bonusId) : undefined;
 
+  // Bonus grids and stats sit below the game while it's played, and fold into "More about today" once it's done.
+  const extras = (
+    <div className="flex flex-wrap items-start gap-6">
+      <BonusList progress={progress} today={today} activeId={bonusId} suggestions={suggestions} />
+      {/* Stats appear after the first game, so a first visit isn't a wall of zeros. */}
+      {stats(progress).played > 0 && <StatsCard progress={progress} today={today} />}
+    </div>
+  );
+
   return (
     <>
       {bonusId && !bonus ? (
@@ -60,17 +69,14 @@ export function PlayClient({ suggestions = [] }: { suggestions?: Suggestion[] })
             saved={bonus.game}
             onSave={onSaveBonus}
             ranked={false}
+            extras={extras}
           />
         </>
       ) : (
-        <MicrogridGame date={today} variant="daily" saved={progress.games[today]} onSave={onSaveDaily} ranked firstVisit={Object.keys(progress.games).length === 0} />
+        <MicrogridGame date={today} variant="daily" saved={progress.games[today]} onSave={onSaveDaily} ranked firstVisit={Object.keys(progress.games).length === 0} extras={extras} />
       )}
 
-      <div className="flex flex-wrap items-start gap-6">
-        <BonusList progress={progress} today={today} activeId={bonusId} suggestions={suggestions} />
-        {/* Stats appear after the first game, so a first visit isn't a wall of zeros. */}
-        {stats(progress).played > 0 && <StatsCard progress={progress} today={today} />}
-      </div>
+      {bonusId && !bonus && extras}
     </>
   );
 }
@@ -166,7 +172,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
               <span>{labels[k]}</span>
               <span className="flex items-center gap-2">
                 <span className="block h-5 rounded-[4px] bg-leaf" style={{ width: `${Math.max(n ? 8 : 2, (n / maxBar) * 100)}%` }} aria-hidden="true" />
-                <span>{n}</span>
+                <span className="num">{n}</span>
               </span>
             </li>
           ))}

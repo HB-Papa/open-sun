@@ -63,9 +63,11 @@ export interface GameProps {
   ranked: boolean;
   /** Open the rules on a player's very first visit. */
   firstVisit?: boolean;
+  /** The rest of the page (bonus grids, stats): shown below while playing, folded into "More about today" once the day is over. */
+  extras?: React.ReactNode;
 }
 
-export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked, firstVisit = false }: GameProps) {
+export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked, firstVisit = false, extras }: GameProps) {
   const reduceMotion = usePrefersReducedMotion();
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -85,7 +87,7 @@ export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ra
 
   if (error) return <p role="alert">Sorry, today’s grid could not be drawn. Please reload the page.</p>;
   if (!puzzle) return <BoardSkeleton label="Drawing today’s map…" />;
-  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} />;
+  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} extras={extras} />;
 }
 
 function Board({
@@ -96,6 +98,7 @@ function Board({
   ranked,
   reduceMotion,
   firstVisit,
+  extras,
 }: {
   puzzle: Puzzle;
   date: string;
@@ -104,6 +107,7 @@ function Board({
   ranked: boolean;
   reduceMotion: boolean;
   firstVisit: boolean;
+  extras?: React.ReactNode;
 }) {
   const [layout, setLayout] = useState<Layout>(() => saved?.layout ?? new Array(CELLS).fill(null));
   const [history, setHistory] = useState<boolean[][]>(() => saved?.history ?? []);
@@ -327,7 +331,7 @@ function Board({
           : `Run the day (try ${tries + 1} of ${MAX_TRIES})`;
   // The phone thumb bar gets a shorter label.
   const canRun = !(done || running || used === 0 || unchanged);
-  const barLabel = canRun ? (offWarning ? 'Run anyway' : `Run the day · try ${tries + 1}/${MAX_TRIES}`) : runLabel;
+  const barLabel = canRun ? (offWarning ? 'Run anyway' : `Run the day · try ${tries + 1}/${MAX_TRIES}`) : unchanged && !done && !running ? 'Change the board first' : runLabel;
   const runClass = `min-h-[52px] rounded-full text-lede font-bold ${
     canRun ? 'bg-leaf text-white' : 'cursor-not-allowed border-2 border-dashed border-line-strong bg-transparent text-muted'
   }`;
@@ -358,7 +362,7 @@ function Board({
             <>
             <p className="text-small leading-snug sm:text-copy sm:leading-normal">
               <span className="sm:hidden">
-                Light every hour with up to <strong>{puzzle.budget} parts</strong>. Tap a plot to place; tap again to remove.{' '}
+                Light every hour with up to <strong>{puzzle.budget} parts</strong>. Pick a part in the bar below, then tap a plot; tap again to remove.{' '}
               </span>
               <span className="hidden sm:inline">
                 Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
@@ -368,7 +372,8 @@ function Board({
               </a>
             </p>
 
-            <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
+            {/* On phones the parts live in the bar at the bottom of the screen, always in reach; this row is for wider screens. */}
+            <div role="radiogroup" aria-label="Part to place" className="hidden max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:grid md:max-w-[400px]">
               {TOOLS.map((t) => (
                 <button
                   key={t.id}
@@ -483,57 +488,94 @@ function Board({
             <HowToPlay open={false} id="how" className="md:hidden" />
           </section>
   );
-  const resultEl = (lastLit && (
-            <section id="day-result" aria-label="The day" className="on-forest flex scroll-mt-4 flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
-              <h2 className="font-serif text-heading font-semibold">
-                <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : lastLit.filter(Boolean).length}</span> of 24 hours lit
-              </h2>
-              <ResultChart
-                lit={shownSim ? shownSim.lit : lastLit}
-                sim={shownSim ?? (done ? lastSim ?? undefined : undefined)}
-                upTo={shownSim ? shownHour : HOURS - 1}
-              />
-              {!running && (
-                <p className="text-copy leading-normal text-on-forest-muted">
-                  {won
-                    ? ranked
-                      ? 'Every home stayed lit all day and night. Come back tomorrow for a new grid.'
-                      : 'Every home stayed lit. Nicely done!'
-                    : lastLit
-                      ? <Nums text={`${describeHours(lastLit)} ${hint(puzzle, lastLit, layout)}`} />
-                      : ''}
-                </p>
-              )}
-              {history.length > 1 && (
-                <>
-                  {/* Each try can be looked back at, when its board was saved (games from before this change have none). */}
-                  <ol className="flex flex-wrap gap-2 text-small text-on-forest-muted" aria-label="Earlier tries">
-                    {history.map((h, k) => (
-                      <li key={k}>
-                        {tryLayouts[k] ? (
-                          <button
-                            type="button"
-                            aria-pressed={previewTry === k}
-                            onClick={() => setPreviewTry((v) => (v === k ? null : k))}
-                            className={`inline-flex min-h-9 items-center rounded-full px-3 font-bold ${previewTry === k ? 'bg-sun text-[#1E3328]' : 'bg-forest-2 text-on-forest hover:bg-forest-2/70'}`}
-                          >
-                            Try {k + 1}: {h.filter(Boolean).length}/24
-                          </button>
-                        ) : (
-                          <span className="inline-flex min-h-9 items-center rounded-full bg-forest-2 px-3">
-                            Try {k + 1}: {h.filter(Boolean).length}/24
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  </ol>
-                  {previewTry !== null && tryLayouts[previewTry] && (
-                    <LayoutPreview puzzle={puzzle} layout={tryLayouts[previewTry]} label={`Your board on try ${previewTry + 1}`} />
+  // A try chip shows that try everywhere in the panel (heading, strip, words and board), not just its board.
+  const lastIndex = history.length - 1;
+  const viewing = !running && previewTry !== null && previewTry !== lastIndex && tryLayouts[previewTry] ? previewTry : null;
+  const viewLit = viewing !== null ? history[viewing] : lastLit;
+  const viewSim = useMemo(() => (viewing !== null ? simulate(puzzle, tryLayouts[viewing]) : null), [puzzle, tryLayouts, viewing]);
+  function viewTry(k: number) {
+    const next = k === lastIndex || previewTry === k ? null : k;
+    setPreviewTry(next);
+    const n = history[k].filter(Boolean).length;
+    setNotice(next === null ? `Showing your latest try: ${history[lastIndex].filter(Boolean).length} of 24 hours lit.` : `Showing try ${k + 1}: ${n} of 24 hours lit.`);
+  }
+  const resultEl = lastLit ? (
+    <section id="day-result" aria-label="The day" className="on-forest flex scroll-mt-4 flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
+      {viewing !== null && (
+        <p className="text-small text-on-forest-muted">
+          Showing try <span className="num">{viewing + 1}</span> ·{' '}
+          <button type="button" className="font-bold text-on-forest-gold underline" onClick={() => viewTry(lastIndex)}>
+            back to try <span className="num">{lastIndex + 1}</span>
+          </button>
+        </p>
+      )}
+      <h2 className="font-serif text-heading font-semibold">
+        <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : viewLit.filter(Boolean).length}</span> of 24 hours lit
+      </h2>
+      <ResultChart
+        lit={shownSim ? shownSim.lit : viewLit}
+        sim={shownSim ?? viewSim ?? (done ? lastSim ?? undefined : undefined)}
+        upTo={shownSim ? shownHour : HOURS - 1}
+      />
+      {!running &&
+        (viewing !== null ? (
+          <p className="text-copy leading-normal text-on-forest-muted">
+            <Nums text={describeHours(viewLit)} />
+          </p>
+        ) : won ? (
+          <p className="text-copy leading-normal text-on-forest-muted">
+            {ranked ? 'Every home stayed lit all day and night. Come back tomorrow for a new grid.' : 'Every home stayed lit. Nicely done!'}
+          </p>
+        ) : done ? (
+          // A finished loss closes the day kindly first; the advice is for next time, so it comes second.
+          <>
+            <p className="text-copy leading-normal text-on-forest">
+              {ranked ? 'That’s today’s grid done. A new one arrives tomorrow.' : 'That’s this bonus grid done.'}
+            </p>
+            <p className="text-small leading-normal text-on-forest-muted">
+              <Nums text={`${describeHours(lastLit)} For next time: ${hint(puzzle, lastLit, layout)}`} />
+            </p>
+          </>
+        ) : (
+          <p className="text-copy leading-normal text-on-forest-muted">
+            <Nums text={`${describeHours(lastLit)} ${hint(puzzle, lastLit, layout)}`} />
+          </p>
+        ))}
+      {history.length > 1 && (
+        <>
+          {/* Each try can be looked back at, when its board was saved (games from before this change have none). */}
+          <ol className="flex flex-wrap gap-2 text-small text-on-forest-muted" aria-label="Your tries">
+            {history.map((h, k) => {
+              const current = (viewing ?? lastIndex) === k;
+              return (
+                <li key={k}>
+                  {tryLayouts[k] && !running ? (
+                    <button
+                      type="button"
+                      aria-pressed={current}
+                      onClick={() => viewTry(k)}
+                      className={`inline-flex min-h-9 items-center rounded-full px-3 font-bold ${current ? 'bg-sun text-[#1E3328]' : 'bg-forest-2 text-on-forest hover:bg-forest-2/70'}`}
+                    >
+                      <span>
+                        Try <span className="num">{k + 1}</span> · <span className="num">{h.filter(Boolean).length}/24</span>
+                      </span>
+                    </button>
+                  ) : (
+                    <span className="inline-flex min-h-9 items-center rounded-full bg-forest-2 px-3">
+                      <span>
+                        Try <span className="num">{k + 1}</span> · <span className="num">{h.filter(Boolean).length}/24</span>
+                      </span>
+                    </span>
                   )}
-                </>
-              )}
-            </section>
-          )) || null;
+                </li>
+              );
+            })}
+          </ol>
+          {viewing !== null && <LayoutPreview puzzle={puzzle} layout={tryLayouts[viewing]} label={`Your board on try ${viewing + 1}`} />}
+        </>
+      )}
+    </section>
+  ) : null;
   const solutionEl = (done && !won && !running && (
             <div className="rounded-[20px] border border-line bg-card p-5">
               <button type="button" className="font-bold text-sky underline" onClick={() => setShowSolution((s) => !s)} aria-expanded={showSolution}>
@@ -546,6 +588,13 @@ function Board({
   const shareEl = done && share && !running ? <SharePanel share={share} /> : null;
   // A loss ends in the village too: some windows dark, and a reading that matches what went wrong.
   const dimVillageEl = done && !won && !running && lastLit ? <VillageLights dim shortfall={shortfall(puzzle, lastLit)} /> : null;
+  const moreEl = (inner: React.ReactNode, blurb: string) => (
+    <details className="rounded-[20px] border border-line bg-card p-5">
+      <summary className="cursor-pointer font-serif text-heading font-semibold">More about today</summary>
+      <p className="mt-1 text-small text-body">{blurb}</p>
+      <div className="mt-4 flex flex-col gap-6">{inner}</div>
+    </details>
+  );
   // Wide screens show the full rules beside the board; once the day is over they move under it, so the columns stay level.
   const howWideEl = <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />;
   const forecastEl = (withRules: boolean) => (
@@ -568,7 +617,9 @@ function Board({
         </div>
         {dayOver ? (
           <p className="text-copy">
-            <strong>{won ? `Solved on try ${tries}` : 'Day complete'}</strong>
+            <strong>
+              <Nums text={ranked ? (won ? `Today: solved on try ${tries}` : `Today: ${lastLit.filter(Boolean).length}/24 lit`) : won ? 'Bonus grid solved' : 'Bonus grid done'} />
+            </strong>
             {ranked && <span className="text-body"> · new grid tomorrow</span>}
           </p>
         ) : (
@@ -587,19 +638,67 @@ function Board({
             {dayOver ? <>{resultEl}{solutionEl}{boardEl}{howWideEl}</> : <>{boardEl}{resultEl}{solutionEl}</>}
           </div>
           <div className="play-col">
-            {dayOver ? <>{winVillageEl}{shareEl}{dimVillageEl}{forecastEl(false)}</> : <>{forecastEl(true)}{winVillageEl}{shareEl}{dimVillageEl}</>}
+            {dayOver ? <>{winVillageEl}{dimVillageEl}{shareEl}{forecastEl(false)}</> : <>{forecastEl(true)}{winVillageEl}{dimVillageEl}{shareEl}</>}
           </div>
         </div>
       ) : (
         <div className="play-layout">
-          {dayOver ? <>{resultEl}{winVillageEl}{shareEl}{dimVillageEl}{solutionEl}{boardEl}{forecastEl(true)}</> : <>{boardEl}{resultEl}{forecastEl(true)}</>}
+          {dayOver ? (
+            <>
+              {resultEl}
+              {winVillageEl}
+              {dimVillageEl}
+              {shareEl}
+              {solutionEl}
+              {boardEl}
+              {moreEl(
+                <>
+                  {forecastEl(true)}
+                  {extras}
+                </>,
+                'Today’s forecast, bonus grids and your stats.',
+              )}
+            </>
+          ) : (
+            <>
+              {boardEl}
+              {resultEl}
+              {forecastEl(true)}
+            </>
+          )}
         </div>
       )}
+
+      {/* Bonus grids and stats: in full while playing; once the day is over, folded away so the day itself is the ending. */}
+      {wide && dayOver ? extras && moreEl(extras, 'Bonus grids and your stats.') : !dayOver && extras}
 
       {/* On phones, the run button stays within thumb's reach while you place parts. */}
       {!done && (
         <div className="run-bar on-forest fixed inset-x-0 bottom-0 z-30 border-t-2 border-sun/70 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest shadow-[0_-8px_24px_-12px_rgba(13,24,18,.5)] md:hidden">
           {offWarning && <p className="mb-2 text-small font-bold text-on-forest-gold">{offText(offCount)}</p>}
+          {/* The phone game controller: pick a part, then run, without scrolling away from the board. */}
+          <div role="radiogroup" aria-label="Part to place" className="mb-2.5 grid grid-cols-4 gap-1.5">
+            {TOOLS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="radio"
+                aria-checked={tool === t.id}
+                onClick={() => setTool(t.id)}
+                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl border-2 px-1 py-1 text-caption font-bold ${
+                  tool === t.id ? 'border-on-forest bg-on-forest text-[#1E3328]' : 'border-on-forest-muted/40 bg-forest-2 text-on-forest'
+                }`}
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md" style={{ background: PART_BG[t.id] }} aria-hidden="true">
+                  {t.id === 'solar' && <SolarIcon />}
+                  {t.id === 'wind' && <WindIcon />}
+                  {t.id === 'battery' && <BatteryIcon />}
+                  {t.id === 'garden' && <GardenIcon />}
+                </span>
+                {t.label}
+              </button>
+            ))}
+          </div>
           <div className="flex items-center gap-3">
             <p className="shrink-0 text-small">
               Parts <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
@@ -608,7 +707,7 @@ function Board({
               type="button"
               onClick={run}
               disabled={!canRun}
-              className={`min-h-12 flex-1 rounded-full text-copy font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
+              className={`min-h-12 flex-1 rounded-full px-4 text-copy font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
             >
               {barLabel}
             </button>
@@ -689,6 +788,14 @@ function TerrainKey({ terrain }: { terrain: Terrain[] }) {
     ['rock', 'Rocky ground (can’t build)', <RockIcon key="k" />],
   ];
   const items = all.filter(([t]) => terrain.includes(t)).map(([t, label, icon]) => [label, icon, TERRAIN_BG[t]] as [string, React.ReactNode, string]);
+  // The ×0.5 / ×1.5 badges on panels and turbines, so their numbers are never a mystery.
+  items.push([
+    'Badge: how much a part makes (×1 is normal)',
+    <span key="b" className="rounded-full bg-card px-1 text-micro font-bold leading-4 text-ink shadow-sm">
+      ×1.5
+    </span>,
+    'var(--g-solar)',
+  ]);
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-2 text-small text-body" aria-label="Map key">
       {items.map(([label, icon, bg]) => (
@@ -744,7 +851,11 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
           You have <strong>three tries</strong>. After each run, the lights strip shows which hours went dark so you can adjust.
         </li>
         <li>
-          <strong>Badges</strong> like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it.
+          <strong>Badges</strong> like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it, and turbines side by side slow each other.
+        </li>
+        {/* Keyboard play, for anyone with a keyboard (phones use the bar at the bottom). */}
+        <li className="hidden md:list-item">
+          <strong>Keyboard:</strong> keys 1 to 4 pick a part, arrow keys move around the map, Enter places, and Delete clears.
         </li>
       </ul>
       {/* The one place the extras are explained; everywhere else links here. */}

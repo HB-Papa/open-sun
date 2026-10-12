@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { baseDemand, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
 import { useProgress } from '@/lib/progress';
+import { dayStatus } from '@/lib/dayStatus';
 import { getPuzzle } from '@/lib/puzzleCache';
 import { forecastSentence } from './microgrid/DayCharts';
 import { NouveauCorners } from './Ornaments';
@@ -24,7 +25,7 @@ export function TodayPuzzleCard() {
   }, []);
 
   const game = today && progress ? progress.games[today] : undefined;
-  const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length;
+  const status = dayStatus(game);
 
   return (
     <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
@@ -33,23 +34,31 @@ export function TodayPuzzleCard() {
         <h2 id="today" className="mb-2 font-serif text-page font-bold leading-none sm:text-page-lg">
           Microgrid {today ? <span className="text-sun">#{puzzleNumber(today)}</span> : ''}
         </h2>
-        <p className="mb-3 text-copy text-on-forest">Today’s puzzle takes about three minutes.</p>
-        <p className="mb-[22px] text-lede leading-normal text-on-forest-muted">
-          Keep a small neighborhood lit for all 24 hours.{' '}
-          {puzzle ? <Nums text={shortForecast(puzzle)} /> : 'Checking today’s forecast…'}
-        </p>
+        {/* Once today is played, the card says how it went and when the next grid comes, not how to start. */}
+        {status ? (
+          <>
+            <p className="mb-3 font-serif text-heading text-on-forest">
+              <Nums text={status.line} />
+            </p>
+            <p className="mb-[22px] text-lede leading-normal text-on-forest-muted">A new grid arrives tomorrow.</p>
+          </>
+        ) : (
+          <>
+            <p className="mb-3 text-copy text-on-forest">Today’s puzzle takes about three minutes.</p>
+            <p className="mb-[22px] text-lede leading-normal text-on-forest-muted">
+              Keep a small neighborhood lit for all 24 hours.{' '}
+              {puzzle ? <Nums text={shortForecast(puzzle)} /> : 'Checking today’s forecast…'}
+            </p>
+          </>
+        )}
         <div className="flex flex-wrap items-center gap-3">
           <Link
             href="/play"
             className="inline-flex min-h-12 items-center rounded-full bg-sun px-6 font-bold text-[#1E3328] no-underline hover:text-[#1E3328]"
           >
-            {game?.done ? 'See today’s result' : game?.tries ? 'Keep playing' : 'Play today’s grid'}
+            {status ? 'See your day' : game?.tries ? 'Keep playing' : 'Play today’s grid'}
           </Link>
-          {game?.done ? (
-            <span className="text-on-forest-muted">
-              {game.won ? `Solved in ${game.tries} ${game.tries === 1 ? 'try' : 'tries'}` : `${lastLit}/24 hours lit`}
-            </span>
-          ) : (
+          {status ? null : (
             <Link href="/play#how" className="inline-flex min-h-12 items-center px-2 text-on-forest hover:text-sun">
               How to play
             </Link>
