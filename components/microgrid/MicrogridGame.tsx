@@ -13,6 +13,9 @@ import {
   describeHours,
   HOURS,
   MAX_TRIES,
+  daysBetween,
+  HARDER_FROM,
+  weekdayName,
   neighbors,
   puzzleNumber,
   RULES,
@@ -28,7 +31,7 @@ import {
   type Variant,
 } from '@/lib/microgrid';
 import { MAX_BONUS_PER_DAY, type DailyGame } from '@/lib/progress';
-import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
+import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, RockIcon, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
 import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
 import { Nums } from '@/lib/nums';
 import { VillageLights } from './VillageLights';
@@ -44,11 +47,11 @@ const TOOLS: { id: Tool; label: string; key: string }[] = [
 ];
 
 const PART_NAME: Record<Part, string> = { solar: 'Solar panel', wind: 'Wind turbine', battery: 'Battery', garden: 'Garden' };
-const TERRAIN_NAME: Record<Terrain, string> = { open: 'Open ground', ridge: 'Windy ridge', home: 'Home', tree: 'Tree', pond: 'Pond' };
+const TERRAIN_NAME: Record<Terrain, string> = { open: 'Open ground', ridge: 'Windy ridge', home: 'Home', tree: 'Tree', pond: 'Pond', rock: 'Rocky ground' };
 
 // Colors come from CSS tokens so the board dims to a moonlit version in dark mode.
 const PART_BG: Record<Part, string> = { solar: 'var(--g-solar)', wind: 'var(--g-wind)', battery: 'var(--g-battery)', garden: 'var(--g-garden)' };
-const TERRAIN_BG: Record<Terrain, string> = { open: 'var(--g-open)', ridge: 'var(--g-ridge)', home: 'var(--g-home)', tree: 'var(--g-green)', pond: 'var(--g-green)' };
+const TERRAIN_BG: Record<Terrain, string> = { open: 'var(--g-open)', ridge: 'var(--g-ridge)', home: 'var(--g-home)', tree: 'var(--g-green)', pond: 'var(--g-green)', rock: 'var(--g-rock)' };
 
 export interface GameProps {
   date: string;
@@ -307,7 +310,7 @@ function Board({
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:items-end md:justify-start md:gap-x-10">
         <div>
           <h1 className="font-serif text-[1.875rem] font-bold leading-tight sm:text-[3.25rem]">{ranked ? `Microgrid #${num}` : info.name}</h1>
-          <p className={`mt-1 text-[1.0625rem] text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
+          <p className={`mt-1 text-[1.0625rem] text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}${levelLabel(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
         </div>
         <p className="text-[1rem] sm:text-[1.0625rem]">
           Tries left: <strong className="num text-[1.25rem] sm:text-[1.375rem]">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
@@ -422,6 +425,7 @@ function Board({
                         {t === 'home' && <HomeIcon lit={lightsHour} />}
                         {t === 'tree' && <TreeIcon />}
                         {t === 'pond' && <PondIcon />}
+                        {t === 'rock' && <RockIcon />}
                         {part === 'solar' && <SolarIcon tilt={running} />}
                         {part === 'wind' && <WindIcon spin={running && !reduceMotion} />}
                         {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
@@ -461,7 +465,7 @@ function Board({
           <p className="sr-only" role="status" aria-live="polite">
             {notice}
           </p>
-          <TerrainKey />
+          <TerrainKey hasRock={puzzle.terrain.includes('rock')} />
           {/* On phones the full rules live below the board, one tap away from the "How it works" links. */}
           <HowToPlay open={false} id="how" className="md:hidden" />
         </section>
@@ -588,17 +592,26 @@ function fmt(m: number) {
   return Number.isInteger(m) ? String(m) : m.toFixed(2).replace(/0$/, '');
 }
 
+/** " · Tuesday, medium": how hard today's grid is meant to be, from the weekly ramp. */
+function levelLabel(key: string): string {
+  if (daysBetween(HARDER_FROM, key) < 0) return '';
+  const day = weekdayName(key);
+  const word = { Monday: 'gentle', Tuesday: 'medium', Wednesday: 'medium', Thursday: 'tricky', Friday: 'tricky', Saturday: 'hard', Sunday: 'hardest' }[day];
+  return ` · ${day}, ${word}`;
+}
+
 function formatDate(key: string) {
   const [y, m, d] = key.split('-').map(Number);
   return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
 }
 
-function TerrainKey() {
+function TerrainKey({ hasRock }: { hasRock: boolean }) {
   const items: [string, React.ReactNode, string][] = [
     ['Home', <HomeIcon key="h" lit={null} />, TERRAIN_BG.home],
     ['Tree (shades panels)', <TreeIcon key="t" />, TERRAIN_BG.tree],
     ['Pond', <PondIcon key="p" />, TERRAIN_BG.pond],
     ['Windy ridge', <RidgeMark key="r" />, TERRAIN_BG.ridge],
+    ...(hasRock ? ([['Rocky ground (can’t build)', <RockIcon key="k" />, TERRAIN_BG.rock]] as [string, React.ReactNode, string][]) : []),
   ];
   return (
     <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[0.875rem] text-body" aria-label="Map key">
@@ -646,6 +659,12 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
           <strong>Gardens</strong> make no power, but they cool the panels beside them and shade homes, cutting those homes’ afternoon use by a quarter.
         </li>
         <li>
+          <strong>Rocky ground</strong> can’t be built on, and power can’t pass across it, so plan your routes around it.
+        </li>
+        <li>
+          <strong>Harder through the week.</strong> Monday’s grid is the gentlest; Sunday’s is the toughest, with demand close to the best possible layout.
+        </li>
+        <li>
           You have <strong>three tries</strong>. After each run, the lights strip shows which hours went dark so you can adjust.
         </li>
         <li>
@@ -688,6 +707,7 @@ function SolutionPreview({ puzzle }: { puzzle: Puzzle }) {
             {t === 'home' && <HomeIcon lit />}
             {t === 'tree' && <TreeIcon />}
             {t === 'pond' && <PondIcon />}
+                        {t === 'rock' && <RockIcon />}
             {part === 'solar' && <SolarIcon />}
             {part === 'wind' && <WindIcon />}
             {part === 'battery' && <BatteryIcon />}

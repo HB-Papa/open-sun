@@ -10,7 +10,7 @@ import { NouveauCorners } from './Ornaments';
 import { Nums } from '@/lib/nums';
 
 // The puzzle card's preview tiles sit on the forest panel in both themes; their colours are tokens.
-const TILE: Record<Terrain, string> = { open: 'var(--tile-open)', ridge: 'var(--tile-ridge)', home: 'var(--tile-home)', tree: 'var(--tile-tree)', pond: 'var(--tile-pond)' };
+const TILE: Record<Terrain, string> = { open: 'var(--tile-open)', ridge: 'var(--tile-ridge)', home: 'var(--tile-home)', tree: 'var(--tile-tree)', pond: 'var(--tile-pond)', rock: 'var(--tile-rock)' };
 
 export function TodayPuzzleCard() {
   const progress = useProgress();
