@@ -90,7 +90,9 @@ export function GardenCard() {
       <h2 className="font-serif text-heading font-semibold">Your garden</h2>
       <p className="text-copy leading-normal text-body">
         {visited.length
-          ? `You’ve read ${visited.length} ${visited.length === 1 ? 'page' : 'pages'} in the library. Each one planted something here.`
+          ? visited.length === 1
+            ? 'You’ve read 1 page in the library, and it planted something here. Each page you read adds another.'
+            : `You’ve read ${visited.length} pages in the library. Each one planted something here.`
           : 'Every page you read in the library plants something here.'}
       </p>
       <div className="flex min-h-[64px] flex-wrap items-end gap-1.5 rounded-xl bg-chip-leaf px-3 pt-2" aria-hidden="true">
