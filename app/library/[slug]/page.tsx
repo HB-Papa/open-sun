@@ -9,9 +9,10 @@ import { ExternalIcon } from '@/components/icons';
 import { VineRule } from '@/components/Ornaments';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
-import { FieldNoteCard, ReadItLink, ReadToEnd } from './FieldNote';
+import { FieldNoteCard, FieldNoteChip, ReadItLink, ReadToEnd } from './FieldNote';
 import { NextStop, PathwayStrip, type Membership } from './PathwayContext';
 import { PageSky } from '@/components/PageSky';
+import { Nums, numHtml } from '@/lib/nums';
 
 // Pages are built ahead of time; a slug added while `npm run dev` is running is
 // still found (unknown slugs fall through to notFound below).
@@ -71,15 +72,16 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
         <p className="text-lg text-body">
           {authorsLine(item)} · <em>{venueLine}</em>
         </p>
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <ReadItLink
             slug={item.slug}
             href={item.url}
             className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-[22px] font-bold text-white no-underline hover:text-white"
           >
             Read it free <ExternalIcon />
-            <span className="sr-only">(opens the publisher’s site)</span>
+            <span className="sr-only">(opens the publisher’s site in a new tab)</span>
           </ReadItLink>
+          {item.fieldNote && <FieldNoteChip slug={item.slug} />}
           {item.doi && item.url !== `https://doi.org/${item.doi}` && (
             <a href={`https://doi.org/${item.doi}`} className="inline-flex min-h-12 items-center px-2 font-bold" rel="noopener">
               Publisher’s page (DOI)
@@ -94,11 +96,11 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             </h2>
             <VineRule />
           </div>
-          <div className="prose-os" dangerouslySetInnerHTML={{ __html: item.summaryHtml }} />
+          <div className="prose-os" dangerouslySetInnerHTML={{ __html: numHtml(item.summaryHtml) }} />
           {item.why && (
             <>
               <h3 className="mt-1.5 text-[17px] font-bold">Why it matters</h3>
-              <p className="text-[17px] leading-relaxed text-body">{item.why}</p>
+              <p className="max-w-[35rem] text-[17px] leading-relaxed text-body"><Nums text={item.why} /></p>
             </>
           )}
         </section>
@@ -120,11 +122,13 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
         {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
         <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
         <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
-        {memberships[0] && <NextStop m={memberships[0]} />}
+        {memberships[0] && <NextStop m={memberships[0]} related={related.slice(0, 2).map((r) => ({ slug: r.slug, title: r.title }))} />}
       </article>
 
+      {related.length > 0 && memberships.length === 0 && (
       <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5 lg:sticky lg:top-6">
-        {related.length > 0 && (
+        {/* On a pathway, the Next stop card does this job; related reading folds into it. */}
+        {related.length > 0 && memberships.length === 0 && (
           <section aria-labelledby="rel" className="flex flex-col gap-3.5 rounded-[18px] border border-line bg-card p-[22px]">
             <h2 id="rel" className="font-serif text-[22px] font-semibold">
               Read next
@@ -144,6 +148,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           </section>
         )}
       </aside>
+      )}
       </main>
     </>
   );

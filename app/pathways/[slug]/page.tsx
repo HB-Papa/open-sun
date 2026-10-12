@@ -5,8 +5,9 @@ import { getItem, getPathway, getPathways } from '@/lib/content';
 import { authorsLine } from '@/components/ItemCard';
 import { ArchRays, PathwayGlyph } from '@/components/Ornaments';
 import { yearText } from '@/lib/types';
-import { PathwayEnd, PathwayStatus, StepStatus, VineSegment } from '../PathwayProgress';
+import { ContinueButton, PathwayEnd, PathwayStatus, StepStatus, VineSegment } from '../PathwayProgress';
 import { PageSky } from '@/components/PageSky';
+import { numHtml } from '@/lib/nums';
 
 export function generateStaticParams() {
   return getPathways().map((p) => ({ slug: p.slug }));
@@ -41,8 +42,9 @@ export default async function PathwayPage({ params }: { params: Promise<{ slug: 
         <p className="text-[15px] text-body">
           <span className="num">{steps.length}</span> readings
         </p>
-        <div className="prose-os text-left text-ink" dangerouslySetInnerHTML={{ __html: pathway.introHtml }} />
+        <div className="prose-os text-left text-ink" dangerouslySetInnerHTML={{ __html: numHtml(pathway.introHtml) }} />
         <PathwayStatus slugs={steps.map((s) => s.slug)} />
+        <ContinueButton steps={steps.map((s) => ({ slug: s.slug, title: s.item!.title }))} />
       </div>
       <ol className="flex flex-col">
         {steps.map((s, k) => (

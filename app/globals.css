@@ -168,10 +168,16 @@
   }
 }
 
-/* Years and counts in Fraunces: lining figures without the slashed zero. */
-.num {
+/* Every number in Fraunces lining figures, so the site has one figure style and no slashed zero.
+   .num is for counts that line up (tabular); .num-i is for digits inside running text. */
+.num,
+.num-i {
   font-family: var(--font-serif);
   font-variant-numeric: lining-nums tabular-nums;
+}
+.num-i {
+  font-variant-numeric: lining-nums proportional-nums;
+  font-size: 0.97em;
 }
 
 /* Art Nouveau frame: a hairline of gold leading set inside a panel. */
@@ -187,6 +193,18 @@
   border-radius: inherit;
   pointer-events: none;
   z-index: -1;
+}
+
+/* The game board: on phones it shrinks on short screens so it fits above the pinned run bar. */
+.board-fit {
+  width: 100%;
+  max-width: min(460px, calc(100svh - 340px));
+  min-width: 260px;
+}
+@media (min-width: 768px) {
+  .board-fit {
+    max-width: 400px;
+  }
 }
 
 /* While the phone run bar is pinned, the page keeps room for it so it never covers the footer. */

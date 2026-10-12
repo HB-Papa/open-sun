@@ -34,19 +34,35 @@ export function PathwayStrip({ m }: { m: Membership }) {
 }
 
 /** After the reading (and its field note): the next stop, or the end of the pathway. */
-export function NextStop({ m }: { m: Membership }) {
+export function NextStop({ m, related = [] }: { m: Membership; related?: { slug: string; title: string }[] }) {
   const steps = m.pathway.steps;
   const nextStep = steps[m.index + 1];
   const nextItem = nextStep ? getItem(nextStep.slug) : undefined;
+  const more =
+    related.length > 0 ? (
+      <p className="text-[15px] text-body">
+        Also related:{' '}
+        {related.map((r, k) => (
+          <span key={r.slug}>
+            {k > 0 && ' · '}
+            <Link href={`/library/${r.slug}`}>{r.title}</Link>
+          </span>
+        ))}
+      </p>
+    ) : null;
   if (!nextItem) {
     return (
-      <PathwayEnd
-        slugs={steps.map((s) => s.slug)}
-        next={m.next ? { slug: m.next.slug, title: m.next.title, blurb: m.next.blurb } : undefined}
-      />
+      <div className="flex flex-col gap-3">
+        <PathwayEnd
+          slugs={steps.map((s) => s.slug)}
+          next={m.next ? { slug: m.next.slug, title: m.next.title, blurb: m.next.blurb } : undefined}
+        />
+        {more}
+      </div>
     );
   }
   return (
+    <div className="flex flex-col gap-3">
     <Link
       href={`/library/${nextItem.slug}`}
       className="card nouveau flex flex-col gap-1.5 rounded-[22px] px-6 py-5 text-ink no-underline hover:text-ink sm:px-8"
@@ -59,5 +75,7 @@ export function NextStop({ m }: { m: Membership }) {
       <span className="font-serif text-[22px] font-semibold leading-snug">{nextItem.title}</span>
       {nextStep.note && <span className="text-[16px] text-body">{nextStep.note}</span>}
     </Link>
+    {more}
+    </div>
   );
 }

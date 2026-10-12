@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { hourLabel, HOURS, RULES, type Puzzle, type SimResult } from '@/lib/microgrid';
 import { MoonGlyph, SunGlyph } from '@/components/icons';
+import { Nums } from '@/lib/nums';
 
 const AXIS = [
   { h: 0, label: '12 am' },
@@ -103,9 +104,11 @@ export function ForecastChart({ puzzle, demand }: { puzzle: Puzzle; demand: numb
         />
       </label>
       <p className="mt-1 min-h-[1.5em] text-[14px] text-body" aria-hidden="true">
-        {hover === null ? 'Hover, tap, or use the slider to see an hour’s numbers.' : hourReadout(puzzle, demand, hover)}
+        {hover === null ? 'Hover, tap, or use the slider to see an hour’s numbers.' : <Nums text={hourReadout(puzzle, demand, hover)} />}
       </p>
-      <figcaption className="text-[15px] leading-snug text-body">{forecastSentence(puzzle, demand)}</figcaption>
+      <figcaption className="text-[15px] leading-snug text-body">
+        <Nums text={forecastSentence(puzzle, demand)} />
+      </figcaption>
       <table className="sr-only">
         <caption>Hour-by-hour forecast</caption>
         <thead>
@@ -143,11 +146,11 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
     ['Demand', demand, maxDemand, 'var(--terracotta)', undefined],
   ];
   return (
-    <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2.5 ${className}`} aria-hidden="true">
+    <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2 ${className}`} aria-hidden="true">
       {rows.map(([label, values, max, color, dim]) => (
         <div key={label} className="grid grid-cols-[58px_1fr] items-end gap-2">
           <span className="text-[12px] font-bold text-muted">{label}</span>
-          <div className="flex h-5 items-end gap-[2px]">
+          <div className="flex h-4 items-end gap-[2px]">
             {values.map((v, h) => (
               <div
                 key={h}

@@ -6,6 +6,7 @@ import { baseDemand, generatePuzzle, localDateKey, puzzleNumber, type Puzzle, ty
 import { useProgress } from '@/lib/progress';
 import { forecastSentence } from './microgrid/DayCharts';
 import { NouveauCorners } from './Ornaments';
+import { Nums } from '@/lib/nums';
 
 const TILE: Record<Terrain, string> = { open: '#5E9467', ridge: '#7C9A6A', home: '#F3E3B5', tree: '#2F6B45', pond: '#4F97A0' };
 
@@ -33,7 +34,7 @@ export function TodayPuzzleCard() {
         <p className="mb-3 text-[17px] text-on-forest">Today’s puzzle takes about three minutes.</p>
         <p className="mb-[22px] text-lg leading-normal text-on-forest-muted">
           Keep a small neighborhood lit for all 24 hours.{' '}
-          {puzzle ? shortForecast(puzzle) : 'Checking today’s forecast…'}
+          {puzzle ? <Nums text={shortForecast(puzzle)} /> : 'Checking today’s forecast…'}
         </p>
         <div className="flex flex-wrap items-center gap-3">
           <Link

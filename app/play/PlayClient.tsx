@@ -16,7 +16,13 @@ import {
   type Progress,
 } from '@/lib/progress';
 
-export function PlayClient() {
+export interface Suggestion {
+  slug: string;
+  title: string;
+  pathway: string;
+}
+
+export function PlayClient({ suggestions = [] }: { suggestions?: Suggestion[] }) {
   const progress = useProgress();
   const params = useSearchParams();
   const bonusId = params.get('bonus');
@@ -61,7 +67,7 @@ export function PlayClient() {
       )}
 
       <div className="flex flex-wrap items-start gap-6">
-        <BonusList progress={progress} today={today} activeId={bonusId} />
+        <BonusList progress={progress} today={today} activeId={bonusId} suggestions={suggestions} />
         {/* Stats appear after the first game, so a first visit isn't a wall of zeros. */}
         {stats(progress).played > 0 && <StatsCard progress={progress} today={today} />}
       </div>
@@ -69,8 +75,10 @@ export function PlayClient() {
   );
 }
 
-function BonusList({ progress, today, activeId }: { progress: Progress; today: string; activeId: string | null }) {
+function BonusList({ progress, today, activeId, suggestions }: { progress: Progress; today: string; activeId: string | null; suggestions: Suggestion[] }) {
   const rounds = progress.bonus[today] ?? [];
+  // A few specific readings with field notes you haven't earned yet, in pathway order.
+  const next = suggestions.filter((s) => !progress.notes[s.slug]).slice(0, 3);
   return (
     <section aria-labelledby="bonus-h" className="flex min-w-0 flex-[1_1_360px] flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
       <h2 id="bonus-h" className="font-serif text-[22px] font-semibold">
@@ -82,11 +90,22 @@ function BonusList({ progress, today, activeId }: { progress: Progress; today: s
           How rewards work
         </a>
       </p>
-      {rounds.length === 0 ? (
-        <Link href="/library" className="self-start font-bold">
-          Find something to read
-        </Link>
-      ) : (
+      {rounds.length < MAX_BONUS_PER_DAY && next.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-[15px] font-bold">Readings with a field note waiting:</p>
+          <ul className="flex flex-col gap-2">
+            {next.map((s) => (
+              <li key={s.slug}>
+                <Link href={`/library/${s.slug}`} className="flex flex-col gap-0.5 rounded-[14px] border border-line p-3 text-ink no-underline hover:border-leaf hover:text-ink">
+                  <span className="font-bold leading-snug">{s.title}</span>
+                  <span className="text-[14px] text-muted">On the pathway {s.pathway}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {rounds.length === 0 ? null : (
       <ul className="flex flex-wrap gap-2.5">
         {rounds.map((b) => (
           <li key={b.id} className="flex-[1_1_200px]">
@@ -104,13 +123,8 @@ function BonusList({ progress, today, activeId }: { progress: Progress; today: s
           </li>
         ))}
         {rounds.length < MAX_BONUS_PER_DAY && (
-          <li className="flex-[1_1_200px]">
-            <Link href="/library" className="flex h-full flex-col gap-1 rounded-[14px] border-2 border-dashed border-line-strong p-3.5 text-ink no-underline hover:text-ink">
-              <strong>
-                {MAX_BONUS_PER_DAY - rounds.length} more today
-              </strong>
-              <span className="text-[14px] text-body">Read something and answer its field note</span>
-            </Link>
+          <li className="flex-[1_1_200px] self-center text-[15px] text-body">
+            <strong className="num">{MAX_BONUS_PER_DAY - rounds.length}</strong> more can open today.
           </li>
         )}
       </ul>

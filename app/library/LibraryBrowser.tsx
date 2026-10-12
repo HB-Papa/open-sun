@@ -155,6 +155,23 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
         <a href="#results" className="sr-only focus:not-sr-only focus:rounded-full focus:bg-card focus:px-4 focus:py-2 focus:font-bold">
           Skip to results
         </a>
+        {/* Quick topics for phones, where the full filter panel is folded away. */}
+        <div className="-mx-4 flex w-[calc(100%+2rem)] gap-2 overflow-x-auto px-4 md:hidden" role="group" aria-label="Popular topics">
+          {allTopics.slice(0, 4).map(([t]) => {
+            const on = topics.includes(t);
+            return (
+              <button
+                key={t}
+                type="button"
+                aria-pressed={on}
+                onClick={() => setTopics(on ? topics.filter((x) => x !== t) : [...topics, t])}
+                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-[15px] ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
+              >
+                {topicLabel(t)}
+              </button>
+            );
+          })}
+        </div>
         <div className="w-full md:hidden">
           <button
             type="button"
@@ -198,6 +215,23 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
               Clear all filters
             </button>
           )}
+          {/* On phones the results sit below this panel, so close it and jump straight to them. */}
+          <div className="sticky bottom-3 md:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                setFiltersOpen(false);
+                requestAnimationFrame(() => {
+                  const r = document.getElementById('results');
+                  r?.scrollIntoView({ block: 'start' });
+                  r?.focus({ preventScroll: true });
+                });
+              }}
+              className="min-h-12 w-full rounded-full bg-leaf font-bold text-white shadow-[0_8px_20px_-8px_rgba(13,24,18,.6)]"
+            >
+              Show {results.length} {results.length === 1 ? 'item' : 'items'}
+            </button>
+          </div>
         </aside>
 
         <section id="results" tabIndex={-1} aria-label="Results" className="flex min-w-0 flex-[999_1_560px] flex-col gap-4">
