@@ -30,16 +30,16 @@ export function SiteHeader() {
 
   return (
     <header className="border-b border-line bg-card">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-3 gap-y-4 px-4 py-3 sm:px-6 sm:py-4">
-        <Link href="/" className="mr-auto flex items-center gap-2.5 text-ink no-underline hover:text-ink md:mr-0">
-          <Logo />
-          <span className="font-serif text-[26px] font-bold">Open Sun</span>
+      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-2 gap-y-4 px-4 py-3 min-[400px]:gap-x-3 sm:px-6 sm:py-4">
+        <Link href="/" className="mr-auto flex min-w-0 items-center gap-2 text-ink no-underline hover:text-ink min-[400px]:gap-2.5 md:mr-0">
+          <Logo size={32} />
+          <span className="font-serif text-[21px] font-bold min-[360px]:text-[23px] min-[400px]:text-[26px]">Open Sun</span>
         </Link>
         {pathname !== '/play' && <PlayPill />}
         <button
           ref={menuButton}
           type="button"
-          className="min-h-11 rounded-full border-2 border-line-strong bg-card px-4 font-bold text-ink md:hidden"
+          className="min-h-11 rounded-full border-2 border-line-strong bg-card px-3 font-bold text-ink min-[360px]:px-4 md:hidden"
           aria-expanded={open}
           aria-controls="main-nav"
           onClick={() => setOpen((o) => !o)}
@@ -86,13 +86,14 @@ function PlayPill() {
   return (
     <Link
       href="/play"
-      className="inline-flex min-h-11 items-center gap-2 rounded-full bg-forest px-4 font-bold text-on-forest no-underline hover:text-on-forest md:hidden"
+      className="inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 font-bold min-[360px]:px-3.5 text-on-forest no-underline hover:text-on-forest md:hidden"
     >
-      <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-sun" />
+      <span aria-hidden="true" className="hidden h-2.5 w-2.5 rounded-full bg-sun min-[360px]:block" />
+      {/* After today's game, a short tick keeps the header on one line; screen readers hear the full words. */}
       {played ? (
         <>
-          Played <span aria-hidden="true">✓</span>
-          <span className="sr-only">today</span>
+          <span aria-hidden="true">✓</span>
+          <span className="sr-only">Played today</span>
         </>
       ) : (
         'Play'
