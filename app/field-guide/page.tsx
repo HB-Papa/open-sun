@@ -19,7 +19,7 @@ export default function FieldGuidePage() {
           <h1 className="font-serif text-[40px] font-bold leading-none sm:text-[56px]">Field Guide</h1>
           <VineRule className="hidden sm:flex" />
         </div>
-        <p className="max-w-[60ch] text-lg leading-normal text-body">
+        <p className="max-w-[35rem] text-lg leading-normal text-body">
           Short definitions of the ideas you’ll meet in the library and in the Microgrid puzzle. Each term links to readings.
         </p>
       </div>
@@ -41,9 +41,9 @@ export default function FieldGuidePage() {
                 </span>
                 {t.term}
               </dt>
-              <dd className="mt-2 max-w-[60ch] text-[17px] leading-relaxed text-body">{t.definition}</dd>
+              <dd className="mt-2 max-w-[35rem] text-[17px] leading-relaxed text-body">{t.definition}</dd>
               {related.length > 0 && (
-                <dd className="mt-3 max-w-[66ch] text-[15px]">
+                <dd className="mt-3 max-w-[33rem] text-[15px]">
                   <span className="font-bold">Read more: </span>
                   {related.map((r, k) => (
                     <span key={r.slug}>

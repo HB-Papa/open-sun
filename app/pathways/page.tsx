@@ -18,7 +18,7 @@ export default function PathwaysPage() {
           <h1 className="font-serif text-[44px] font-bold leading-none sm:text-[56px]">Pathways</h1>
           <VineRule className="hidden sm:flex" />
         </div>
-        <p className="max-w-[60ch] text-lg leading-normal text-body">
+        <p className="max-w-[35rem] text-lg leading-normal text-body">
           Short routes through the library, {readingsPhrase(pathways)} readings each. Each one grows a vine as you go.
         </p>
       </div>

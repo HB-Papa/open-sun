@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { MicrogridGame } from '@/components/microgrid/MicrogridGame';
+import { BoardSkeleton, MicrogridGame } from '@/components/microgrid/MicrogridGame';
 import { localDateKey, VARIANT_INFO } from '@/lib/microgrid';
 import {
   currentStreak,
@@ -26,7 +26,7 @@ export function PlayClient() {
   const onSaveDaily = useCallback((g: DailyGame) => today && saveDaily(today, g), [today]);
   const onSaveBonus = useCallback((g: DailyGame) => today && bonusId && saveBonus(today, bonusId, g), [today, bonusId]);
 
-  if (!today || !progress) return <p className="py-16 text-center text-lg text-muted">Loading the puzzle…</p>;
+  if (!today || !progress) return <BoardSkeleton label="Loading the puzzle…" />;
 
   const rounds = progress.bonus[today] ?? [];
   const bonus = bonusId ? rounds.find((b) => b.id === bonusId) : undefined;

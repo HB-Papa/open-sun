@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getAllItems, getItem, relatedItems } from '@/lib/content';
+import { getAllItems, getItem, getPathways, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
 import { LANGUAGES, topicLabel, TYPE_COLORS } from '@/lib/topics';
 import { yearText } from '@/lib/types';
@@ -10,6 +10,7 @@ import { VineRule } from '@/components/Ornaments';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
 import { FieldNoteCard, ReadItLink, ReadToEnd } from './FieldNote';
+import { NextStop, PathwayStrip, type Membership } from './PathwayContext';
 import { PageSky } from '@/components/PageSky';
 
 // Pages are built ahead of time; a slug added while `npm run dev` is running is
@@ -31,6 +32,12 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
   if (!item) notFound();
   const related = relatedItems(item);
   const cites = { apa: apa(item), chicago: chicago(item) };
+  // Pathways this reading belongs to, so the page can say where it sits on the route.
+  const pathways = getPathways();
+  const memberships: Membership[] = pathways
+    .map((p, k) => ({ pathway: p, index: p.steps.findIndex((s) => s.slug === item.slug), next: pathways[(k + 1) % pathways.length] }))
+    .filter((m) => m.index >= 0)
+    .slice(0, 2);
   const venueLine = [item.venue, item.volume && `${item.volume}${item.issue ? `(${item.issue})` : ''}`, !item.volume && item.issue && `no. ${item.issue}`, item.pages]
     .filter(Boolean)
     .join(', ');
@@ -49,6 +56,9 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             </>
           )}
         </nav>
+        {memberships.map((m) => (
+          <PathwayStrip key={m.pathway.slug} m={m} />
+        ))}
         <div className="flex flex-wrap gap-2">
           <span className="rounded-full px-3 py-1 text-[13px] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
             {item.type}
@@ -110,6 +120,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
         {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
         <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
         <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
+        {memberships[0] && <NextStop m={memberships[0]} />}
       </article>
 
       <aside className="flex min-w-0 flex-[1_1_300px] flex-col gap-5 lg:sticky lg:top-6">

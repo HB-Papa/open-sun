@@ -35,7 +35,8 @@ export function SiteHeader() {
           <Logo size={32} />
           <span className="font-serif text-[21px] font-bold min-[360px]:text-[23px] min-[400px]:text-[26px]">Open Sun</span>
         </Link>
-        {pathname !== '/play' && <PlayPill />}
+        {/* The home hero has its own Play row, and /play is the game itself. */}
+        {pathname !== '/play' && pathname !== '/' && <PlayPill />}
         <button
           ref={menuButton}
           type="button"
