@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { localDateKey, puzzleNumber } from '@/lib/microgrid';
+import { currentTheme, subscribeTheme } from '@/lib/theme';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -21,14 +22,13 @@ export function useSkyPhase(): Phase | null {
   // Unknown until the browser reports its clock and theme, so nothing paints in the wrong sky first.
   const [phase, setPhase] = useState<Phase | null>(null);
   useEffect(() => {
-    const dark = window.matchMedia('(prefers-color-scheme: dark)');
-    const tick = () => setPhase(dark.matches ? 'night' : phaseFor(new Date().getHours()));
+    const tick = () => setPhase(currentTheme() === 'dark' ? 'night' : phaseFor(new Date().getHours()));
     tick();
     const id = setInterval(tick, 5 * 60 * 1000);
-    dark.addEventListener('change', tick);
+    const unsubscribe = subscribeTheme(tick);
     return () => {
       clearInterval(id);
-      dark.removeEventListener('change', tick);
+      unsubscribe();
     };
   }, []);
   return phase;
@@ -42,6 +42,21 @@ function phaseFor(h: number): Phase {
 }
 
 const r1 = (n: number) => Math.round(n * 10) / 10;
+
+/**
+ * A crescent moon as one shape: the disc of radius R at (cx, cy) with the part covered by a
+ * second disc (radius r, offset dx, dy) cut away. Drawn as a single path, so it reads as one
+ * object whatever the sky behind it (a covering disc never matches a gradient sky).
+ */
+export function crescentPath(cx: number, cy: number, R: number, dx: number, dy: number, r: number): string {
+  const d = Math.hypot(dx, dy);
+  const [ux, uy] = [dx / d, dy / d];
+  const a = (R * R - r * r + d * d) / (2 * d);
+  const h = Math.sqrt(R * R - a * a);
+  const p1 = [cx + a * ux + h * uy, cy + a * uy - h * ux].map(r1);
+  const p2 = [cx + a * ux - h * uy, cy + a * uy + h * ux].map(r1);
+  return `M${p1[0]} ${p1[1]} A${R} ${R} 0 1 0 ${p2[0]} ${p2[1]} A${r} ${r} 0 0 1 ${p1[0]} ${p1[1]}Z`;
+}
 
 const INK = '#1E3328';
 
@@ -78,8 +93,9 @@ export function EcoHomes({ night, glass, leaf, turf }: { night: boolean; glass: 
     <g strokeLinejoin="round">
       {/* Cottage with a sloping sod roof, a big window and a flower box. */}
       <g style={{ ['--d' as string]: '0.2s' }}>
-      <rect x="664" y="262" width="66" height="42" fill={wood} stroke={INK} strokeWidth="2" />
-      <path d="M672 266 V302 M682 266 V302 M720 266 V302" stroke={INK} strokeOpacity="0.18" strokeWidth="1.5" />
+      {/* The wall rises with the roof, so no sky shows between them. */}
+      <path d="M664 304 V265 L730 254 V304 Z" fill={wood} stroke={INK} strokeWidth="2" />
+      <path d="M672 265 V302 M682 263 V302 M720 257 V302" stroke={INK} strokeOpacity="0.18" strokeWidth="1.5" />
       <path d="M656 266 L738 252 L738 245 L656 259 Z" fill={turf} stroke={INK} strokeWidth="2" />
       <Tufts leaf={leaf} points={[[662, 258], [674, 256], [688, 254], [702, 251], [716, 249], [730, 247]]} />
       <Pane x={670} y={272} w={28} h={18} glass={glass} />
@@ -270,7 +286,7 @@ export function Hero() {
               })}
             </g>
           )}
-          <circle cx={sun.x} cy={sun.y} r={night ? 44 : 60} fill={p.sun} />
+          {night ? <path d={crescentPath(sun.x, sun.y, 44, 18, -10, 40)} fill={p.sun} /> : <circle cx={sun.x} cy={sun.y} r={60} fill={p.sun} />}
           {!night && (
             <g stroke="#FFFDF7" strokeOpacity="0.55" strokeWidth="2" fill="none">
               <circle cx={sun.x} cy={sun.y} r="42" />
@@ -280,7 +296,6 @@ export function Hero() {
               })}
             </g>
           )}
-          {night && <circle cx={sun.x + 18} cy={sun.y - 10} r={40} fill={p.sky} />}
         </motion.g>
 
         {/* Far hills, with a turbine on the ridge. */}

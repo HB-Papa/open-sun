@@ -1,49 +1,65 @@
 @import 'tailwindcss';
 
+/* dark: utilities follow the chosen theme, or the device setting when none is chosen. */
+@custom-variant dark {
+  &:where([data-theme='dark'], [data-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme='light']), :root:not([data-theme='light']) *) {
+      @slot;
+    }
+  }
+}
+
 /* Design tokens from the style tile. Night values are a softer, darker set. */
 :root {
-  --paper: #f6f1e4;
-  --card: #fffdf7;
-  --line: #dcd3bc;
-  --line-strong: #cfc4a6;
-  --ink: #1e3328;
-  --body: #2e3e34;
-  --muted: #4a5a50;
-  --leaf: #2f6b45;
-  --leaf-ink: #2f6b45;
+  --paper: light-dark(#f6f1e4, #142219);
+  --card: light-dark(#fffdf7, #1b2c22);
+  --line: light-dark(#dcd3bc, #34493c);
+  --line-strong: light-dark(#cfc4a6, #4a6252);
+  --ink: light-dark(#1e3328, #eee8d6);
+  --body: light-dark(#2e3e34, #dcd8c8);
+  --muted: light-dark(#4a5a50, #b6c3b3);
+  /* Dark: A lighter leaf so buttons stand off the dark paper; white text stays above 5:1. */
+  --leaf: light-dark(#2f6b45, #357a4f);
+  --leaf-ink: light-dark(#2f6b45, #8fcb9f);
   --sun: #e3a72f;
-  --sky: #1f6f78;
-  --sky-hover: #174f56;
+  --sky: light-dark(#1f6f78, #86ccd4);
+  --sky-hover: light-dark(#174f56, #b3e2e7);
   --meadow: #a9c48e;
-  --pale-sun: #f3e3b5;
-  --forest: #1e3328;
-  --forest-2: #2a4436;
+  --pale-sun: light-dark(#f3e3b5, #4a4122);
+  --forest: light-dark(#1e3328, #0d1812);
+  --forest-2: light-dark(#2a4436, #1d3226);
   --on-forest: #f6f1e4;
   --on-forest-muted: #dce6d8;
-  --chip: #efe8d3;
-  --chip-hover: #e8dfc6;
-  --chip-leaf: #cfe3d3;
-  --chip-sky: #cde4e6;
-  --chip-clay: #ead9c9;
-  --chip-rose: #f0d6d0;
-  --terracotta: #b5563a;
-  --input-bg: #ffffff;
+  /* Gold text on the always-dark surfaces (forest panels, the night village). Same in both themes. */
+  --on-forest-gold: #f3e3b5;
+  --chip: light-dark(#efe8d3, #263a2e);
+  --chip-hover: light-dark(#e8dfc6, #2f4638);
+  --chip-leaf: light-dark(#cfe3d3, #24432f);
+  --chip-sky: light-dark(#cde4e6, #1f4247);
+  --chip-clay: light-dark(#ead9c9, #47392b);
+  --chip-rose: light-dark(#f0d6d0, #4a2f33);
+  --terracotta: light-dark(#b5563a, #e48e72);
+  --input-bg: light-dark(#ffffff, #0f1b14);
   /* Focus ring: teal reads on paper; panels on forest switch it to sun. */
-  --focus: #1f6f78;
+  --focus: light-dark(#1f6f78, #e3a72f);
   /* Microgrid board. */
-  --board: #a9c48e;
-  --g-open: #cfe3d3;
-  --g-ridge: #d3c98f;
+  /* Dark: A moonlit board: mid-tones, so the dark icon strokes still read. */
+  --board: light-dark(#a9c48e, #5c7a55);
+  --g-open: light-dark(#cfe3d3, #9fb79f);
+  --g-ridge: light-dark(#d3c98f, #b8ad78);
   /* Rocky ground: unbuildable stony plots. */
-  --g-rock: #d8d0c2;
-  --rock-light: #a89e8c;
-  --rock-dark: #6f675a;
-  --g-home: #f3e3b5;
-  --g-green: #a9c48e;
-  --g-solar: #1f6f78;
-  --g-wind: #d5e9ec;
-  --g-battery: #2f6b45;
-  --g-garden: #cfe3d3;
+  --g-rock: light-dark(#d8d0c2, #a49c8d);
+  --rock-light: light-dark(#a89e8c, #7c7466);
+  --rock-dark: light-dark(#6f675a, #4e4840);
+  --g-home: light-dark(#f3e3b5, #e0cf9a);
+  --g-green: light-dark(#a9c48e, #8fae78);
+  --g-solar: light-dark(#1f6f78, #1f6f78);
+  --g-wind: light-dark(#d5e9ec, #b9d4d8);
+  --g-battery: light-dark(#2f6b45, #2f6b45);
+  --g-garden: light-dark(#cfe3d3, #a9c9b0);
   /* Puzzle-card preview tiles (on the forest panel in both themes). */
   --tile-open: #5e9467;
   --tile-ridge: #7c9a6a;
@@ -60,57 +76,21 @@
   --sprout-rose: #f0d6d0;
   --sprout-teal: #1f6f78;
   /* Field-note answers. */
-  --option-bg: #fffdf7;
-  --option-ink: #1e3328;
-  --option-line: #dcd3bc;
+  --option-bg: light-dark(#fffdf7, #1b2c22);
+  --option-ink: light-dark(#1e3328, #eee8d6);
+  --option-line: light-dark(#dcd3bc, #4a6252);
+  /* Each colour holds its light and dark value; color-scheme picks one. It follows the device
+     unless the visitor chooses a theme, which sets data-theme on <html> (see ThemeToggle). */
+  color-scheme: light dark;
+}
+:root[data-theme='light'] {
   color-scheme: light;
 }
+:root[data-theme='dark'] {
+  color-scheme: dark;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #142219;
-    --card: #1b2c22;
-    --line: #34493c;
-    --line-strong: #4a6252;
-    --ink: #eee8d6;
-    --body: #dcd8c8;
-    --muted: #b6c3b3;
-    /* A lighter leaf so buttons stand off the dark paper; white text stays above 5:1. */
-    --leaf: #357a4f;
-    --leaf-ink: #8fcb9f;
-    --sky: #86ccd4;
-    --sky-hover: #b3e2e7;
-    --pale-sun: #4a4122;
-    --forest: #0d1812;
-    --forest-2: #1d3226;
-    --chip: #263a2e;
-    --chip-hover: #2f4638;
-    --chip-leaf: #24432f;
-    --chip-sky: #1f4247;
-    --chip-clay: #47392b;
-    --chip-rose: #4a2f33;
-    --terracotta: #e48e72;
-    --input-bg: #0f1b14;
-    --focus: #e3a72f;
-    /* A moonlit board: mid-tones, so the dark icon strokes still read. */
-    --board: #5c7a55;
-    --g-open: #9fb79f;
-    --g-ridge: #b8ad78;
-    --g-rock: #a49c8d;
-    --rock-light: #7c7466;
-    --rock-dark: #4e4840;
-    --g-home: #e0cf9a;
-    --g-green: #8fae78;
-    --g-solar: #1f6f78;
-    --g-wind: #b9d4d8;
-    --g-battery: #2f6b45;
-    --g-garden: #a9c9b0;
-    --option-bg: #1b2c22;
-    --option-ink: #eee8d6;
-    --option-line: #4a6252;
-    color-scheme: dark;
-  }
 }
+
 
 @theme inline {
   --color-paper: var(--paper);
@@ -130,6 +110,7 @@
   --color-forest-2: var(--forest-2);
   --color-on-forest: var(--on-forest);
   --color-on-forest-muted: var(--on-forest-muted);
+  --color-on-forest-gold: var(--on-forest-gold);
   --color-chip: var(--chip);
   --color-chip-hover: var(--chip-hover);
   --color-chip-leaf: var(--chip-leaf);
@@ -198,9 +179,12 @@
     letter-spacing: 0.01em;
   }
   @media (prefers-color-scheme: dark) {
-    body {
+    :root:not([data-theme='light']) body {
       letter-spacing: 0.006em;
     }
+  }
+  :root[data-theme='dark'] body {
+    letter-spacing: 0.006em;
   }
   .on-forest :focus-visible {
     outline-color: var(--sun);
@@ -318,31 +302,76 @@
 
 /* Microgrid page: on phones the board comes first (with a compact forecast strip above it),
    then results, then the full forecast and rules. On wide screens the forecast sits beside the board. */
+/* The game page: one column on phones, where .play-col steps aside so each panel's order class sets the
+   reading order; two independent columns on wide screens, so one tall column never leaves a hole in the other. */
 .play-layout {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 24px;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: 'board' 'rest' 'forecast';
 }
-.play-layout > [data-area='forecast'] {
-  grid-area: forecast;
+.play-col {
+  display: contents;
 }
-.play-layout > [data-area='board'] {
-  grid-area: board;
-}
-.play-layout > [data-area='rest'] {
-  grid-area: rest;
-}
-/* Wide screens: the board column is as wide as the board, and each run's results land right under it,
-   so cause and effect read together. The forecast and rules fill the rest of the row. */
 @media (min-width: 900px) {
   .play-layout {
-    gap: 28px 48px;
-    grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    grid-template-areas: 'board forecast' 'rest forecast';
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
     align-items: start;
   }
+  .play-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+}
+
+/* The forecast's hour slider, drawn from the theme tokens (the browser's own track turns white in dark mode). */
+.hour-range {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.hour-range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--leaf) var(--fill, 50%), var(--line-strong) var(--fill, 50%));
+}
+.hour-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--leaf);
+  border: 3px solid var(--card);
+  box-shadow: 0 0 0 1px var(--leaf);
+}
+.hour-range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line-strong);
+}
+.hour-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--leaf);
+}
+.hour-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--leaf);
+  border: 3px solid var(--card);
+  box-shadow: 0 0 0 1px var(--leaf);
+}
+
+/* Switching theme crossfades the whole page instead of snapping (see switchTheme). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.6s;
+  animation-timing-function: ease-in-out;
 }
 
 .skip-link {

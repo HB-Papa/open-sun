@@ -45,4 +45,15 @@ export const LANGUAGES: Record<string, string> = {
   pt: 'Portuguese',
   fr: 'French',
   de: 'German',
+  pl: 'Polish',
 };
+
+/** A language's English name from its code; codes not listed above fall back to the browser's own name for them. */
+export function languageName(code: string): string {
+  if (LANGUAGES[code]) return LANGUAGES[code];
+  try {
+    return new Intl.DisplayNames(['en'], { type: 'language' }).of(code) ?? code;
+  } catch {
+    return code;
+  }
+}

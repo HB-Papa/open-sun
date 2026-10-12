@@ -1,4 +1,7 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = { title: 'Page not found' };
 
 export default function NotFound() {
   return (
@@ -6,7 +9,7 @@ export default function NotFound() {
       <h1 className="font-serif text-page font-bold">This path is overgrown</h1>
       <p className="text-lede text-body">We couldn’t find that page. It may have moved, or the link may be mistyped.</p>
       <p className="text-lede">
-        <Link href="/library">Browse the library</Link> or <Link href="/">go back to Today</Link>.
+        <Link href="/library">Browse the library</Link> or <Link href="/">go back home</Link>.
       </p>
     </main>
   );

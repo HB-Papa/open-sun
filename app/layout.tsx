@@ -3,6 +3,7 @@ import { Fraunces, Atkinson_Hyperlegible } from 'next/font/google';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SITE } from '@/lib/site';
+import { THEME_SCRIPT } from '@/lib/themeScript';
 import './globals.css';
 
 const fraunces = Fraunces({ subsets: ['latin'], weight: ['400', '600', '700'], variable: '--font-fraunces', display: 'swap' });
@@ -26,7 +27,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${atkinson.variable}`}>
+    // The theme script may set data-theme before React loads, so <html> can differ from the server's copy.
+    <html lang="en" className={`${fraunces.variable} ${atkinson.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="min-h-screen flex flex-col">
         <a href="#main" className="skip-link">
           Skip to content

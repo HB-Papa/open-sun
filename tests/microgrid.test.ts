@@ -54,6 +54,18 @@ test('share text uses real emoji, not garbled characters', () => {
   assert.doesNotMatch(emoji + plain, /[ÃÂâð]/);
 });
 
+test('the share grid is two rows of 12 whole hours, with no split emoji', () => {
+  // Mixed lit and dark hours: a split by string index would cut a 🟨 in half.
+  const lit = Array.from({ length: HOURS }, (_, h) => !(h >= 3 && h < 6) && h < 21);
+  const rows = shareText(2, false, 3, lit).emoji.split('\n').slice(2);
+  assert.equal(rows.length, 2);
+  for (const r of rows) {
+    assert.ok(r.isWellFormed(), 'no half emoji');
+    assert.equal([...r].length, 12);
+  }
+  assert.equal(rows.join(''), lit.map((ok) => (ok ? '🟨' : '⬛')).join(''));
+});
+
 test('generation is deterministic', () => {
   const a = generatePuzzle('2027-01-05', 'daily', 'x');
   const b = generatePuzzle('2027-01-05', 'daily', 'x');

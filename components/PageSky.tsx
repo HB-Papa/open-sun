@@ -1,6 +1,6 @@
 'use client';
 
-import { PALETTES, useSkyPhase } from './HeroSky';
+import { crescentPath, PALETTES, useSkyPhase } from './HeroSky';
 
 /**
  * A short band of the home page's sky and hills for the top of inner pages,
@@ -29,10 +29,7 @@ export function PageSky() {
           </g>
         )}
         {night ? (
-          <g>
-            <circle cx={sun.x} cy={sun.y} r="20" fill={p.sun} />
-            <circle cx={sun.x + 9} cy={sun.y - 5} r="18" fill={p.sky} />
-          </g>
+          <path d={crescentPath(sun.x, sun.y, 20, 9, -5, 18)} fill={p.sun} />
         ) : (
           <g fill={p.sun}>
             {Array.from({ length: 12 }, (_, k) => (
