@@ -40,6 +40,20 @@
   --g-wind: #d5e9ec;
   --g-battery: #2f6b45;
   --g-garden: #cfe3d3;
+  /* Puzzle-card preview tiles (on the forest panel in both themes). */
+  --tile-open: #5e9467;
+  --tile-ridge: #7c9a6a;
+  --tile-home: #f3e3b5;
+  --tile-tree: #2f6b45;
+  --tile-pond: #4f97a0;
+  /* Garden sprouts. */
+  --sprout-stem: #2f6b45;
+  --sprout-leaf: #5e9467;
+  --sprout-leaf-2: #3e7c4f;
+  --sprout-light: #a9c48e;
+  --sprout-seed: #6b4a2e;
+  --sprout-rose: #f0d6d0;
+  --sprout-teal: #1f6f78;
   /* Field-note answers. */
   --option-bg: #fffdf7;
   --option-ink: #1e3328;
@@ -165,6 +179,20 @@
 
   a {
     text-underline-offset: 0.18em;
+  }
+  /* Links inside running text are underlined, so they never rely on colour alone (WCAG 1.4.1).
+     Standalone links and cards opt out with the no-underline utility. */
+  .prose-os a,
+  p a,
+  dd a,
+  li > a:not([class]) {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+  }
+  .prose-os a:hover,
+  p a:hover,
+  dd a:hover {
+    text-decoration-thickness: 2px;
   }
 }
 
@@ -316,7 +344,7 @@
 .prose-os {
   /* Atkinson's "0" is wide, so ch units overshoot; 35rem holds about 70 characters at 18px. */
   max-width: 35rem;
-  font-size: 18px;
+  font-size: 1.125rem;
   line-height: 1.6;
   color: var(--body);
 }
@@ -325,7 +353,7 @@
 }
 .prose-os h2 {
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: 1.75rem;
   line-height: 1.2;
   color: var(--ink);
   margin-top: 1.6em;
@@ -360,14 +388,20 @@
   }
 }
 
+/* Reduced motion removes movement (spins, slides, lifts, pulses, smooth scrolling) but keeps
+   gentle fades and colour changes, which carry state without moving anything. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    transition-property: opacity, color, background-color, border-color, fill, stroke, outline-color, text-decoration-color !important;
     scroll-behavior: auto !important;
+  }
+  /* The village's windows lighting up is a colour change, not movement: keep it. */
+  .village-lights .pane {
+    animation-duration: 0.8s !important;
   }
   .card:hover {
     transform: none;

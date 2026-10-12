@@ -9,8 +9,8 @@ export function SiteFooter() {
       </svg>
       <div className="mx-auto flex max-w-[1200px] flex-wrap justify-between gap-8 px-4 py-10 sm:px-6">
         <div className="max-w-md flex-[1_1_320px]">
-          <p className="mb-2 font-serif text-[22px] text-on-forest">Open Sun</p>
-          <p className="text-[15px] leading-relaxed">
+          <p className="mb-2 font-serif text-[1.375rem] text-on-forest">Open Sun</p>
+          <p className="text-[0.9375rem] leading-relaxed">
             Every item is free to read. New items are found by a search each week and approved by a person before they appear.
           </p>
         </div>

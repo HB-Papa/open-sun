@@ -49,7 +49,7 @@ export function VineRule({ className = '' }: { className?: string }) {
 export function SectionHeading({ id, children, action }: { id: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <h2 id={id} className="font-serif text-[30px] font-semibold leading-tight sm:text-[34px]">
+      <h2 id={id} className="font-serif text-[1.875rem] font-semibold leading-tight sm:text-[2.125rem]">
         {children}
       </h2>
       <VineRule className="hidden sm:flex" />

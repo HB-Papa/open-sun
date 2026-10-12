@@ -2,13 +2,15 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { baseDemand, generatePuzzle, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
+import { baseDemand, localDateKey, puzzleNumber, type Puzzle, type Terrain } from '@/lib/microgrid';
 import { useProgress } from '@/lib/progress';
+import { getPuzzle } from '@/lib/puzzleCache';
 import { forecastSentence } from './microgrid/DayCharts';
 import { NouveauCorners } from './Ornaments';
 import { Nums } from '@/lib/nums';
 
-const TILE: Record<Terrain, string> = { open: '#5E9467', ridge: '#7C9A6A', home: '#F3E3B5', tree: '#2F6B45', pond: '#4F97A0' };
+// The puzzle card's preview tiles sit on the forest panel in both themes; their colours are tokens.
+const TILE: Record<Terrain, string> = { open: 'var(--tile-open)', ridge: 'var(--tile-ridge)', home: 'var(--tile-home)', tree: 'var(--tile-tree)', pond: 'var(--tile-pond)' };
 
 export function TodayPuzzleCard() {
   const progress = useProgress();
@@ -17,7 +19,7 @@ export function TodayPuzzleCard() {
   useEffect(() => {
     const d = localDateKey();
     setToday(d);
-    const t = setTimeout(() => setPuzzle(generatePuzzle(d)), 50);
+    const t = setTimeout(() => setPuzzle(getPuzzle(d)), 50);
     return () => clearTimeout(t);
   }, []);
 
@@ -28,10 +30,10 @@ export function TodayPuzzleCard() {
     <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
       <NouveauCorners />
       <div className="flex-[1_1_260px]">
-        <h2 id="today" className="mb-2 font-serif text-[40px] font-bold leading-none sm:text-[48px]">
+        <h2 id="today" className="mb-2 font-serif text-[2.5rem] font-bold leading-none sm:text-[3rem]">
           Microgrid {today ? <span className="text-sun">#{puzzleNumber(today)}</span> : ''}
         </h2>
-        <p className="mb-3 text-[17px] text-on-forest">Today’s puzzle takes about three minutes.</p>
+        <p className="mb-3 text-[1.0625rem] text-on-forest">Today’s puzzle takes about three minutes.</p>
         <p className="mb-[22px] text-lg leading-normal text-on-forest-muted">
           Keep a small neighborhood lit for all 24 hours.{' '}
           {puzzle ? <Nums text={shortForecast(puzzle)} /> : 'Checking today’s forecast…'}
@@ -104,36 +106,36 @@ function Sprout({ k }: { k: number }) {
   if (k < 0)
     return (
       <svg width="30" height="40" viewBox="0 0 46 60">
-        <path d="M23 60 V44" stroke="#2F6B45" strokeWidth="3" />
-        <path d="M23 48 C16 46 14 40 17 36 C22 38 24 42 23 48Z" fill="#A9C48E" />
+        <path d="M23 60 V44" stroke="var(--sprout-stem)" strokeWidth="3" />
+        <path d="M23 48 C16 46 14 40 17 36 C22 38 24 42 23 48Z" fill="var(--sprout-light)" />
       </svg>
     );
   const kind = k % 4;
   const h = 40 + (k % 17);
   return (
     <svg width="30" height={h} viewBox={`0 0 46 ${h * 1.5}`}>
-      <path d={`M23 ${h * 1.5} V${kind === 1 ? 22 : 28}`} stroke="#2F6B45" strokeWidth="3" />
+      <path d={`M23 ${h * 1.5} V${kind === 1 ? 22 : 28}`} stroke="var(--sprout-stem)" strokeWidth="3" />
       {kind === 0 && (
         <>
-          <path d="M23 40 C10 36 8 26 12 20 C20 22 24 30 23 40Z" fill="#5E9467" />
-          <path d="M23 34 C36 30 38 20 34 14 C26 16 22 24 23 34Z" fill="#3E7C4F" />
+          <path d="M23 40 C10 36 8 26 12 20 C20 22 24 30 23 40Z" fill="var(--sprout-leaf)" />
+          <path d="M23 34 C36 30 38 20 34 14 C26 16 22 24 23 34Z" fill="var(--sprout-leaf-2)" />
         </>
       )}
       {kind === 1 && (
         <>
-          <circle cx="23" cy="18" r="10" fill="#E3A72F" />
-          <circle cx="23" cy="18" r="4" fill="#6B4A2E" />
+          <circle cx="23" cy="18" r="10" fill="var(--sun)" />
+          <circle cx="23" cy="18" r="4" fill="var(--sprout-seed)" />
         </>
       )}
       {kind === 2 && (
         <>
-          <circle cx="17" cy="22" r="6" fill="#F0D6D0" />
-          <circle cx="29" cy="22" r="6" fill="#F0D6D0" />
-          <circle cx="23" cy="15" r="6" fill="#F0D6D0" />
-          <circle cx="23" cy="21" r="3.5" fill="#E3A72F" />
+          <circle cx="17" cy="22" r="6" fill="var(--sprout-rose)" />
+          <circle cx="29" cy="22" r="6" fill="var(--sprout-rose)" />
+          <circle cx="23" cy="15" r="6" fill="var(--sprout-rose)" />
+          <circle cx="23" cy="21" r="3.5" fill="var(--sun)" />
         </>
       )}
-      {kind === 3 && <path d="M23 30 C14 26 14 14 23 8 C32 14 32 26 23 30Z" fill="#1F6F78" />}
+      {kind === 3 && <path d="M23 30 C14 26 14 14 23 8 C32 14 32 26 23 30Z" fill="var(--sprout-teal)" />}
     </svg>
   );
 }

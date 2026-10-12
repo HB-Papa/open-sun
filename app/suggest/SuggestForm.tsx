@@ -42,7 +42,7 @@ export function SuggestForm() {
     <form onSubmit={onSubmit} className="nouveau relative flex flex-col gap-5 rounded-[24px] border border-line bg-card px-6 pb-7 pt-10 sm:px-9" noValidate={false}>
       <NouveauCorners />
       {/* A library slip: a dashed tear line, as on a borrowing card. */}
-      <div className="-mt-2 flex items-center gap-3 border-b-2 border-dashed border-line-strong pb-3 font-serif text-[20px] font-semibold" aria-hidden="true">
+      <div className="-mt-2 flex items-center gap-3 border-b-2 border-dashed border-line-strong pb-3 font-serif text-[1.25rem] font-semibold" aria-hidden="true">
         Suggestion slip
       </div>
       <div className="flex flex-col gap-1.5">
@@ -74,7 +74,7 @@ export function SuggestForm() {
         <label htmlFor="s-website">Leave this empty</label>
         <input id="s-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      <p className="text-[14px] text-muted">Please don’t include private information. Suggestions are posted to the site’s public review list.</p>
+      <p className="text-[0.875rem] text-muted">Please don’t include private information. Suggestions are posted to the site’s public review list.</p>
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={status.kind === 'sending'} className="min-h-12 rounded-full bg-leaf px-6 font-bold text-white disabled:opacity-60">
           {status.kind === 'sending' ? 'Sending…' : 'Send suggestion'}
