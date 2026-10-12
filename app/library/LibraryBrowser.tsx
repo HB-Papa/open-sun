@@ -159,7 +159,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search titles, authors, summaries, and topics"
-          className="min-h-[52px] flex-[1_1_320px] rounded-full border-2 border-line-strong bg-input px-[18px] text-lg text-ink placeholder:text-muted"
+          className="min-h-[52px] flex-[1_1_320px] rounded-full border-2 border-line-strong bg-input px-[18px] text-lede text-ink placeholder:text-muted"
         />
         <div className="hidden flex-wrap gap-2 sm:flex" role="group" aria-label="View">
           {(['grid', 'list'] as const).map((v) => (
@@ -190,7 +190,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setTopics(on ? topics.filter((x) => x !== t) : [...topics, t])}
-                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-[0.9375rem] ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
+                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-small ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
               >
                 {topicLabel(t)}
               </button>
@@ -261,7 +261,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
 
         <section id="results" tabIndex={-1} aria-label="Results" className="flex min-w-0 flex-[999_1_560px] flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="text-base text-muted" aria-hidden="true">
+            <p className="text-copy text-muted" aria-hidden="true">
               {countText}
             </p>
             <p className="sr-only" role="status" aria-live="polite">
@@ -282,9 +282,9 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
             />
           </div>
           {results.length === 0 ? (
-            <div className="rounded-[18px] border border-line bg-card p-6 text-lg">
+            <div className="rounded-[18px] border border-line bg-card p-6 text-lede">
               <p>Nothing matches yet. Try a shorter search or fewer filters.</p>
-              <p className="mt-2 text-base text-muted">
+              <p className="mt-2 text-copy text-muted">
                 Know something that belongs here? <a href="/suggest">Suggest a resource</a>.
               </p>
             </div>
@@ -340,9 +340,9 @@ function CheckGroup({
   const hidden = options.length - visible.length;
   return (
     <fieldset className="flex flex-col gap-1.5">
-      <legend className="mb-2 text-base font-bold">{legend}</legend>
+      <legend className="mb-2 text-copy font-bold">{legend}</legend>
       {visible.map((o) => (
-        <label key={o.value} className="flex min-h-8 items-center gap-2.5 text-base">
+        <label key={o.value} className="flex min-h-8 items-center gap-2.5 text-copy">
           <input
             type="checkbox"
             className="h-5 w-5 shrink-0 accent-[#2F6B45]"
@@ -380,14 +380,14 @@ function Select({
 }) {
   return (
     <div className={inline ? 'flex items-center gap-2' : 'flex flex-col gap-2'}>
-      <label htmlFor={id} className={inline ? 'text-base' : 'text-base font-bold'}>
+      <label htmlFor={id} className={inline ? 'text-copy' : 'text-copy font-bold'}>
         {label}
       </label>
       <select
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-11 rounded-[10px] border-2 border-line-strong bg-input px-2.5 text-base text-ink"
+        className="min-h-11 rounded-[10px] border-2 border-line-strong bg-input px-2.5 text-copy text-ink"
       >
         {options.map(([v, l]) => (
           <option key={v} value={v}>
@@ -420,7 +420,7 @@ function Pages({ current, count, onGo }: { current: number; count: number; onGo:
         <span className="sr-only sm:not-sr-only sm:ml-1.5">Previous</span>
       </button>
       {/* Phones get a compact "Page 3 of 6"; wider screens get the numbered buttons. */}
-      <p className="px-2 text-[0.9375rem] font-bold sm:hidden">
+      <p className="px-2 text-small font-bold sm:hidden">
         Page <span className="num">{current}</span> of <span className="num">{count}</span>
       </p>
       <ol className="hidden flex-wrap items-center gap-1.5 sm:flex">

@@ -10,7 +10,7 @@ export function PathwayCardProgress({ slugs }: { slugs: string[] }) {
   const done = slugs.filter((s) => progress.visited[s]).length;
   if (!done) return null;
   return (
-    <span className="text-[0.875rem] font-bold text-leaf-ink">
+    <span className="text-small font-bold text-leaf-ink">
       {done === slugs.length ? 'Pathway complete' : `${done} of ${slugs.length} read`}
     </span>
   );
@@ -21,7 +21,7 @@ export function PathwayStatus({ slugs }: { slugs: string[] }) {
   const progress = useProgress();
   const done = progress ? slugs.filter((s) => progress.visited[s]).length : 0;
   return (
-    <p className="text-[0.9375rem] font-bold" role="status">
+    <p className="text-small font-bold" role="status">
       {progress ? (done === slugs.length ? 'You’ve read every stop on this pathway.' : `${done} of ${slugs.length} stops read`) : ' '}
     </p>
   );
@@ -58,7 +58,7 @@ export function VineSegment({ slug, index, last }: { slug: string; index: number
     <span className="relative flex w-12 shrink-0 flex-col items-center" aria-hidden="true">
       {/* The bud, with the stop number. */}
       <span
-        className={`num relative z-10 mt-3 flex h-10 w-10 items-center justify-center rounded-[50%_50%_50%_6px] border-2 text-[1.0625rem] font-bold transition-colors duration-500 ${
+        className={`num relative z-10 mt-3 flex h-10 w-10 items-center justify-center rounded-[50%_50%_50%_6px] border-2 text-copy font-bold transition-colors duration-500 ${
           read ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
         }`}
         style={{ transform: 'rotate(-45deg)' }}
@@ -99,7 +99,7 @@ export function StepStatus({ slug }: { slug: string }) {
   const read = progress.visited[slug];
   const noted = progress.notes[slug];
   if (!read) return null;
-  return <span className="rounded-full bg-chip-leaf px-2.5 py-0.5 text-[0.8125rem] font-bold">{noted ? 'Read · field note' : 'Read'}</span>;
+  return <span className="rounded-full bg-chip-leaf px-2.5 py-0.5 text-caption font-bold">{noted ? 'Read · field note' : 'Read'}</span>;
 }
 
 /** The end of the pathway: a bloom once every stop is read, and the way onward. */
@@ -126,11 +126,11 @@ export function PathwayEnd({ slugs, next }: { slugs: string[]; next?: { slug: st
         )}
       </svg>
       <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-1.5">
-        <p className="font-serif text-[1.5rem] font-semibold leading-snug">
+        <p className="font-serif text-heading font-semibold leading-snug">
           {complete ? 'This pathway is in full bloom.' : 'Keep going: the vine grows with every stop you read.'}
         </p>
         {next && (
-          <p className="text-[1.0625rem] text-body">
+          <p className="text-copy text-body">
             Next pathway:{' '}
             <Link href={`/pathways/${next.slug}`} className="font-bold">
               {next.title}

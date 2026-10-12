@@ -25,9 +25,9 @@ export function VillageLights({ dim = false }: { dim?: boolean }) {
         <SolarArray panel={p.panel} night />
       </svg>
       <figcaption className="flex flex-col gap-1 px-5 pb-4 pt-1">
-        <span className="font-serif text-[1.375rem] font-semibold text-on-forest">{dim ? 'Some homes went dark tonight.' : 'The village is lit.'}</span>
+        <span className="font-serif text-heading font-semibold text-on-forest">{dim ? 'Some homes went dark tonight.' : 'The village is lit.'}</span>
         {dim && (
-          <span className="text-[1rem] text-on-forest-muted">
+          <span className="text-copy text-on-forest-muted">
             Storage is usually what carries a village through the night.{' '}
             <Link href="/library?q=storage" className="font-bold text-pale-sun underline hover:text-sun">
               Read about energy storage

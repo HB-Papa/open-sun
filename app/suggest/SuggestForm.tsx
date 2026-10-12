@@ -27,9 +27,9 @@ export function SuggestForm() {
 
   if (status.kind === 'sent')
     return (
-      <div role="status" className="rounded-[18px] bg-chip-leaf p-6 text-lg">
+      <div role="status" className="rounded-[18px] bg-chip-leaf p-6 text-lede">
         <p className="font-bold">Thank you! Your suggestion is in the review queue.</p>
-        <p className="mt-2 text-base">
+        <p className="mt-2 text-copy">
           <button type="button" className="font-bold text-sky underline" onClick={() => setStatus({ kind: 'idle' })}>
             Suggest another
           </button>
@@ -37,12 +37,12 @@ export function SuggestForm() {
       </div>
     );
 
-  const field = 'min-h-12 w-full rounded-xl border-2 border-line-strong bg-input px-3.5 text-base text-ink';
+  const field = 'min-h-12 w-full rounded-xl border-2 border-line-strong bg-input px-3.5 text-copy text-ink';
   return (
     <form onSubmit={onSubmit} className="nouveau relative flex flex-col gap-5 rounded-[24px] border border-line bg-card px-6 pb-7 pt-10 sm:px-9" noValidate={false}>
       <NouveauCorners />
       {/* A library slip: a dashed tear line, as on a borrowing card. */}
-      <div className="-mt-2 flex items-center gap-3 border-b-2 border-dashed border-line-strong pb-3 font-serif text-[1.25rem] font-semibold" aria-hidden="true">
+      <div className="-mt-2 flex items-center gap-3 border-b-2 border-dashed border-line-strong pb-3 font-serif text-title font-semibold" aria-hidden="true">
         Suggestion slip
       </div>
       <div className="flex flex-col gap-1.5">
@@ -74,12 +74,12 @@ export function SuggestForm() {
         <label htmlFor="s-website">Leave this empty</label>
         <input id="s-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      <p className="text-[0.875rem] text-muted">Please don’t include private information. Suggestions are posted to the site’s public review list.</p>
+      <p className="text-small text-muted">Please don’t include private information. Suggestions are posted to the site’s public review list.</p>
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={status.kind === 'sending'} className="min-h-12 rounded-full bg-leaf px-6 font-bold text-white disabled:opacity-60">
           {status.kind === 'sending' ? 'Sending…' : 'Send suggestion'}
         </button>
-        <p role="status" aria-live="polite" className="text-base text-terracotta">
+        <p role="status" aria-live="polite" className="text-copy text-terracotta">
           {status.kind === 'error' ? status.message : ''}
         </p>
       </div>

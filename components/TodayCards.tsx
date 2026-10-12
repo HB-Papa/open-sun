@@ -30,11 +30,11 @@ export function TodayPuzzleCard() {
     <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
       <NouveauCorners />
       <div className="flex-[1_1_260px]">
-        <h2 id="today" className="mb-2 font-serif text-[2.5rem] font-bold leading-none sm:text-[3rem]">
+        <h2 id="today" className="mb-2 font-serif text-page font-bold leading-none sm:text-page-lg">
           Microgrid {today ? <span className="text-sun">#{puzzleNumber(today)}</span> : ''}
         </h2>
-        <p className="mb-3 text-[1.0625rem] text-on-forest">Today’s puzzle takes about three minutes.</p>
-        <p className="mb-[22px] text-lg leading-normal text-on-forest-muted">
+        <p className="mb-3 text-copy text-on-forest">Today’s puzzle takes about three minutes.</p>
+        <p className="mb-[22px] text-lede leading-normal text-on-forest-muted">
           Keep a small neighborhood lit for all 24 hours.{' '}
           {puzzle ? <Nums text={shortForecast(puzzle)} /> : 'Checking today’s forecast…'}
         </p>
@@ -78,8 +78,8 @@ export function GardenCard() {
   const visited = progress ? Object.keys(progress.visited) : [];
   return (
     <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-[28px] border border-line bg-card px-6 py-6 shadow-[0_18px_40px_-24px_rgba(30,51,40,.35)] sm:px-7">
-      <h2 className="font-serif text-2xl font-semibold">Your garden</h2>
-      <p className="text-base leading-normal text-body">
+      <h2 className="font-serif text-heading font-semibold">Your garden</h2>
+      <p className="text-copy leading-normal text-body">
         {visited.length
           ? `You’ve read ${visited.length} ${visited.length === 1 ? 'page' : 'pages'} in the library. Each one planted something here.`
           : 'Every page you read in the library plants something here.'}

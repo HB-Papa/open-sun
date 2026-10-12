@@ -30,7 +30,7 @@ export function CitationBox({ apa, chicago }: { apa: Cite; chicago: Cite }) {
   return (
     <section aria-labelledby="cite" className="flex flex-col gap-2.5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="cite" className="font-serif text-[1.375rem] font-semibold">
+        <h2 id="cite" className="font-serif text-heading font-semibold">
           Cite this
         </h2>
         <div role="group" aria-label="Citation style" className="flex gap-1.5">
@@ -43,19 +43,19 @@ export function CitationBox({ apa, chicago }: { apa: Cite; chicago: Cite }) {
                 setStyle(s);
                 setStatus('');
               }}
-              className={`min-h-11 rounded-full border-2 px-4 text-[0.9375rem] ${style === s ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
+              className={`min-h-11 rounded-full border-2 px-4 text-small ${style === s ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
             >
               {s === 'apa' ? 'APA' : 'Chicago'}
             </button>
           ))}
         </div>
       </div>
-      <p className="break-words rounded-xl bg-chip px-[18px] py-4 text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: numHtml(cite.html) }} />
+      <p className="break-words rounded-xl bg-chip px-[18px] py-4 text-copy leading-relaxed" dangerouslySetInnerHTML={{ __html: numHtml(cite.html) }} />
       <div className="flex flex-wrap items-center gap-3">
         <button type="button" onClick={copy} className="min-h-12 rounded-full border-2 border-line-strong bg-card px-5 font-bold text-ink">
           Copy citation
         </button>
-        <span role="status" className="text-[0.9375rem] text-muted">
+        <span role="status" className="text-small text-muted">
           {status}
         </span>
       </div>

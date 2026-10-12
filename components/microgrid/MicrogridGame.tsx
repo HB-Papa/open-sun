@@ -300,7 +300,7 @@ function Board({
     return !(done || running || used === 0);
   }
   const canRun = !(done || running || used === 0);
-  const runClass = `min-h-[52px] rounded-full text-lg font-bold ${
+  const runClass = `min-h-[52px] rounded-full text-lede font-bold ${
     canRun ? 'bg-leaf text-white' : 'cursor-not-allowed border-2 border-dashed border-line-strong bg-transparent text-muted'
   }`;
 
@@ -309,11 +309,11 @@ function Board({
       {/* On phones the title and tries share one line, so the board starts higher. */}
       <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:items-end md:justify-start md:gap-x-10">
         <div>
-          <h1 className="font-serif text-[1.875rem] font-bold leading-tight sm:text-[3.25rem]">{ranked ? `Microgrid #${num}` : info.name}</h1>
-          <p className={`mt-1 text-[1.0625rem] text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}${levelLabel(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
+          <h1 className="font-serif text-section font-bold leading-tight sm:text-page-lg">{ranked ? `Microgrid #${num}` : info.name}</h1>
+          <p className={`mt-1 text-copy text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}${levelLabel(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
         </div>
-        <p className="text-[1rem] sm:text-[1.0625rem]">
-          Tries left: <strong className="num text-[1.25rem] sm:text-[1.375rem]">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
+        <p className="text-copy sm:text-copy">
+          Tries left: <strong className="num text-title sm:text-heading">{MAX_TRIES - tries}</strong> of <span className="num">{MAX_TRIES}</span>
         </p>
       </div>
 
@@ -321,7 +321,7 @@ function Board({
         {/* ---------- the full forecast (beside the board on wide screens; after the results on phones) ---------- */}
         <section data-area="forecast" aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
           <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
-            <h2 className="font-serif text-[1.375rem] font-semibold">Today’s forecast</h2>
+            <h2 className="font-serif text-heading font-semibold">Today’s forecast</h2>
             <ForecastChart puzzle={puzzle} demand={demand} />
           </div>
           <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />
@@ -332,12 +332,12 @@ function Board({
           {/* Rules first on phones: a short version on a first visit; the full rules sit below the board. */}
           {firstVisit && !rulesDismissed && (
             <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
-              <ol className="flex list-decimal flex-col gap-1 pl-5 text-[0.9375rem] leading-snug text-body">
+              <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
                 <li>Connect every part to a home, directly or through other parts.</li>
                 <li>Trees shade panels; gardens and windy ridges boost them.</li>
                 <li>Batteries carry daytime sun into the night. Then run the day.</li>
               </ol>
-              <div className="flex gap-4 text-[0.9375rem]">
+              <div className="flex gap-4 text-small">
                 <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
                   Got it
                 </button>
@@ -347,7 +347,7 @@ function Board({
               </div>
             </div>
           )}
-          <p className="text-[0.9375rem] leading-snug sm:text-[1.0625rem] sm:leading-normal">
+          <p className="text-small leading-snug sm:text-copy sm:leading-normal">
             <span className="sm:hidden">
               Light every hour with up to <strong>{puzzle.budget} parts</strong>. Tap a plot to place; tap again to remove.{' '}
             </span>
@@ -368,7 +368,7 @@ function Board({
                 aria-checked={tool === t.id}
                 onClick={() => setTool(t.id)}
                 disabled={done}
-                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-[0.875rem] font-bold disabled:opacity-50 sm:text-[0.9375rem] ${
+                className={`relative flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-2xl border-2 px-1 py-1.5 text-small font-bold disabled:opacity-50 sm:text-small ${
                   tool === t.id ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'
                 }`}
               >
@@ -379,7 +379,7 @@ function Board({
                   {t.id === 'garden' && <GardenIcon />}
                 </span>
                 {t.label}
-                <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-[0.75rem] font-normal leading-4 md:inline" aria-hidden="true">
+                <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-micro font-normal leading-4 md:inline" aria-hidden="true">
                   {t.key}
                 </kbd>
               </button>
@@ -431,12 +431,12 @@ function Board({
                         {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
                         {part === 'garden' && <GardenIcon />}
                         {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
-                          <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-[0.75rem] font-bold leading-[18px] text-ink shadow-sm">
+                          <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-micro font-bold leading-[18px] text-ink shadow-sm">
                             ×{fmt(m)}
                           </span>
                         )}
                         {off && (
-                          <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-[0.75rem] font-bold leading-4 text-terracotta">
+                          <span aria-hidden="true" className="absolute bottom-1 rounded-full bg-card px-1.5 text-micro font-bold leading-4 text-terracotta">
                             off grid
                           </span>
                         )}
@@ -448,7 +448,7 @@ function Board({
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-x-4 gap-y-1 text-[0.9375rem]">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 text-small">
             <span>
               Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
             </span>
@@ -460,7 +460,7 @@ function Board({
             <button type="button" onClick={run} disabled={!canRun} className={runClass}>
               {runLabel}
             </button>
-            {offWarning && <p className="text-[0.9375rem] font-bold text-terracotta">{offText(offCount)}</p>}
+            {offWarning && <p className="text-small font-bold text-terracotta">{offText(offCount)}</p>}
           </div>
           <p className="sr-only" role="status" aria-live="polite">
             {notice}
@@ -476,7 +476,7 @@ function Board({
           {won && !running && <VillageLights />}
           {lastLit && (
             <div className="on-forest flex flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
-              <h2 className="font-serif text-[1.625rem] font-semibold">
+              <h2 className="font-serif text-heading font-semibold">
                 <span className="num">{shownSim ? shownSim.lit.slice(0, shownHour + 1).filter(Boolean).length : lastLit.filter(Boolean).length}</span> of 24 hours lit
               </h2>
               <ResultChart
@@ -485,7 +485,7 @@ function Board({
                 upTo={shownSim ? shownHour : HOURS - 1}
               />
               {!running && (
-                <p className="text-base leading-normal text-on-forest-muted">
+                <p className="text-copy leading-normal text-on-forest-muted">
                   {won
                     ? ranked
                       ? 'Every home stayed lit all day and night. Come back tomorrow for a new grid.'
@@ -496,7 +496,7 @@ function Board({
                 </p>
               )}
               {history.length > 1 && (
-                <ol className="flex flex-wrap gap-2 text-[0.875rem] text-on-forest-muted" aria-label="Earlier tries">
+                <ol className="flex flex-wrap gap-2 text-small text-on-forest-muted" aria-label="Earlier tries">
                   {history.map((h, k) => (
                     <li key={k} className="rounded-full bg-forest-2 px-3 py-1">
                       Try {k + 1}: {h.filter(Boolean).length}/24
@@ -525,16 +525,16 @@ function Board({
       {/* On phones, the run button stays within thumb's reach while you place parts. */}
       {!done && (
         <div className="run-bar on-forest fixed inset-x-0 bottom-0 z-30 border-t-2 border-sun/70 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest shadow-[0_-8px_24px_-12px_rgba(13,24,18,.5)] md:hidden">
-          {offWarning && <p className="mb-2 text-[0.875rem] font-bold text-pale-sun">{offText(offCount)}</p>}
+          {offWarning && <p className="mb-2 text-small font-bold text-pale-sun">{offText(offCount)}</p>}
           <div className="flex items-center gap-3">
-            <p className="shrink-0 text-[0.9375rem]">
+            <p className="shrink-0 text-small">
               Parts <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
             </p>
             <button
               type="button"
               onClick={run}
               disabled={!canRun}
-              className={`min-h-12 flex-1 rounded-full text-[1.0625rem] font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
+              className={`min-h-12 flex-1 rounded-full text-copy font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
             >
               {barLabel}
             </button>
@@ -614,7 +614,7 @@ function TerrainKey({ hasRock }: { hasRock: boolean }) {
     ...(hasRock ? ([['Rocky ground (can’t build)', <RockIcon key="k" />, TERRAIN_BG.rock]] as [string, React.ReactNode, string][]) : []),
   ];
   return (
-    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-[0.875rem] text-body" aria-label="Map key">
+    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-small text-body" aria-label="Map key">
       {items.map(([label, icon, bg]) => (
         <li key={label} className="flex items-center gap-1.5">
           <span className="relative flex h-6 w-6 items-center justify-center rounded-md" style={{ background: bg }} aria-hidden="true">
@@ -641,16 +641,16 @@ function showHow(target: 'how' | 'rewards') {
 function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; className?: string }) {
   return (
     <details id={id} data-how open={open} className={`scroll-mt-4 rounded-[20px] border border-line bg-card p-5 ${className}`}>
-      <summary className="cursor-pointer font-serif text-[1.25rem] font-semibold">How it works</summary>
-      <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-[1rem] leading-normal text-body">
+      <summary className="cursor-pointer font-serif text-title font-semibold">How it works</summary>
+      <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-copy leading-normal text-body">
         <li>
           <strong>Connect everything.</strong> A part only joins the grid if it touches a home or another connected part (up, down, left, or right). Parts marked “off grid” do nothing.
         </li>
         <li>
-          <strong>Solar panels</strong> follow the sun. A panel next to a tree is shaded and makes half as much. A panel next to a garden stays cool and makes {Math.round((RULES.gardenBoost - 1) * 100)}% more (that’s agrivoltaics).
+          <strong>Solar panels</strong> follow the sun. A panel next to a tree is shaded and makes half as much. A panel next to a garden stays cool and makes <span className="num-i">{Math.round((RULES.gardenBoost - 1) * 100)}%</span> more (that’s agrivoltaics).
         </li>
         <li>
-          <strong>Wind turbines</strong> work day and night, whenever the wind blows. On a windy ridge they make {Math.round((RULES.ridgeBoost - 1) * 100)}% more, but two turbines side by side slow each other down.
+          <strong>Wind turbines</strong> work day and night, whenever the wind blows. On a windy ridge they make <span className="num-i">{Math.round((RULES.ridgeBoost - 1) * 100)}%</span> more, but two turbines side by side slow each other down.
         </li>
         <li>
           <strong>Batteries</strong> save extra power for later. Each one holds a few hours of evening use and starts the day half full.
@@ -673,8 +673,8 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
       </ul>
       {/* The one place the extras are explained; everywhere else links here. */}
       <details data-rewards id={id === 'how' ? 'rewards' : undefined} className="mt-5 scroll-mt-4 border-t border-line pt-4">
-        <summary className="cursor-pointer font-serif text-[1.125rem] font-semibold">How rewards work</summary>
-        <ul className="mt-2 flex list-disc flex-col gap-2 pl-5 text-[1rem] leading-normal text-body">
+        <summary className="cursor-pointer font-serif text-lede font-semibold">How rewards work</summary>
+        <ul className="mt-2 flex list-disc flex-col gap-2 pl-5 text-copy leading-normal text-body">
           <li>
             <strong>Your streak</strong> counts the days you play the daily grid. Your score and share result only ever come from that grid.
           </li>
@@ -745,11 +745,11 @@ function SharePanel({ share }: { share: { emoji: string; plain: string } }) {
   }
   return (
     <div className="flex flex-col gap-3 rounded-[18px] border border-line bg-card p-5">
-      <h2 className="font-serif text-[1.375rem] font-semibold">Share your day</h2>
-      <pre className="overflow-hidden whitespace-pre-wrap break-words rounded-xl bg-chip p-3 font-sans text-[0.9375rem] leading-normal" aria-hidden="true">
+      <h2 className="font-serif text-heading font-semibold">Share your day</h2>
+      <pre className="overflow-hidden whitespace-pre-wrap break-words rounded-xl bg-chip p-3 font-sans text-small leading-normal" aria-hidden="true">
         {share.emoji}
       </pre>
-      <p className="text-[0.9375rem] text-body">
+      <p className="text-small text-body">
         <span className="sr-only">Share text: </span>
         {share.plain}
       </p>
@@ -766,7 +766,7 @@ function SharePanel({ share }: { share: { emoji: string; plain: string } }) {
           </button>
         )}
       </div>
-      <p role="status" className="min-h-[1.25em] text-[0.875rem] text-muted">
+      <p role="status" className="min-h-[1.25em] text-small text-muted">
         {copied === 'error' ? 'Could not copy. Select the text above instead.' : copied ? 'Copied to your clipboard.' : ''}
       </p>
     </div>
