@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { Pages } from '@/components/Pages';
+import { Nums } from '@/lib/nums';
 import { languageName, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
 
@@ -263,7 +264,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
         <section id="results" tabIndex={-1} aria-label="Results" className="flex min-w-0 flex-[999_1_560px] flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="text-copy text-muted" aria-hidden="true">
-              {countText}
+              <Nums text={countText} />
             </p>
             <p className="sr-only" role="status" aria-live="polite">
               {announced}
