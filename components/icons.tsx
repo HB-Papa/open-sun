@@ -112,6 +112,18 @@ export function TreeIcon() {
   );
 }
 
+/** Rocky ground: a cluster of stones. Nothing can be built here. */
+export function RockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[70%] w-[70%]">
+      <path d="M3 18c0-4 3-7 6-7 2 0 3 1 4 2 1-2 3-3 5-2 2 1 3 4 3 7Z" fill="var(--rock-dark)" />
+      <path d="M6 18c0-2.5 1.6-4.5 3.6-4.5S13 15.5 13 18Z" fill="var(--rock-light)" />
+      <path d="M14 18c.2-2 1.4-3.4 3-3.4s2.8 1.4 3 3.4Z" fill="var(--rock-light)" />
+      <path d="M2 18.5h20" stroke="var(--rock-dark)" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function PondIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[70%] w-[70%]">

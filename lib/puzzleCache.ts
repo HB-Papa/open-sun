@@ -4,7 +4,7 @@ import { generatePuzzle, type Puzzle, type Variant } from './microgrid';
 
 // Building a puzzle runs a small solver (about 0.1–0.5 s on a phone). The result is the
 // same for everyone on a given day, so keep it in the visitor's browser after the first build.
-const VERSION = 1;
+const VERSION = 2;
 const key = (date: string, variant: Variant, seed: string) => `opensun:puzzle:v${VERSION}:${date}:${variant}:${seed}`;
 
 export function getPuzzle(date: string, variant: Variant = 'daily', extraSeed = ''): Puzzle {

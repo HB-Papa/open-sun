@@ -11,6 +11,11 @@ import {
   simulate,
   shareText,
   buildable,
+  difficultyFor,
+  HARDER_FROM,
+  maxScale,
+  neighbors,
+  SLACK,
   type Layout,
   type Variant,
 } from '../lib/microgrid.ts';
@@ -73,4 +78,51 @@ test('placement matters: random layouts rarely win', () => {
   const rate = wins / total;
   console.log(`random win rate: ${(rate * 100).toFixed(1)}%`);
   assert.ok(rate < 0.1, `random layouts win too often (${rate})`);
+});
+
+test('puzzles before the harder date are unchanged; later ones follow the weekly ramp', () => {
+  // The day before HARDER_FROM keeps the original settings and has no rocks.
+  const before = addDays(HARDER_FROM, -1);
+  assert.deepEqual(difficultyFor(before), { slack: SLACK, rocks: 0 });
+  assert.ok(!generatePuzzle(before).terrain.includes('rock'));
+  for (let d = 0; d < 14; d++) {
+    const key = addDays(HARDER_FROM, d);
+    const level = difficultyFor(key);
+    assert.ok(level.slack > SLACK, `${key}: harder demand`);
+    const p = generatePuzzle(key);
+    const rocks = p.terrain.map((t, i) => (t === 'rock' ? i : -1)).filter((i) => i >= 0);
+    assert.equal(rocks.length, level.rocks, `${key}: rock count`);
+    for (const i of rocks) assert.ok(!neighbors(i).some((n) => p.terrain[n] === 'home'), `${key}: rock next to a home`);
+    assert.equal(simulate(p, p.solution).litCount, HOURS, `${key}: still solvable`);
+  }
+});
+
+test('a strong greedy player no longer wins every harder puzzle on the first try', () => {
+  // Adds, one at a time, whichever part on whichever plot carries the most demand.
+  function greedy(p: ReturnType<typeof generatePuzzle>): Layout {
+    const layout: Layout = new Array(CELLS).fill(null);
+    for (let k = 0; k < p.budget; k++) {
+      let best: [number, (typeof PART_ORDER)[number], number] | null = null;
+      for (let i = 0; i < CELLS; i++) {
+        if (!buildable(p.terrain[i]) || layout[i]) continue;
+        for (const part of PART_ORDER) {
+          layout[i] = part;
+          const s = maxScale(p, layout);
+          layout[i] = null;
+          if (!best || s > best[0]) best = [s, part, i];
+        }
+      }
+      if (!best) break;
+      layout[best[2]] = best[1];
+    }
+    return layout;
+  }
+  let wins = 0;
+  const days = 28;
+  for (let d = 0; d < days; d++) {
+    const p = generatePuzzle(addDays(HARDER_FROM, d));
+    if (simulate(p, greedy(p)).litCount === HOURS) wins++;
+  }
+  console.log(`greedy first-try win rate on harder puzzles: ${Math.round((wins / days) * 100)}%`);
+  assert.ok(wins / days < 0.9, `greedy wins too often (${wins}/${days})`);
 });

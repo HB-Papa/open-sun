@@ -11,7 +11,8 @@ export const HOURS = 24;
 export const MAX_TRIES = 3;
 export const LAUNCH_DATE = '2026-10-11';
 
-export type Terrain = 'open' | 'ridge' | 'home' | 'tree' | 'pond';
+/** 'rock' is stony ground: nothing can be built on it, and power can't pass across it. */
+export type Terrain = 'open' | 'ridge' | 'home' | 'tree' | 'pond' | 'rock';
 export type Part = 'solar' | 'wind' | 'battery' | 'garden';
 export type Layout = (Part | null)[];
 
@@ -402,6 +403,47 @@ export function solve(p: Puzzle, r: Rand, iterations = 2500): { layout: Layout; 
 /** Demand is set to this fraction of the solver's best, so good human layouts can win. */
 export const SLACK = 0.78;
 
+/**
+ * Puzzles from this date on are harder: demand sits closer to the best possible layout,
+ * and a few rocky plots break up easy routes. Earlier dates keep the original puzzles
+ * exactly, so nobody's saved board changes underneath them.
+ */
+export const HARDER_FROM = '2026-10-13';
+
+export interface Difficulty {
+  /** Demand as a fraction of the solver's best layout. */
+  slack: number;
+  /** Unbuildable rocky plots on the map. */
+  rocks: number;
+}
+
+/** Monday is the gentlest day and Sunday the hardest, like many daily puzzles. */
+const WEEK: Difficulty[] = [
+  { slack: 0.97, rocks: 3 }, // Sunday
+  { slack: 0.88, rocks: 1 }, // Monday
+  { slack: 0.9, rocks: 2 }, // Tuesday
+  { slack: 0.92, rocks: 2 }, // Wednesday
+  { slack: 0.93, rocks: 2 }, // Thursday
+  { slack: 0.94, rocks: 3 }, // Friday
+  { slack: 0.95, rocks: 3 }, // Saturday
+];
+
+/** For tuning only: replaces the weekly table (used by the difficulty measurement script). */
+export const difficultyOverride: { value: Difficulty | null } = { value: null };
+
+const weekday = (key: string) => (((dayIndex(key) + 4) % 7) + 7) % 7; // 1970-01-01 was a Thursday
+
+export function difficultyFor(dateKey: string, variant: Variant = 'daily'): Difficulty {
+  if (daysBetween(HARDER_FROM, dateKey) < 0) return { slack: SLACK, rocks: 0 };
+  const d = difficultyOverride.value ?? WEEK[weekday(dateKey)];
+  // Bonus grids are just for fun, so they stay a notch gentler than the day's ranked grid.
+  return variant === 'daily' ? d : { slack: Math.min(d.slack, 0.88), rocks: Math.min(d.rocks, 1) };
+}
+
+export function weekdayName(dateKey: string): string {
+  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][weekday(dateKey)];
+}
+
 const cache = new Map<string, Puzzle>();
 
 export function generatePuzzle(dateKey: string, variant: Variant = 'daily', extraSeed = ''): Puzzle {
@@ -409,6 +451,7 @@ export function generatePuzzle(dateKey: string, variant: Variant = 'daily', extr
   const hit = cache.get(seed);
   if (hit) return hit;
   const r = mulberry32(hashString(seed));
+  const level = difficultyFor(dateKey, variant);
 
   for (let attempt = 0; attempt < 12; attempt++) {
     const terrain: Terrain[] = new Array(CELLS).fill('open');
@@ -434,8 +477,16 @@ export function generatePuzzle(dateKey: string, variant: Variant = 'daily', extr
     let k = 0;
     for (; k < nTrees; k++) terrain[rest[k]] = 'tree';
     if (r() < 0.5) terrain[rest[k++]] = 'pond';
+    // Rocky plots, kept off the cells right next to homes so every home can still be reached.
+    if (level.rocks > 0) {
+      rest
+        .slice(k)
+        .filter((i) => !neighbors(i).some((n) => terrain[n] === 'home'))
+        .slice(0, level.rocks)
+        .forEach((i) => (terrain[i] = 'rock'));
+    }
     // Ridges sit on the edges of the map.
-    const edges = rest.slice(k).filter((i) => {
+    const edges = rest.slice(k).filter((i) => terrain[i] === 'open').filter((i) => {
       const rr = Math.floor(i / SIZE);
       const cc = i % SIZE;
       return rr === 0 || cc === 0 || rr === SIZE - 1 || cc === SIZE - 1;
@@ -457,7 +508,7 @@ export function generatePuzzle(dateKey: string, variant: Variant = 'daily', extr
     const { layout, scale } = solve(base, r);
     if (scale <= 0.05) continue; // degenerate map; try another
     // Leave a little slack below the solver's best so good human layouts win.
-    const demandScale = Math.floor(scale * SLACK * 1000) / 1000;
+    const demandScale = Math.floor(scale * level.slack * 1000) / 1000;
     const puzzle: Puzzle = { ...base, demandScale, solution: layout };
     if (simulate(puzzle, layout).litCount !== HOURS) continue; // should never happen
     cache.set(seed, puzzle);

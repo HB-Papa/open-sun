@@ -34,6 +34,10 @@
   --board: #a9c48e;
   --g-open: #cfe3d3;
   --g-ridge: #d3c98f;
+  /* Rocky ground: unbuildable stony plots. */
+  --g-rock: #d8d0c2;
+  --rock-light: #a89e8c;
+  --rock-dark: #6f675a;
   --g-home: #f3e3b5;
   --g-green: #a9c48e;
   --g-solar: #1f6f78;
@@ -46,6 +50,7 @@
   --tile-home: #f3e3b5;
   --tile-tree: #2f6b45;
   --tile-pond: #4f97a0;
+  --tile-rock: #8a8270;
   /* Garden sprouts. */
   --sprout-stem: #2f6b45;
   --sprout-leaf: #5e9467;
@@ -91,6 +96,9 @@
     --board: #5c7a55;
     --g-open: #9fb79f;
     --g-ridge: #b8ad78;
+    --g-rock: #a49c8d;
+    --rock-light: #7c7466;
+    --rock-dark: #4e4840;
     --g-home: #e0cf9a;
     --g-green: #8fae78;
     --g-solar: #1f6f78;
