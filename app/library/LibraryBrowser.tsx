@@ -2,7 +2,7 @@
 
 import MiniSearch from 'minisearch';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { LANGUAGES, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
@@ -13,6 +13,7 @@ type Sort = 'relevance' | 'added' | 'newest' | 'oldest';
 type LicenseFilter = 'any' | 'cc' | 'cc-by' | 'other';
 
 const VIEW_KEY = 'opensun:library-view';
+const PAGE_SIZE = 15;
 
 function licenseGroup(l: string): 'cc-by' | 'cc' | 'other' {
   if (/^CC BY( 4\.0)?$/i.test(l.trim()) || /^CC BY 4\.0/.test(l)) return 'cc-by';
@@ -29,6 +30,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
   const [language, setLanguage] = useState(params.get('lang') ?? 'any');
   const [license, setLicense] = useState<LicenseFilter>((params.get('license') as LicenseFilter) ?? 'any');
   const [sort, setSort] = useState<Sort>((params.get('sort') as Sort) ?? 'relevance');
+  const [page, setPage] = useState(() => Math.max(1, Number(params.get('page')) || 1));
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -55,9 +57,10 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
     if (language !== 'any') sp.set('lang', language);
     if (license !== 'any') sp.set('license', license);
     if (sort !== 'relevance') sp.set('sort', sort);
+    if (page > 1) sp.set('page', String(page));
     const qs = sp.toString();
     window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
-  }, [query, topics, types, since, language, license, sort]);
+  }, [query, topics, types, since, language, license, sort, page]);
 
   const index = useMemo(() => {
     const ms = new MiniSearch<ItemCard & { id: string; authorText: string; topicText: string }>({
@@ -105,8 +108,30 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
     });
   }, [items, index, query, topics, types, since, language, license, sort]);
 
+  // Results come 15 to a page. A new search, filter or sort starts again at page 1.
+  const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
+  const current = Math.min(page, pageCount);
+  const filterKey = JSON.stringify([query, topics, types, since, language, license, sort]);
+  const lastKey = useRef(filterKey);
+  useEffect(() => {
+    if (lastKey.current === filterKey) return;
+    lastKey.current = filterKey;
+    setPage(1);
+  }, [filterKey]);
+  const start = (current - 1) * PAGE_SIZE;
+  const visible = results.slice(start, start + PAGE_SIZE);
+  function goTo(n: number) {
+    setPage(n);
+    requestAnimationFrame(() => {
+      const r = document.getElementById('results');
+      r?.scrollIntoView({ block: 'start' });
+      r?.focus({ preventScroll: true });
+    });
+  }
+
   // Announce the count to screen readers only once typing pauses, not on every keystroke.
-  const countText = results.length === items.length ? `All ${items.length} items` : `${results.length} of ${items.length} items`;
+  const total = results.length === items.length ? `All ${items.length} items` : `${results.length} of ${items.length} items`;
+  const countText = pageCount > 1 ? `${total} · showing ${start + 1}–${start + visible.length}` : total;
   const [announced, setAnnounced] = useState(countText);
   useEffect(() => {
     const t = setTimeout(() => setAnnounced(countText), 700);
@@ -265,7 +290,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
             </div>
           ) : view === 'grid' ? (
             <ul className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-[18px]">
-              {results.map((i) => (
+              {visible.map((i) => (
                 <li key={i.slug}>
                   <ItemCardView item={i} headingLevel={2} />
                 </li>
@@ -273,13 +298,14 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
             </ul>
           ) : (
             <ul className="flex flex-col gap-2.5">
-              {results.map((i) => (
+              {visible.map((i) => (
                 <li key={i.slug}>
                   <ItemRow item={i} />
                 </li>
               ))}
             </ul>
           )}
+          {pageCount > 1 && <Pages current={current} count={pageCount} onGo={goTo} />}
         </section>
       </div>
     </>
@@ -370,5 +396,63 @@ function Select({
         ))}
       </select>
     </div>
+  );
+}
+
+/** Numbered pages under the results: Previous, page numbers (with gaps when there are many), Next. */
+function Pages({ current, count, onGo }: { current: number; count: number; onGo: (n: number) => void }) {
+  // Always show the first and last page and the ones next to the current page.
+  const nums: (number | 'gap')[] = [];
+  for (let n = 1; n <= count; n++) {
+    if (n === 1 || n === count || Math.abs(n - current) <= 1) nums.push(n);
+    else if (nums[nums.length - 1] !== 'gap') nums.push('gap');
+  }
+  const btn = 'inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border-2 px-3 font-bold';
+  return (
+    <nav aria-label="Result pages" className="mt-2 flex flex-wrap items-center justify-center gap-2">
+      <button
+        type="button"
+        onClick={() => onGo(current - 1)}
+        disabled={current === 1}
+        className={`${btn} border-line-strong bg-card text-ink disabled:cursor-not-allowed disabled:opacity-40`}
+      >
+        <span aria-hidden="true">←</span>
+        <span className="sr-only sm:not-sr-only sm:ml-1.5">Previous</span>
+      </button>
+      {/* Phones get a compact "Page 3 of 6"; wider screens get the numbered buttons. */}
+      <p className="px-2 text-[0.9375rem] font-bold sm:hidden">
+        Page <span className="num">{current}</span> of <span className="num">{count}</span>
+      </p>
+      <ol className="hidden flex-wrap items-center gap-1.5 sm:flex">
+        {nums.map((n, k) =>
+          n === 'gap' ? (
+            <li key={`gap-${k}`} aria-hidden="true" className="px-1 text-muted">
+              …
+            </li>
+          ) : (
+            <li key={n}>
+              <button
+                type="button"
+                onClick={() => onGo(n)}
+                aria-current={n === current ? 'page' : undefined}
+                aria-label={`Page ${n} of ${count}`}
+                className={`${btn} num ${n === current ? 'border-leaf bg-leaf text-white' : 'border-line-strong bg-card text-ink'}`}
+              >
+                {n}
+              </button>
+            </li>
+          ),
+        )}
+      </ol>
+      <button
+        type="button"
+        onClick={() => onGo(current + 1)}
+        disabled={current === count}
+        className={`${btn} border-line-strong bg-card text-ink disabled:cursor-not-allowed disabled:opacity-40`}
+      >
+        <span className="sr-only sm:not-sr-only sm:mr-1.5">Next</span>
+        <span aria-hidden="true">→</span>
+      </button>
+    </nav>
   );
 }
