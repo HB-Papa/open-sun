@@ -5,6 +5,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { useEffect, useState } from 'react';
 import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 import { currentTheme, subscribeTheme } from '@/lib/theme';
+import { useProgress } from '@/lib/progress';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -201,8 +202,20 @@ export function Hero() {
   const p = PALETTES[phase ?? 'day'];
   const night = phase === 'night';
   const lit = night || phase === 'dusk';
-  const [puzzleNo, setPuzzleNo] = useState<number | null>(null);
-  useEffect(() => setPuzzleNo(puzzleNumber(localDateKey())), []);
+  const [today, setToday] = useState<string | null>(null);
+  useEffect(() => setToday(localDateKey()), []);
+  const puzzleNo = today ? puzzleNumber(today) : null;
+  // The phone pill says where today's game stands: not started, under way, or done (with the result).
+  const progress = useProgress();
+  const game = today ? progress?.games[today] : undefined;
+  const lastLit = game?.history[game.history.length - 1]?.filter(Boolean).length ?? 0;
+  const pill = game?.done
+    ? game.won
+      ? 'Today: solved · see your day'
+      : `Today: ${lastLit}/24 lit · see your day`
+    : game?.tries
+      ? `Daily puzzle: keep going · Microgrid${puzzleNo ? ` #${puzzleNo}` : ''}`
+      : `Daily puzzle: keep a village lit · Play${puzzleNo ? ` #${puzzleNo}` : ''}`;
   const sun = phase === 'dawn' ? { x: 990, y: 190 } : phase === 'dusk' ? { x: 1000, y: 196 } : phase === 'night' ? { x: 980, y: 96 } : { x: 975, y: 110 };
   // Glass reflects the sky by day and glows gold once the lamps come on.
   const glass = lit ? '#E8B547' : '#CDE4E6';
@@ -224,7 +237,7 @@ export function Hero() {
             style={{ color: ready ? p.text : 'var(--ink)' }}
           >
             <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-sun" />
-            Daily puzzle: keep a village lit · Play{puzzleNo ? ` #${puzzleNo}` : ''}
+            {pill}
           </Link>
           <h1 className="mb-4 font-serif text-page font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-hero">A free library for a solarpunk tomorrow</h1>
           <p className="mb-6 max-w-[46ch] text-copy leading-normal sm:text-lede" style={{ color: ready ? p.soft : 'var(--body)' }}>
