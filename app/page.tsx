@@ -34,7 +34,7 @@ export default function HomePage() {
           <SectionHeading
             id="new"
             action={
-              <Link href="/new" className="text-[17px] font-bold">
+              <Link href="/new" className="text-[1.0625rem] font-bold">
                 See all new arrivals
               </Link>
             }
@@ -65,14 +65,14 @@ export default function HomePage() {
         </section>
 
         <section aria-labelledby="what" className="flex flex-col gap-3 border-t border-line pt-12">
-          <h2 id="what" className="font-serif text-[32px] font-semibold">
+          <h2 id="what" className="font-serif text-[2rem] font-semibold">
             Where solarpunk came from
           </h2>
           <p className="max-w-[35rem] text-lg leading-relaxed text-body">
             Solarpunk began as an internet word around <span className="num">2008</span> and has grown into fiction, art, design, scholarship, and activism. The Field Guide
             explains the ideas you’ll meet here, from agrivoltaics to the commons.
           </p>
-          <Link href="/field-guide" className="self-start text-[17px] font-bold">
+          <Link href="/field-guide" className="self-start text-[1.0625rem] font-bold">
             Read the Field Guide
           </Link>
         </section>

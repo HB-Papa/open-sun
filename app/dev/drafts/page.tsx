@@ -16,8 +16,8 @@ export default function DraftsPage() {
 
   return (
     <main id="main" tabIndex={-1} className="mx-auto flex max-w-[900px] flex-col gap-6 px-4 pb-16 pt-9 sm:px-6">
-      <p className="self-start rounded-full bg-pale-sun px-3 py-1 text-[13px] font-bold">Only visible on your computer</p>
-      <h1 className="font-serif text-[40px] font-bold">Summaries to edit</h1>
+      <p className="self-start rounded-full bg-pale-sun px-3 py-1 text-[0.8125rem] font-bold">Only visible on your computer</p>
+      <h1 className="font-serif text-[2.5rem] font-bold">Summaries to edit</h1>
       <p className="text-lg text-body">
         {drafts.length} of {items.length} summaries are still drafts. Open the file, rewrite the summary and “Why it matters” in your own words, then change{' '}
         <code className="rounded bg-chip px-1.5">summary_status: draft</code> to <code className="rounded bg-chip px-1.5">summary_status: edited</code>. This list
@@ -31,11 +31,11 @@ export default function DraftsPage() {
       <ol className="flex flex-col gap-3">
         {drafts.map((i) => (
           <li key={i.slug} className="flex flex-col gap-1 rounded-[14px] border border-line bg-card p-4">
-            <Link href={`/library/${i.slug}`} className="font-serif text-[19px] font-semibold">
+            <Link href={`/library/${i.slug}`} className="font-serif text-[1.1875rem] font-semibold">
               {i.title}
             </Link>
-            <code className="break-all text-[14px] text-muted">content/library/{i.slug}.md</code>
-            <span className="text-[14px] text-muted">
+            <code className="break-all text-[0.875rem] text-muted">content/library/{i.slug}.md</code>
+            <span className="text-[0.875rem] text-muted">
               Source: {i.source === 'agent' ? 'update agent' : 'curated'} · added {i.dateAdded}
             </span>
           </li>

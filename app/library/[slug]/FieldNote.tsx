@@ -24,7 +24,7 @@ export function FieldNoteChip({ slug }: { slug: string }) {
   if (!progress) return null;
   const earned = !!progress.notes[slug];
   return (
-    <a href="#note-h" className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[14px] font-bold no-underline ${earned ? 'bg-chip-leaf text-ink' : 'bg-pale-sun text-ink'}`}>
+    <a href="#note-h" className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[0.875rem] font-bold no-underline ${earned ? 'bg-chip-leaf text-ink' : 'bg-pale-sun text-ink'}`}>
       <span aria-hidden="true">{earned ? '✓' : '✎'}</span>
       {earned ? 'Field note earned' : 'Field note waiting below'}
     </a>
@@ -116,19 +116,19 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
       </p>
       {note && !unlocked ? (
         <>
-          <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug">
+          <h2 id="note-h" className="font-serif text-[1.5rem] font-semibold leading-snug">
             A field note is waiting
           </h2>
-          <p className="max-w-[56ch] text-[16px] text-on-forest-muted">
+          <p className="max-w-[56ch] text-[1rem] text-on-forest-muted">
             Press “Read it free” to open the reading, or stay with the summary for about <span className="num-i">30</span> seconds, and a short question will appear here. Answering it opens a bonus grid in Play.
           </p>
         </>
       ) : note ? (
         <>
-          <h2 id="note-h" className="font-serif text-[24px] font-semibold leading-snug text-balance">
+          <h2 id="note-h" className="font-serif text-[1.5rem] font-semibold leading-snug text-balance">
             {note.question}
           </h2>
-          <p className="-mt-1 text-[15px] text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
+          <p className="-mt-1 text-[0.9375rem] text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
           {/* Each answer is a plain button: pressing one answers the question, so it shouldn't pose as a radio choice. */}
           <div role="group" aria-labelledby="note-h" className="flex max-w-[560px] flex-col gap-2">
             {note.options.map((o, k) => {
@@ -150,8 +150,8 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                   }}
                 >
                   <span>{o}</span>
-                  {right && <span className="text-[14px] font-bold">✓ Correct</span>}
-                  {wrong && <span className="text-[14px] font-bold">✗ Not this one</span>}
+                  {right && <span className="text-[0.875rem] font-bold">✓ Correct</span>}
+                  {wrong && <span className="text-[0.875rem] font-bold">✗ Not this one</span>}
                 </button>
               );
             })}
@@ -166,16 +166,16 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
               </p>
             )}
             {picked !== null && picked !== note.answer && (
-              <p className="text-[15px] text-pale-sun">
+              <p className="text-[0.9375rem] text-pale-sun">
                 Not quite. Have another look at the summary{resting ? '; you can answer again in a few seconds.' : ', then try again.'}
               </p>
             )}
           </div>
-          {already && picked === null && <p className="text-[14px] text-on-forest-muted">You’ve already earned the field note for this page.</p>}
+          {already && picked === null && <p className="text-[0.875rem] text-on-forest-muted">You’ve already earned the field note for this page.</p>}
         </>
       ) : (
         <>
-          <h2 id="note-h" className="font-serif text-[22px] font-semibold leading-snug">
+          <h2 id="note-h" className="font-serif text-[1.375rem] font-semibold leading-snug">
             Read to the end
           </h2>
           <p className="text-base text-on-forest-muted">

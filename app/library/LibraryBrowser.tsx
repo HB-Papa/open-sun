@@ -165,7 +165,7 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setTopics(on ? topics.filter((x) => x !== t) : [...topics, t])}
-                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-[15px] ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
+                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-[0.9375rem] ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
               >
                 {topicLabel(t)}
               </button>

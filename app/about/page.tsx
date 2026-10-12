@@ -11,7 +11,7 @@ export default function AboutPage() {
     <>
       <PageSky />
       <main id="main" tabIndex={-1} className="mx-auto flex max-w-[760px] flex-col gap-6 px-4 pb-16 pt-9 sm:px-6">
-      <h1 className="font-serif text-[40px] font-bold leading-[1.05] text-balance sm:text-[48px]">{page.title}</h1>
+      <h1 className="font-serif text-[2.5rem] font-bold leading-[1.05] text-balance sm:text-[3rem]">{page.title}</h1>
       <div className="prose-os [&_h2]:scroll-mt-6" dangerouslySetInnerHTML={{ __html: numHtml(page.html) }} />
       </main>
     </>

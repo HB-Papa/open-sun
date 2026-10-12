@@ -40,9 +40,9 @@ export function PathwayWindow({
         <ArchRays className="absolute inset-x-0 top-0 h-10 w-[120px] text-sun" />
         <PathwayGlyph slug={pathway.slug} className="relative h-12 w-12" />
       </span>
-      <H className="font-serif text-[23px] font-bold leading-tight text-balance">{pathway.title}</H>
-      <span className="text-[15px] leading-snug text-body">{pathway.blurb}</span>
-      <span className="mt-auto flex flex-wrap items-center justify-center gap-2 pt-3 text-[14px] text-body">
+      <H className="font-serif text-[1.4375rem] font-bold leading-tight text-balance">{pathway.title}</H>
+      <span className="text-[0.9375rem] leading-snug text-body">{pathway.blurb}</span>
+      <span className="mt-auto flex flex-wrap items-center justify-center gap-2 pt-3 text-[0.875rem] text-body">
         {featured && <span className="rounded-full bg-sun px-2.5 py-0.5 font-bold text-[#1E3328]">Start here</span>}
         <span>
           <span className="num">{pathway.steps.length}</span> readings
