@@ -8,12 +8,19 @@ import { PALETTES, useSkyPhase } from './HeroSky';
  */
 export function PageSky() {
   const phase = useSkyPhase();
-  const p = PALETTES[phase];
+  const ready = phase !== null;
+  const p = PALETTES[phase ?? 'day'];
   const night = phase === 'night';
   const sun = { x: 1080, y: night ? 46 : 56 };
   return (
-    <div aria-hidden="true" className="relative h-[72px] overflow-hidden sm:h-[96px]" style={{ background: `linear-gradient(${p.sky}, ${p.sky2})`, transition: 'background 1s' }}>
-      <svg viewBox="0 0 1200 120" preserveAspectRatio="xMaxYMax slice" className="absolute inset-0 h-full w-full">
+    // Plain paper until the sky is known, then the band fades in (no day-to-night flash in dark mode).
+    <div aria-hidden="true" className="relative h-[72px] overflow-hidden sm:h-[96px]" style={{ background: ready ? `linear-gradient(${p.sky}, ${p.sky2})` : 'var(--paper)' }}>
+      <svg
+        viewBox="0 0 1200 120"
+        preserveAspectRatio="xMaxYMax slice"
+        className="absolute inset-0 h-full w-full transition-opacity duration-700"
+        style={{ opacity: ready ? 1 : 0 }}
+      >
         {night && (
           <g fill="#F6F1E4" opacity="0.85">
             {[[820, 24], [900, 50], [960, 18], [1150, 28], [700, 40], [600, 20], [480, 36], [300, 22], [140, 30]].map(([x, y], k) => (

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -16,8 +17,9 @@ export const PALETTES: Record<Phase, Palette> = {
 };
 
 /** The sky follows the visitor's local time, and stays at night in dark mode. */
-export function useSkyPhase(): Phase {
-  const [phase, setPhase] = useState<Phase>('day');
+export function useSkyPhase(): Phase | null {
+  // Unknown until the browser reports its clock and theme, so nothing paints in the wrong sky first.
+  const [phase, setPhase] = useState<Phase | null>(null);
   useEffect(() => {
     const dark = window.matchMedia('(prefers-color-scheme: dark)');
     const tick = () => setPhase(dark.matches ? 'night' : phaseFor(new Date().getHours()));
@@ -179,9 +181,12 @@ export function Hero() {
   const farY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 20]);
   const midY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 10]);
 
-  const p = PALETTES[phase];
+  const ready = phase !== null;
+  const p = PALETTES[phase ?? 'day'];
   const night = phase === 'night';
   const lit = night || phase === 'dusk';
+  const [puzzleNo, setPuzzleNo] = useState<number | null>(null);
+  useEffect(() => setPuzzleNo(puzzleNumber(localDateKey())), []);
   const sun = phase === 'dawn' ? { x: 990, y: 190 } : phase === 'dusk' ? { x: 1000, y: 196 } : phase === 'night' ? { x: 980, y: 96 } : { x: 975, y: 110 };
   // Glass reflects the sky by day and glows gold once the lamps come on.
   const glass = lit ? '#E8B547' : '#CDE4E6';
@@ -189,11 +194,24 @@ export function Hero() {
   const turf = night ? '#2F5A3C' : '#3E7C4F';
 
   return (
-    <section className="relative overflow-hidden md:min-h-[520px]" style={{ background: `linear-gradient(${p.sky}, ${p.sky2})`, transition: 'background 1s' }}>
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-6 pt-9 sm:px-6 md:pb-40 md:pt-16">
-        <div className="max-w-[540px]" style={{ color: p.text }}>
+    <section
+      className="relative overflow-hidden md:min-h-[520px]"
+      // Until the sky is known the band is plain paper (light or dark), then the sky fades in: no bright flash.
+      style={{ background: ready ? `linear-gradient(${p.sky}, ${p.sky2})` : 'var(--paper)' }}
+    >
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-4 pt-7 sm:px-6 sm:pb-6 sm:pt-9 md:pb-40 md:pt-16">
+        <div className="max-w-[540px]" style={{ color: ready ? p.text : 'var(--ink)' }}>
+          {/* On phones, today's puzzle comes first. */}
+          <Link
+            href="/play"
+            className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-current px-4 text-[15px] font-bold no-underline md:hidden"
+            style={{ color: ready ? p.text : 'var(--ink)' }}
+          >
+            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-sun" />
+            Microgrid{puzzleNo ? ` #${puzzleNo}` : ''} · Play today’s grid
+          </Link>
           <h1 className="mb-4 font-serif text-[40px] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[56px]">A free library for a solarpunk tomorrow</h1>
-          <p className="mb-6 max-w-[46ch] text-[17px] leading-normal sm:text-[19px]" style={{ color: p.soft }}>
+          <p className="mb-6 max-w-[46ch] text-[17px] leading-normal sm:text-[19px]" style={{ color: ready ? p.soft : 'var(--body)' }}>
             Solarpunk imagines a future powered by the sun, woven into living ecosystems, and built around community. Here is open access writing on it, gathered in one place and updated every week.
           </p>
           <form role="search" action="/library" className="flex flex-wrap gap-2.5">
@@ -212,7 +230,7 @@ export function Hero() {
             </button>
           </form>
           <p className="mt-4 text-[16px]">
-            <Link href="/library/flynn-2014-solarpunk-notes-manifesto" className="font-bold underline decoration-2" style={{ color: p.text }}>
+            <Link href="/library/flynn-2014-solarpunk-notes-manifesto" className="font-bold underline decoration-2" style={{ color: ready ? p.text : 'var(--ink)' }}>
               New to solarpunk? Start with one short essay
             </Link>
           </p>
@@ -222,7 +240,8 @@ export function Hero() {
       <svg
         viewBox="0 0 1200 400"
         preserveAspectRatio="xMaxYMax slice"
-        className="block h-[150px] w-full sm:h-[260px] md:absolute md:inset-0 md:h-full"
+        className="block h-[120px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-0 md:h-full"
+        style={{ opacity: ready ? 1 : 0 }}
         aria-hidden="true"
       >
         {night && (

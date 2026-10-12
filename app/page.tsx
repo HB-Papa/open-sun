@@ -25,7 +25,7 @@ export default function HomePage() {
 
       <div className="mx-auto flex max-w-[1200px] flex-col gap-16 px-4 pb-20 sm:px-6">
         {/* Today's puzzle rises out of the front hill. */}
-        <section aria-labelledby="today" className="relative z-10 -mt-6 flex flex-wrap gap-6 md:-mt-28">
+        <section aria-labelledby="today" className="relative z-10 -mt-10 flex flex-wrap gap-6 md:-mt-28">
           <TodayPuzzleCard />
           <GardenCard />
         </section>
@@ -52,7 +52,7 @@ export default function HomePage() {
 
         <section id="pathways" aria-labelledby="paths" className="flex flex-col gap-5">
           <SectionHeading id="paths">Pathways: guided reading</SectionHeading>
-          <p className="max-w-[60ch] text-lg leading-normal text-body">
+          <p className="max-w-[35rem] text-lg leading-normal text-body">
             Short routes through the library, {readingsPhrase(pathways)} readings each. Every stop with a field note can unlock a bonus grid.
           </p>
           <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] sm:overflow-visible sm:px-0 sm:pb-0">
@@ -68,7 +68,7 @@ export default function HomePage() {
           <h2 id="what" className="font-serif text-[32px] font-semibold">
             Where solarpunk came from
           </h2>
-          <p className="max-w-[60ch] text-lg leading-relaxed text-body">
+          <p className="max-w-[35rem] text-lg leading-relaxed text-body">
             Solarpunk began as an internet word around <span className="num">2008</span> and has grown into fiction, art, design, scholarship, and activism. The Field Guide
             explains the ideas you’ll meet here, from agrivoltaics to the commons.
           </p>

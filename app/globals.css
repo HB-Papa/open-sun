@@ -189,6 +189,13 @@
   z-index: -1;
 }
 
+/* While the phone run bar is pinned, the page keeps room for it so it never covers the footer. */
+@media (max-width: 767px) {
+  body:has(.run-bar) {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* After a win, the village's windows come on one house at a time. */
 @keyframes os-light {
   from {
@@ -289,8 +296,8 @@
 
 /* Long-form text from Markdown. */
 .prose-os {
-  /* Atkinson runs narrow, so 60ch lands near 70 characters per line. */
-  max-width: 60ch;
+  /* Atkinson's "0" is wide, so ch units overshoot; 35rem holds about 70 characters at 18px. */
+  max-width: 35rem;
   font-size: 18px;
   line-height: 1.6;
   color: var(--body);

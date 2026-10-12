@@ -79,12 +79,7 @@ export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ra
   }, [date, variant, extraSeed]);
 
   if (error) return <p role="alert">Sorry, today’s grid could not be drawn. Please reload the page.</p>;
-  if (!puzzle)
-    return (
-      <p className="py-16 text-center text-lg text-muted" role="status">
-        Drawing today’s map…
-      </p>
-    );
+  if (!puzzle) return <BoardSkeleton label="Drawing today’s map…" />;
   return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} />;
 }
 
@@ -492,7 +487,7 @@ function Board({
 
       {/* On phones, the run button stays within thumb's reach while you place parts. */}
       {!done && (
-        <div className="on-forest fixed inset-x-0 bottom-0 z-30 border-t border-forest-2 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest md:hidden">
+        <div className="run-bar on-forest fixed inset-x-0 bottom-0 z-30 border-t-2 border-sun/70 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest shadow-[0_-8px_24px_-12px_rgba(13,24,18,.5)] md:hidden">
           {offWarning && <p className="mb-2 text-[14px] font-bold text-pale-sun">{offText(offCount)}</p>}
           <div className="flex items-center gap-3">
             <p className="shrink-0 text-[15px]">
@@ -509,6 +504,37 @@ function Board({
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/**
+ * A board-sized placeholder while the puzzle is drawn, so the page doesn't jump when it arrives.
+ * It mirrors the real page's header, tools and board footprint.
+ */
+export function BoardSkeleton({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <p className="sr-only" role="status">
+        {label}
+      </p>
+      <div className="h-[40px] w-[220px] rounded-xl bg-chip sm:h-[62px] sm:w-[340px]" aria-hidden="true" />
+      <div className="play-layout" aria-hidden="true">
+        <div data-area="board" className="flex min-w-0 flex-col gap-3.5">
+          <div className="h-[52px] rounded-xl bg-chip" />
+          <div className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[360px]">
+            {Array.from({ length: 4 }, (_, k) => (
+              <div key={k} className="min-h-14 rounded-2xl bg-chip" />
+            ))}
+          </div>
+          <div className="board grid max-w-[460px] grid-cols-5 gap-2 rounded-[22px] p-3 sm:p-3.5 md:max-w-[360px]" style={{ background: 'var(--board)' }}>
+            {Array.from({ length: 25 }, (_, k) => (
+              <div key={k} className="aspect-square min-h-11 rounded-xl animate-pulse" style={{ background: 'var(--g-open)', opacity: 0.7 }} />
+            ))}
+          </div>
+        </div>
+        <div data-area="forecast" className="hidden h-[340px] rounded-[20px] border border-line bg-card md:block" />
+      </div>
     </div>
   );
 }
