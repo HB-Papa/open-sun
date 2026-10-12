@@ -5,6 +5,8 @@ import { shortAuthors } from '@/lib/cite';
 import { yearText } from '@/lib/types';
 import { PageSky } from '@/components/PageSky';
 import { TermGlyph, VineRule } from '@/components/Ornaments';
+import { Nums } from '@/lib/nums';
+import { TermSearch } from './TermSearch';
 
 export const metadata: Metadata = { title: 'Field Guide', description: 'Short, plain definitions of solarpunk ideas, each linked to readings in the library.' };
 
@@ -23,9 +25,10 @@ export default function FieldGuidePage() {
           Short definitions of the ideas you’ll meet in the library and in the Microgrid puzzle. Each term links to readings.
         </p>
       </div>
+      <TermSearch total={terms.length} />
       <nav aria-label="Terms" className="flex flex-wrap gap-2">
         {terms.map((t) => (
-          <a key={t.slug} href={`#${t.slug}`} className="rounded-full border border-line bg-card px-3 py-1.5 text-[14px] text-ink no-underline hover:bg-chip-hover hover:text-ink">
+          <a key={t.slug} href={`#${t.slug}`} data-term-chip={t.slug} className="rounded-full border border-line bg-card px-3 py-1.5 text-[14px] text-ink no-underline hover:bg-chip-hover hover:text-ink">
             {t.term}
           </a>
         ))}
@@ -34,14 +37,14 @@ export default function FieldGuidePage() {
         {terms.map((t) => {
           const related = t.related.map(getItem).filter((x) => x !== undefined);
           return (
-            <div key={t.slug} id={t.slug} className="scroll-mt-6 rounded-[20px] border border-line bg-card p-6">
+            <div key={t.slug} id={t.slug} data-term className="scroll-mt-6 rounded-[20px] border border-line bg-card p-6">
               <dt className="flex items-center gap-3.5 font-serif text-[24px] font-semibold">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-chip-leaf text-leaf-ink">
                   <TermGlyph slug={t.slug} className="h-8 w-8" />
                 </span>
                 {t.term}
               </dt>
-              <dd className="mt-2 max-w-[35rem] text-[17px] leading-relaxed text-body">{t.definition}</dd>
+              <dd className="mt-2 max-w-[35rem] text-[17px] leading-relaxed text-body"><Nums text={t.definition} /></dd>
               {related.length > 0 && (
                 <dd className="mt-3 max-w-[33rem] text-[15px]">
                   <span className="font-bold">Read more: </span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { numHtml } from '@/lib/nums';
 
 type Cite = { text: string; html: string };
 
@@ -49,7 +50,7 @@ export function CitationBox({ apa, chicago }: { apa: Cite; chicago: Cite }) {
           ))}
         </div>
       </div>
-      <p className="break-words rounded-xl bg-chip px-[18px] py-4 text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: cite.html }} />
+      <p className="break-words rounded-xl bg-chip px-[18px] py-4 text-base leading-relaxed" dangerouslySetInnerHTML={{ __html: numHtml(cite.html) }} />
       <div className="flex flex-wrap items-center gap-3">
         <button type="button" onClick={copy} className="min-h-12 rounded-full border-2 border-line-strong bg-card px-5 font-bold text-ink">
           Copy citation

@@ -16,6 +16,20 @@ function resultMessage(r: NoteResult): string {
 }
 
 const OPENED = (slug: string) => `opensun:opened:${slug}`;
+const DWELL = (slug: string) => `opensun:dwell:${slug}`;
+
+/** A small status beside "Read it free": whether this page's field note is waiting or earned. */
+export function FieldNoteChip({ slug }: { slug: string }) {
+  const progress = useProgress();
+  if (!progress) return null;
+  const earned = !!progress.notes[slug];
+  return (
+    <a href="#note-h" className={`inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 text-[14px] font-bold no-underline ${earned ? 'bg-chip-leaf text-ink' : 'bg-pale-sun text-ink'}`}>
+      <span aria-hidden="true">{earned ? '✓' : '✎'}</span>
+      {earned ? 'Field note earned' : 'Field note waiting below'}
+    </a>
+  );
+}
 /** How long someone spends with the summary before the question appears without opening the reading. */
 const DWELL_MS = 30000;
 /** How long the choices pause after a wrong answer. */
@@ -27,6 +41,8 @@ export function ReadItLink({ slug, href, children, className }: { slug: string; 
     <a
       href={href}
       className={className}
+      // A new tab keeps Open Sun (and the field note) waiting here for the reader's return.
+      target="_blank"
       rel="noopener"
       onClick={() => {
         try {
@@ -53,10 +69,27 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
     } catch {}
     const onOpen = (e: Event) => (e as CustomEvent).detail === slug && setOpened(true);
     window.addEventListener('opensun:opened', onOpen);
-    const t = setTimeout(() => setOpened(true), DWELL_MS);
+    // Time spent with the page adds up across app switches and return visits in this session,
+    // and only counts while the page is actually on screen.
+    let spent = 0;
+    try {
+      spent = Number(sessionStorage.getItem(DWELL(slug)) ?? 0) || 0;
+    } catch {}
+    if (spent >= DWELL_MS) setOpened(true);
+    const tick = setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      spent += 1000;
+      try {
+        sessionStorage.setItem(DWELL(slug), String(spent));
+      } catch {}
+      if (spent >= DWELL_MS) {
+        setOpened(true);
+        clearInterval(tick);
+      }
+    }, 1000);
     return () => {
       window.removeEventListener('opensun:opened', onOpen);
-      clearTimeout(t);
+      clearInterval(tick);
     };
   }, [slug]);
   const unlocked = opened || !!already;
@@ -87,7 +120,7 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
             A field note is waiting
           </h2>
           <p className="max-w-[56ch] text-[16px] text-on-forest-muted">
-            Press “Read it free” to open the reading, or stay with the summary for about 30 seconds, and a short question will appear here. Answering it opens a bonus grid in Play.
+            Press “Read it free” to open the reading, or stay with the summary for about <span className="num-i">30</span> seconds, and a short question will appear here. Answering it opens a bonus grid in Play.
           </p>
         </>
       ) : note ? (
@@ -96,7 +129,8 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
             {note.question}
           </h2>
           <p className="-mt-1 text-[15px] text-on-forest-muted">A field note: answer from what you just read to open a bonus grid in Play.</p>
-          <div role="radiogroup" aria-labelledby="note-h" className="flex max-w-[560px] flex-col gap-2">
+          {/* Each answer is a plain button: pressing one answers the question, so it shouldn't pose as a radio choice. */}
+          <div role="group" aria-labelledby="note-h" className="flex max-w-[560px] flex-col gap-2">
             {note.options.map((o, k) => {
               const isPicked = picked === k;
               const right = isPicked && k === note.answer;
@@ -105,19 +139,9 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
                 <button
                   key={k}
                   type="button"
-                  role="radio"
                   onClick={() => pick(k)}
-                  aria-checked={isPicked}
                   aria-disabled={resting || undefined}
-                  tabIndex={picked === null ? (k === 0 ? 0 : -1) : isPicked ? 0 : -1}
-                  onKeyDown={(e) => {
-                    const step = e.key === 'ArrowDown' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 0;
-                    if (!step) return;
-                    e.preventDefault();
-                    const n = (k + step + note.options.length) % note.options.length;
-                    const sibling = e.currentTarget.parentElement?.children[n] as HTMLElement | undefined;
-                    sibling?.focus();
-                  }}
+                  aria-describedby={isPicked ? `note-result` : undefined}
                   className={`flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-base ${resting ? 'cursor-wait opacity-60' : 'hover:border-sun'}`}
                   style={{
                     color: right ? '#1E3328' : 'var(--option-ink)',
@@ -132,7 +156,7 @@ export function FieldNoteCard({ slug, title, topics, note }: { slug: string; tit
               );
             })}
           </div>
-          <div role="status" aria-live="polite">
+          <div id="note-result" role="status" aria-live="polite">
             {picked !== null && picked === note.answer && (
               <p className="rounded-xl bg-leaf px-3.5 py-3 text-base text-white">
                 {result?.earned ? resultMessage(result) : 'Correct! You already have a field note from this page.'}{' '}

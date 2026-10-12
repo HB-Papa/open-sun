@@ -3,6 +3,7 @@ import { yearText, type ItemCard as Card } from '@/lib/types';
 import { topicLabel, TYPE_COLORS, LANGUAGES } from '@/lib/topics';
 import { naturalName } from '@/lib/cite';
 import { LeafSprout } from './icons';
+import { Nums } from '@/lib/nums';
 
 export function authorsLine(item: Pick<Card, 'authors' | 'edited'>): string {
   const a = item.authors.map(naturalName);
@@ -24,7 +25,6 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
         <span className="shrink-0 rounded-full px-2.5 py-1 text-[13px] font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
           {item.type}
         </span>
-        <span className="num shrink-0 rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{yearText(item.year)}</span>
         {item.language !== 'en' ? (
           <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-[13px] text-body">{LANGUAGES[item.language] ?? item.language}</span>
         ) : (
@@ -36,8 +36,15 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
         )}
       </div>
       <H className="font-serif text-[20px] font-semibold leading-tight">{item.title}</H>
-      <p className="text-[15px] text-muted">{authorsLine(item)}</p>
-      {!compact && <p className="line-clamp-4 text-[15px] leading-normal text-body">{item.summary}</p>}
+      {/* The year joins the byline, which leaves the tag row room for the topic. */}
+      <p className="text-[15px] text-muted">
+        {authorsLine(item)} · <span className="num">{yearText(item.year)}</span>
+      </p>
+      {!compact && (
+        <p className="line-clamp-4 text-[15px] leading-normal text-body">
+          <Nums text={item.summary} />
+        </p>
+      )}
     </Link>
   );
 }

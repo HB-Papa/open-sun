@@ -27,6 +27,24 @@ export function PathwayStatus({ slugs }: { slugs: string[] }) {
   );
 }
 
+/** "Start at stop 1", or "Continue at stop N" once some stops are read. */
+export function ContinueButton({ steps }: { steps: { slug: string; title: string }[] }) {
+  const progress = useProgress();
+  const firstUnread = progress ? steps.findIndex((s) => !progress.visited[s.slug]) : 0;
+  if (firstUnread < 0) return null;
+  const k = firstUnread;
+  return (
+    <Link
+      href={`/library/${steps[k].slug}`}
+      className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-6 font-bold text-white no-underline hover:text-white"
+    >
+      {k === 0 ? 'Start at stop 1' : `Continue at stop ${k + 1}`}
+      <span className="sr-only">: {steps[k].title}</span>
+      <span aria-hidden="true">→</span>
+    </Link>
+  );
+}
+
 /**
  * One stretch of the vine that runs down the left of a pathway. It turns green
  * once that stop is read, and the stop's bud opens into a leaf.

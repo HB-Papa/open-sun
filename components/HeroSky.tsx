@@ -200,19 +200,24 @@ export function Hero() {
       style={{ background: ready ? `linear-gradient(${p.sky}, ${p.sky2})` : 'var(--paper)' }}
     >
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-4 pt-7 sm:px-6 sm:pb-6 sm:pt-9 md:pb-40 md:pt-16">
-        <div className="max-w-[540px]" style={{ color: ready ? p.text : 'var(--ink)' }}>
+        {/* Narrower on desktop so the search stays clear of the cottages. */}
+        <div className="max-w-[540px] md:max-w-[480px]" style={{ color: ready ? p.text : 'var(--ink)' }}>
           {/* On phones, today's puzzle comes first. */}
           <Link
             href="/play"
             className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-current px-4 text-[15px] font-bold no-underline md:hidden"
             style={{ color: ready ? p.text : 'var(--ink)' }}
           >
-            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-sun" />
-            Microgrid{puzzleNo ? ` #${puzzleNo}` : ''} · Play today’s grid
+            <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-sun" />
+            Daily puzzle: keep a village lit · Play{puzzleNo ? ` #${puzzleNo}` : ''}
           </Link>
           <h1 className="mb-4 font-serif text-[40px] font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-[56px]">A free library for a solarpunk tomorrow</h1>
           <p className="mb-6 max-w-[46ch] text-[17px] leading-normal sm:text-[19px]" style={{ color: ready ? p.soft : 'var(--body)' }}>
-            Solarpunk imagines a future powered by the sun, woven into living ecosystems, and built around community. Here is open access writing on it, gathered in one place and updated every week.
+            <span className="sm:hidden">Free writing on a future powered by the sun and built around community.</span>
+            <span className="hidden sm:inline">
+              Solarpunk imagines a future powered by the sun, woven into living ecosystems, and built around community. Here is open access writing on it, gathered in one
+              place and updated every week.
+            </span>
           </p>
           <form role="search" action="/library" className="flex flex-wrap gap-2.5">
             <label htmlFor="home-search" className="sr-only">
@@ -222,7 +227,7 @@ export function Hero() {
               id="home-search"
               name="q"
               type="search"
-              placeholder="Try: community solar, agrivoltaics"
+              placeholder="Try: agrivoltaics"
               className="min-h-12 flex-[1_1_220px] rounded-full border-2 border-line-strong bg-input px-4 text-[17px] text-ink shadow-[0_2px_10px_rgba(30,51,40,.08)] placeholder:text-muted"
             />
             <button type="submit" className="min-h-12 rounded-full bg-leaf px-[22px] font-bold text-white">

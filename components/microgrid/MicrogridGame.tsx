@@ -30,6 +30,7 @@ import {
 import { MAX_BONUS_PER_DAY, type DailyGame } from '@/lib/progress';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
 import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
+import { Nums } from '@/lib/nums';
 import { VillageLights } from './VillageLights';
 
 type Tool = Part;
@@ -109,6 +110,7 @@ function Board({
   const [notice, setNotice] = useState('');
   // Set when the player tries to run with parts that aren't connected; a second press runs anyway.
   const [offWarning, setOffWarning] = useState(false);
+  const [rulesDismissed, setRulesDismissed] = useState(false);
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // "How it works" links open the rules where they are, rather than jumping away from the board.
@@ -272,6 +274,9 @@ function Board({
       if (puzzle.terrain[i] === 'ridge') notes.push('on a windy ridge');
       if (ns.some((n) => layout[n] === 'wind')) notes.push('slowed by a nearby turbine');
     }
+    // Say the badge's number too, so screen-reader players get the same figure sighted players see.
+    const m = mult[i];
+    if ((part === 'solar' || part === 'wind') && m !== 1) notes.push(`making ${fmt(m)} times normal`);
     return notes.length ? `, ${notes.join(', ')}` : '';
   }
 
@@ -286,15 +291,20 @@ function Board({
         : offWarning
           ? 'Run anyway'
           : `Run the day (try ${tries + 1} of ${MAX_TRIES})`;
+  // The phone thumb bar gets a shorter label.
+  const barLabel = canRunNow() ? (offWarning ? 'Run anyway' : `Run the day · try ${tries + 1}/${MAX_TRIES}`) : runLabel;
+  function canRunNow() {
+    return !(done || running || used === 0);
+  }
   const canRun = !(done || running || used === 0);
   const runClass = `min-h-[52px] rounded-full text-lg font-bold ${
     canRun ? 'bg-leaf text-white' : 'cursor-not-allowed border-2 border-dashed border-line-strong bg-transparent text-muted'
   }`;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       {/* On phones the title and tries share one line, so the board starts higher. */}
-      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:items-end">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 sm:items-end md:justify-start md:gap-x-10">
         <div>
           <h1 className="font-serif text-[30px] font-bold leading-tight sm:text-[52px]">{ranked ? `Microgrid #${num}` : info.name}</h1>
           <p className={`mt-1 text-[17px] text-body ${ranked ? 'hidden sm:block' : ''}`}>{ranked ? `Today’s puzzle, ${formatDate(date)}` : `Bonus grid, just for fun. ${info.blurb}`}</p>
@@ -315,17 +325,38 @@ function Board({
         </section>
 
         {/* ---------- the board ---------- */}
-        <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-3.5">
-          {/* Rules first on phones: open on a first visit, folded away after that. */}
-          <HowToPlay open={firstVisit} id="how" className="md:hidden" />
-          <p className="text-[17px] leading-normal">
-            Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
+        <section data-area="board" aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-2.5 sm:gap-3.5">
+          {/* Rules first on phones: a short version on a first visit; the full rules sit below the board. */}
+          {firstVisit && !rulesDismissed && (
+            <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
+              <ol className="flex list-decimal flex-col gap-1 pl-5 text-[15px] leading-snug text-body">
+                <li>Connect every part to a home, directly or through other parts.</li>
+                <li>Trees shade panels; gardens and windy ridges boost them.</li>
+                <li>Batteries carry daytime sun into the night. Then run the day.</li>
+              </ol>
+              <div className="flex gap-4 text-[15px]">
+                <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
+                  Got it
+                </button>
+                <a href="#how" onClick={openHow} className="font-bold">
+                  Full rules
+                </a>
+              </div>
+            </div>
+          )}
+          <p className="text-[15px] leading-snug sm:text-[17px] sm:leading-normal">
+            <span className="sm:hidden">
+              Light every hour with up to <strong>{puzzle.budget} parts</strong>. Tap a plot to place; tap again to remove.{' '}
+            </span>
+            <span className="hidden sm:inline">
+              Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
+            </span>
             <a href="#how" onClick={openHow} className="font-bold">
               How it works
             </a>
           </p>
 
-          <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[360px]">
+          <div role="radiogroup" aria-label="Part to place" className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
             {TOOLS.map((t) => (
               <button
                 key={t.id}
@@ -358,7 +389,7 @@ function Board({
           <div
             role="grid"
             aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
-            className="board grid max-w-[460px] grid-cols-5 md:max-w-[360px] gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
+            className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
             style={{ background: 'var(--board)' }}
             onKeyDown={onGridKey}
           >
@@ -417,11 +448,11 @@ function Board({
             <span>
               Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
             </span>
-            <span className="text-muted">
+            <span className="hidden text-muted sm:inline">
               Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
             </span>
           </div>
-          <div className="hidden max-w-[360px] flex-col gap-2 md:flex">
+          <div className="hidden max-w-[400px] flex-col gap-2 md:flex">
             <button type="button" onClick={run} disabled={!canRun} className={runClass}>
               {runLabel}
             </button>
@@ -431,6 +462,8 @@ function Board({
             {notice}
           </p>
           <TerrainKey />
+          {/* On phones the full rules live below the board, one tap away from the "How it works" links. */}
+          <HowToPlay open={false} id="how" className="md:hidden" />
         </section>
 
         {/* ---------- results ---------- */}
@@ -454,7 +487,7 @@ function Board({
                       ? 'Every home stayed lit all day and night. Come back tomorrow for a new grid.'
                       : 'Every home stayed lit. Nicely done!'
                     : lastLit
-                      ? `${describeHours(lastLit)} ${hint(puzzle, lastLit, layout)}`
+                      ? <Nums text={`${describeHours(lastLit)} ${hint(puzzle, lastLit, layout)}`} />
                       : ''}
                 </p>
               )}
@@ -499,7 +532,7 @@ function Board({
               disabled={!canRun}
               className={`min-h-12 flex-1 rounded-full text-[17px] font-bold ${canRun ? 'bg-sun text-[#1E3328]' : 'cursor-not-allowed border-2 border-dashed border-on-forest-muted/50 text-on-forest-muted'}`}
             >
-              {runLabel}
+              {barLabel}
             </button>
           </div>
         </div>
@@ -522,12 +555,12 @@ export function BoardSkeleton({ label }: { label: string }) {
       <div className="play-layout" aria-hidden="true">
         <div data-area="board" className="flex min-w-0 flex-col gap-3.5">
           <div className="h-[52px] rounded-xl bg-chip" />
-          <div className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[360px]">
+          <div className="grid max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:max-w-[400px]">
             {Array.from({ length: 4 }, (_, k) => (
               <div key={k} className="min-h-14 rounded-2xl bg-chip" />
             ))}
           </div>
-          <div className="board grid max-w-[460px] grid-cols-5 gap-2 rounded-[22px] p-3 sm:p-3.5 md:max-w-[360px]" style={{ background: 'var(--board)' }}>
+          <div className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 sm:p-3.5" style={{ background: 'var(--board)' }}>
             {Array.from({ length: 25 }, (_, k) => (
               <div key={k} className="aspect-square min-h-11 rounded-xl animate-pulse" style={{ background: 'var(--g-open)', opacity: 0.7 }} />
             ))}
