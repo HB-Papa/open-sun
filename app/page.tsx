@@ -25,7 +25,8 @@ export default function HomePage() {
 
       <div className="mx-auto flex max-w-[1200px] flex-col gap-16 px-4 pb-20 sm:px-6">
         {/* Today's puzzle rises out of the front hill. */}
-        <section aria-labelledby="today" className="relative z-10 -mt-4 flex flex-wrap gap-6 sm:-mt-10 xl:-mt-28">
+        {/* Phones: two short tiles side by side. Wider screens: the full puzzle card beside the garden. */}
+        <section aria-labelledby="today" className="relative z-10 -mt-4 grid grid-cols-2 gap-3 sm:-mt-10 sm:flex sm:flex-wrap sm:gap-6 xl:-mt-28">
           <TodayPuzzleCard />
           <GardenCard />
         </section>
@@ -44,7 +45,7 @@ export default function HomePage() {
           <ul className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-5">
             {latest.map((i) => (
               <li key={i.slug}>
-                <ItemCardView item={toCard(i)} />
+                <ItemCardView item={toCard(i)} phoneCompact />
               </li>
             ))}
           </ul>
@@ -53,9 +54,10 @@ export default function HomePage() {
         <section id="pathways" aria-labelledby="paths" className="flex flex-col gap-5">
           <SectionHeading id="paths">Pathways: guided reading</SectionHeading>
           <p className="max-w-[35rem] text-lede leading-normal text-body">
-            Short routes through the library, {readingsPhrase(pathways)} readings each. Every stop with a field note can unlock a bonus grid.
+            Short routes through the library, {readingsPhrase(pathways)} readings each.
           </p>
-          <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] sm:overflow-visible sm:px-0 sm:pb-0">
+          {/* A scrolling row clips whatever sits outside it, so the top padding keeps the arches and the "Start here" ring whole. */}
+          <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 pt-1.5 sm:mx-0 sm:grid sm:pt-0 sm:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] sm:overflow-visible sm:px-0 sm:pb-0">
             {pathways.map((p, k) => (
               <li key={p.slug} className="w-[240px] shrink-0 snap-start sm:w-auto">
                 <PathwayWindow pathway={p} featured={k === 0} />

@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { localDateKey, puzzleNumber } from '@/lib/microgrid';
 import { currentTheme, subscribeTheme } from '@/lib/theme';
-import { useProgress } from '@/lib/progress';
-import { dayStatus } from '@/lib/dayStatus';
+import { useMinWidth } from '@/lib/useMinWidth';
 
 export type Phase = 'dawn' | 'day' | 'dusk' | 'night';
 
@@ -193,6 +191,8 @@ export function SolarArray({ panel, night }: { panel: string; night: boolean }) 
  */
 export function Hero() {
   const phase = useSkyPhase();
+  // Phones see a close crop of the village, array and turbine; wider screens see the whole valley.
+  const wide = useMinWidth(640);
   const reduce = useReducedMotion();
   const { scrollY } = useScroll();
   const sunY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 50]);
@@ -203,18 +203,6 @@ export function Hero() {
   const p = PALETTES[phase ?? 'day'];
   const night = phase === 'night';
   const lit = night || phase === 'dusk';
-  const [today, setToday] = useState<string | null>(null);
-  useEffect(() => setToday(localDateKey()), []);
-  const puzzleNo = today ? puzzleNumber(today) : null;
-  // The phone pill says where today's game stands: not started, under way, or done (with the result).
-  const progress = useProgress();
-  const game = today ? progress?.games[today] : undefined;
-  const status = dayStatus(game);
-  const pill = status
-    ? `${status.line} · see your day`
-    : game?.tries
-      ? `Daily puzzle: keep going · Microgrid${puzzleNo ? ` #${puzzleNo}` : ''}`
-      : `Daily puzzle: keep a village lit · Play${puzzleNo ? ` #${puzzleNo}` : ''}`;
   const sun = phase === 'dawn' ? { x: 990, y: 190 } : phase === 'dusk' ? { x: 1000, y: 196 } : phase === 'night' ? { x: 980, y: 96 } : { x: 975, y: 110 };
   // Glass reflects the sky by day and glows gold once the lamps come on.
   const glass = lit ? '#E8B547' : '#CDE4E6';
@@ -229,15 +217,6 @@ export function Hero() {
     >
       <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-4 pt-7 sm:px-6 sm:pb-6 sm:pt-9 md:pb-40 md:pt-16">
         <div className="max-w-[540px] md:max-w-[480px]" style={{ color: ready ? p.text : 'var(--ink)' }}>
-          {/* On phones, today's puzzle comes first. */}
-          <Link
-            href="/play"
-            className="mb-3 inline-flex min-h-11 items-center gap-2 rounded-full border-2 border-current px-4 text-small font-bold no-underline md:hidden"
-            style={{ color: ready ? p.text : 'var(--ink)' }}
-          >
-            <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full bg-sun" />
-            {pill}
-          </Link>
           <h1 className="mb-4 font-serif text-page font-bold leading-[1.02] tracking-[-0.01em] text-balance sm:text-hero">A free library for a solarpunk tomorrow</h1>
           <p className="mb-6 max-w-[46ch] text-copy leading-normal sm:text-lede" style={{ color: ready ? p.soft : 'var(--body)' }}>
             <span className="sm:hidden">Free writing on a future powered by the sun and built around community.</span>
@@ -270,11 +249,11 @@ export function Hero() {
       </div>
 
       <svg
-        viewBox="0 0 1200 400"
+        viewBox={wide ? '0 0 1200 400' : '560 46 640 294'}
         preserveAspectRatio="xMaxYMax slice"
         // On desktop the scene sits along the bottom at its own proportions (not stretched to the copy's height),
         // so the village stays below and to the right of the search, whatever the text wraps to.
-        className="block h-[60px] w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-x-0 md:bottom-0 md:h-auto md:max-h-full"
+        className="block h-auto w-full transition-opacity duration-700 sm:h-[260px] md:absolute md:inset-x-0 md:bottom-0 md:h-auto md:max-h-full"
         style={{ opacity: ready ? 1 : 0 }}
         aria-hidden="true"
       >

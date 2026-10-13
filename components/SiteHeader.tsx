@@ -37,8 +37,8 @@ export function SiteHeader() {
           <Logo size={32} />
           <span className="font-serif text-heading font-bold">Open Sun</span>
         </Link>
-        {/* The home hero has its own Play row, and /play is the game itself. */}
-        {pathname !== '/play' && pathname !== '/' && <PlayPill />}
+        {/* The home page has its own Microgrid tile, and /microgrid is the game itself. */}
+        {pathname !== '/microgrid' && pathname !== '/' && <PlayPill />}
         <button
           ref={menuButton}
           type="button"
@@ -91,7 +91,7 @@ function PlayPill() {
   const status = dayStatus(today ? progress?.games[today] : undefined);
   return (
     <Link
-      href="/play"
+      href="/microgrid"
       className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 font-bold ${status ? '' : 'min-[360px]:px-3.5'} text-on-forest no-underline hover:text-on-forest md:hidden dark:ring-1 dark:ring-sun/60`}
     >
       {!status && <span aria-hidden="true" className="hidden h-2.5 w-2.5 rounded-full bg-sun min-[360px]:block" />}

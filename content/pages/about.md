@@ -21,7 +21,7 @@ Once a week, an automated search checks three open scholarly databases (OpenAlex
 
 ## The daily puzzle
 
-Microgrid is a short daily puzzle about keeping a small solar neighborhood lit for 24 hours. Everyone gets the same puzzle each day. Reading in the library earns field notes, which unlock bonus grids and rest days for your streak, but your daily result is always just your own play.
+Microgrid is a short daily puzzle about keeping a small solar neighborhood lit for 24 hours. Everyone gets the same puzzle each day. There are no rewards to chase: your result is just your own play, and the garden on the home page grows with every page you read in the library.
 
 Your progress is saved only in your own browser. Open Sun has no accounts, no ads, and no tracking cookies.
 

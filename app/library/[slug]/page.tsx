@@ -9,7 +9,7 @@ import { ExternalIcon } from '@/components/icons';
 import { VineRule } from '@/components/Ornaments';
 import { authorsLine } from '@/components/ItemCard';
 import { CitationBox } from './CitationBox';
-import { FieldNoteCard, FieldNoteChip, ReadItLink, ReadToEnd } from './FieldNote';
+import { FieldNoteCard, ReadItLink, ReadToEnd } from './FieldNote';
 import { NextStop, PathwayStrip, type Membership } from './PathwayContext';
 import { PageSky } from '@/components/PageSky';
 import { Nums, numHtml } from '@/lib/nums';
@@ -75,14 +75,12 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <ReadItLink
-              slug={item.slug}
               href={item.url}
               className="inline-flex min-h-12 items-center gap-2 rounded-full bg-leaf px-[22px] font-bold text-white no-underline hover:text-white"
             >
               Read it free <ExternalIcon />
               <span className="sr-only">(opens the publisher’s site in a new tab)</span>
             </ReadItLink>
-            {item.fieldNote && <FieldNoteChip slug={item.slug} />}
             {item.doi && item.url !== `https://doi.org/${item.doi}` && (
               <a href={`https://doi.org/${item.doi}`} className="inline-flex min-h-12 items-center px-2 font-bold" rel="noopener">
                 Publisher’s page (DOI)
@@ -107,9 +105,9 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
               </>
             )}
           </section>
-          {/* The field note comes after the reading, so it rewards reading rather than skimming. */}
-          <FieldNoteCard slug={item.slug} title={`${shortAuthors(item)} (${yearText(item.year)})`} topics={item.topics} note={item.fieldNote} />
-          <ReadToEnd slug={item.slug} title={item.title} topics={item.topics} hasQuestion={!!item.fieldNote} />
+          {/* A question to reflect on, after the summary. */}
+          <FieldNoteCard slug={item.slug} note={item.fieldNote} />
+          <ReadToEnd slug={item.slug} />
           {memberships[0] && <NextStop m={memberships[0]} related={related.slice(0, 2).map((r) => ({ slug: r.slug, title: r.title }))} />}
         </article>
 
