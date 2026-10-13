@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllItems, getItem, getPathways, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
-import { languageName, topicLabel, TYPE_COLORS } from '@/lib/topics';
+import { familyOf, FAMILIES, languageName, topicLabel } from '@/lib/topics';
 import { yearText } from '@/lib/types';
 import { ExternalIcon } from '@/components/icons';
 import { VineRule } from '@/components/Ornaments';
@@ -62,7 +62,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             <PathwayStrip key={m.pathway.slug} m={m} />
           ))}
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-full px-3 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
+            <span className="rounded-full border border-line-strong px-3 py-[3px] text-caption font-bold">
               {item.type}
             </span>
             <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
@@ -120,7 +120,9 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
               <li key={t}>
                 <Link
                   href={`/library?topic=${t}`}
-                  className="inline-block rounded-full border border-line bg-card px-3 py-1.5 text-small text-ink no-underline hover:bg-chip-hover hover:text-ink"
+                  className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-small text-ink no-underline hover:text-ink hover:underline"
+                    style={{ background: FAMILIES[familyOf(t)].tint }}
+                    title={FAMILIES[familyOf(t)].label}
                 >
                   {topicLabel(t)}
                 </Link>

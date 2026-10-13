@@ -24,20 +24,45 @@ export const TOPICS = {
 export type Topic = keyof typeof TOPICS;
 export const topicLabel = (t: string) => (TOPICS as Record<string, string>)[t] ?? t;
 
+/**
+ * Idea families: the one meaning colour carries for ideas across the site (topic chips, Field Guide terms,
+ * library filters, pathways). Each family is a tint from the palette plus a stronger dot, and always has a
+ * written name, so colour is never the only cue.
+ */
+export const FAMILIES = {
+  sun: { label: 'Solarpunk', tint: 'var(--color-pale-sun)', dot: 'var(--dot-sun)' },
+  energy: { label: 'Energy', tint: 'var(--color-chip-sky)', dot: 'var(--dot-energy)' },
+  land: { label: 'Living land', tint: 'var(--color-chip-leaf)', dot: 'var(--dot-land)' },
+  commons: { label: 'Commons and justice', tint: 'var(--color-chip-clay)', dot: 'var(--dot-commons)' },
+  futures: { label: 'Futures and stories', tint: 'var(--color-chip-rose)', dot: 'var(--dot-futures)' },
+} as const;
+export type Family = keyof typeof FAMILIES;
+
+const TOPIC_FAMILY: Record<string, Family> = {
+  solarpunk: 'sun',
+  'community-energy': 'energy',
+  'energy-justice': 'energy',
+  technology: 'energy',
+  ecology: 'land',
+  multispecies: 'land',
+  agriculture: 'land',
+  degrowth: 'commons',
+  commons: 'commons',
+  libraries: 'commons',
+  education: 'commons',
+  justice: 'commons',
+  governance: 'commons',
+  urban: 'commons',
+  design: 'commons',
+  resilience: 'commons',
+  fiction: 'futures',
+  'climate-futures': 'futures',
+  'indigenous-futures': 'futures',
+};
+export const familyOf = (topic: string): Family => TOPIC_FAMILY[topic] ?? 'sun';
+
 export const TYPES = ['Article', 'Book', 'Chapter', 'Essay', 'Fiction', 'Guide', 'Report', 'Journal', 'Thesis', 'Preprint'] as const;
 
-export const TYPE_COLORS: Record<string, string> = {
-  Article: 'var(--color-chip-leaf)',
-  Essay: 'var(--color-pale-sun)',
-  Book: 'var(--color-chip-sky)',
-  Fiction: 'var(--color-chip-rose)',
-  Guide: 'var(--color-chip-clay)',
-  Report: 'var(--color-chip-clay)',
-  Chapter: 'var(--color-chip-sky)',
-  Journal: 'var(--color-chip-leaf)',
-  Thesis: 'var(--color-chip-leaf)',
-  Preprint: 'var(--color-chip-rose)',
-};
 
 export const LANGUAGES: Record<string, string> = {
   en: 'English',
