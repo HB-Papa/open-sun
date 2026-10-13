@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     '/**': ['./content/**/*'],
   },
+  // The game moved from /play to /microgrid; old and shared links still land on it.
+  async redirects() {
+    return [{ source: '/play', destination: '/microgrid', permanent: true }];
+  },
 };
 
 export default nextConfig;

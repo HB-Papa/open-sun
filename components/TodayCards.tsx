@@ -28,13 +28,20 @@ export function TodayPuzzleCard() {
   const status = dayStatus(game);
 
   return (
-    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[28px] bg-forest px-7 py-9 text-on-forest shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
-      <NouveauCorners />
-      <div className="flex-[1_1_260px]">
-        <h2 id="today" className="mb-2 font-serif text-page font-bold leading-none sm:text-page-lg">
+    <div className="nouveau on-forest relative flex min-w-0 flex-[2_1_520px] flex-wrap items-center gap-7 rounded-[22px] bg-forest px-4 py-5 text-on-forest sm:rounded-[28px] sm:px-7 sm:py-9 shadow-[0_18px_40px_-18px_rgba(13,24,18,.55)] sm:px-10 dark:bg-forest-2 dark:shadow-[0_0_0_1px_rgba(227,167,47,.45),0_18px_40px_-18px_rgba(0,0,0,.8)]">
+      <span className="hidden sm:contents">
+        <NouveauCorners />
+      </span>
+      <div className="flex h-full flex-[1_1_260px] flex-col sm:block sm:h-auto">
+        <h2 id="today" className="mb-2 font-serif text-title font-bold leading-none sm:text-page-lg">
           Microgrid {today ? <span className="text-sun">#{puzzleNumber(today)}</span> : ''}
         </h2>
+        {/* Phones: one short line. */}
+        <p className="mb-3 text-small text-on-forest-muted sm:hidden">
+          {status ? <Nums text={status.line} /> : 'Today’s puzzle · 3 minutes'}
+        </p>
         {/* Once today is played, the card says how it went and when the next grid comes, not how to start. */}
+        <div className="hidden sm:block">
         {status ? (
           <>
             <p className="mb-3 font-serif text-heading text-on-forest">
@@ -51,15 +58,16 @@ export function TodayPuzzleCard() {
             </p>
           </>
         )}
-        <div className="flex flex-wrap items-center gap-3">
+        </div>
+        <div className="mt-auto flex flex-wrap items-center gap-3 sm:mt-0">
           <Link
-            href="/play"
-            className="inline-flex min-h-12 items-center rounded-full bg-sun px-6 font-bold text-[#1E3328] no-underline hover:text-[#1E3328]"
+            href="/microgrid"
+            className="inline-flex min-h-11 items-center rounded-full bg-sun px-4 text-small font-bold text-[#1E3328] no-underline hover:text-[#1E3328] sm:min-h-12 sm:px-6 sm:text-copy"
           >
-            {status ? 'See your day' : game?.tries ? 'Keep playing' : 'Play today’s grid'}
+            {status ? 'See your day' : game?.tries ? 'Keep playing' : <><span className="sm:hidden">Play</span><span className="hidden sm:inline">Play today’s grid</span></>}
           </Link>
           {status ? null : (
-            <Link href="/play#how" className="inline-flex min-h-12 items-center px-2 text-on-forest hover:text-sun">
+            <Link href="/microgrid#how" className="hidden min-h-12 items-center px-2 text-on-forest hover:text-sun sm:inline-flex">
               How to play
             </Link>
           )}
@@ -86,23 +94,24 @@ export function GardenCard() {
   const progress = useProgress();
   const visited = progress ? Object.keys(progress.visited) : [];
   return (
-    <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-3.5 rounded-[28px] border border-line bg-card px-6 py-6 shadow-[0_18px_40px_-24px_rgba(30,51,40,.35)] sm:px-7">
-      <h2 className="font-serif text-heading font-semibold">Your garden</h2>
-      <p className="text-copy leading-normal text-body">
+    <div className="flex min-w-0 flex-[1_1_260px] flex-col gap-2.5 rounded-[22px] border border-line bg-card px-4 py-5 shadow-[0_18px_40px_-24px_rgba(30,51,40,.35)] sm:gap-3.5 sm:rounded-[28px] sm:px-7 sm:py-6">
+      <h2 className="font-serif text-title font-semibold sm:text-heading">Your garden</h2>
+      <p className="hidden text-copy leading-normal text-body sm:block">
         {visited.length
           ? visited.length === 1
             ? 'You’ve read 1 page in the library, and it planted something here. Each page you read adds another.'
             : `You’ve read ${visited.length} pages in the library. Each one planted something here.`
           : 'Every page you read in the library plants something here.'}
       </p>
-      <div className="flex min-h-[64px] flex-wrap items-end gap-1.5 rounded-xl bg-chip-leaf px-3 pt-2" aria-hidden="true">
+      <div className="flex min-h-[48px] flex-1 flex-wrap items-end gap-1.5 overflow-hidden rounded-xl bg-chip-leaf px-2 pt-2 sm:min-h-[64px] sm:flex-none sm:px-3" aria-hidden="true">
         {visited.length === 0 && <Sprout k={-1} />}
         {visited.slice(0, 40).map((slug) => (
           <Sprout key={slug} k={hash(slug)} />
         ))}
       </div>
-      <Link href="/library" className="self-start font-bold">
-        Find something to read
+      <Link href="/library" className="self-start text-small font-bold sm:text-copy">
+        <span className="sm:hidden">Read to grow it</span>
+        <span className="hidden sm:inline">Find something to read</span>
       </Link>
     </div>
   );

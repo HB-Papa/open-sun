@@ -15,7 +15,7 @@ export const NAV = [
   { href: '/', label: 'Home' },
   { href: '/library', label: 'Library' },
   { href: '/pathways', label: 'Pathways' },
-  { href: '/play', label: 'Play' },
+  { href: '/microgrid', label: 'Microgrid' },
   { href: '/field-guide', label: 'Field Guide' },
   { href: '/about', label: 'About' },
 ];

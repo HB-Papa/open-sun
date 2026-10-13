@@ -19,7 +19,6 @@ import {
   weekdayName,
   neighbors,
   puzzleNumber,
-  RULES,
   shareText,
   simulate,
   SIZE,
@@ -31,7 +30,7 @@ import {
   type Terrain,
   type Variant,
 } from '@/lib/microgrid';
-import { MAX_BONUS_PER_DAY, type DailyGame } from '@/lib/progress';
+import { type DailyGame } from '@/lib/progress';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, RockIcon, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
 import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
 import { Nums } from '@/lib/nums';
@@ -40,11 +39,11 @@ import { VillageLights } from './VillageLights';
 type Tool = Part;
 
 // Tapping a placed part with its own tool removes it, so there is no separate Clear tool.
-const TOOLS: { id: Tool; label: string; key: string }[] = [
-  { id: 'solar', label: 'Solar', key: '1' },
-  { id: 'wind', label: 'Wind', key: '2' },
-  { id: 'battery', label: 'Battery', key: '3' },
-  { id: 'garden', label: 'Garden', key: '4' },
+const TOOLS: { id: Tool; label: string }[] = [
+  { id: 'solar', label: 'Solar' },
+  { id: 'wind', label: 'Wind' },
+  { id: 'battery', label: 'Battery' },
+  { id: 'garden', label: 'Garden' },
 ];
 
 const PART_NAME: Record<Part, string> = { solar: 'Solar panel', wind: 'Wind turbine', battery: 'Battery', garden: 'Garden' };
@@ -63,7 +62,7 @@ export interface GameProps {
   ranked: boolean;
   /** Open the rules on a player's very first visit. */
   firstVisit?: boolean;
-  /** The rest of the page (bonus grids, stats): shown below while playing, folded into "More about today" once the day is over. */
+  /** The rest of the page (your stats): shown below while playing, folded into "More about today" once the day is over. */
   extras?: React.ReactNode;
 }
 
@@ -123,6 +122,8 @@ function Board({
   // Set when the player tries to run with parts that aren't connected; a second press runs anyway.
   const [offWarning, setOffWarning] = useState(false);
   const [rulesDismissed, setRulesDismissed] = useState(false);
+  // "Clear all" keeps the board it removed until the next piece is placed, so a mis-tap can be undone.
+  const [clearedBoard, setClearedBoard] = useState<Layout | null>(null);
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // "How it works" links open the rules where they are, rather than jumping away from the board.
@@ -133,7 +134,7 @@ function Board({
   useEffect(() => {
     const go = () => {
       const target = window.location.hash.slice(1);
-      if (target === 'how' || target === 'rewards') showHow(target);
+      if (target === 'how') showHow(target);
     };
     go();
     window.addEventListener('hashchange', go);
@@ -178,15 +179,34 @@ function Board({
     if (next[i] === tool) next[i] = null;
     else {
       if (!next[i] && used >= puzzle.budget) {
-        setNotice(`You have used all ${puzzle.budget} parts. Clear one first.`);
+        setNotice(`You have used all ${puzzle.budget} pieces. Clear one first.`);
         return;
       }
       next[i] = tool;
     }
-    setNotice(next[i] ? `${PART_NAME[next[i]!]} placed. ${used + (layout[i] ? 0 : 1)} of ${puzzle.budget} parts used.` : `Cleared. ${countParts(next)} of ${puzzle.budget} parts used.`);
+    setClearedBoard(null);
+    setNotice(next[i] ? `${PART_NAME[next[i]!]} placed. ${used + (layout[i] ? 0 : 1)} of ${puzzle.budget} pieces used.` : `Cleared. ${countParts(next)} of ${puzzle.budget} pieces used.`);
     setOffWarning(false);
     setLayout(next);
     persist({ layout: next });
+  }
+
+  function clearAll() {
+    if (done || running) return;
+    if (clearedBoard) {
+      setLayout(clearedBoard);
+      persist({ layout: clearedBoard });
+      setNotice(`Board restored. ${countParts(clearedBoard)} of ${puzzle.budget} pieces used.`);
+      setClearedBoard(null);
+      return;
+    }
+    if (used === 0) return;
+    const empty: Layout = new Array(CELLS).fill(null);
+    setClearedBoard(layout);
+    setLayout(empty);
+    persist({ layout: empty });
+    setOffWarning(false);
+    setNotice('Board cleared. Press “Undo clear” to bring it back.');
   }
 
   function run() {
@@ -240,7 +260,7 @@ function Board({
     wasOver.current = dayOver;
   });
 
-  // Keyboard: arrows move around the grid; 1–5 pick a tool.
+  // Played with a mouse or touch. Arrow keys and Enter still work on the board, unannounced, for anyone who can't use a pointer.
   function onGridKey(e: React.KeyboardEvent) {
     const r = Math.floor(focus / SIZE);
     const c = focus % SIZE;
@@ -259,7 +279,7 @@ function Board({
         setLayout(next);
         persist({ layout: next });
         setOffWarning(false);
-        setNotice(`Cleared. ${countParts(next)} of ${puzzle.budget} parts used.`);
+        setNotice(`Cleared. ${countParts(next)} of ${puzzle.budget} pieces used.`);
       }
       return;
     } else return;
@@ -267,19 +287,6 @@ function Board({
     setFocus(n);
     cellRefs.current[n]?.focus();
   }
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      const el = e.target as HTMLElement | null;
-      // Leave typing alone: inputs, selects, text areas, and anything editable.
-      if (el && (el.isContentEditable || el.closest('input, textarea, select, [contenteditable], [role="combobox"], [role="textbox"]'))) return;
-      if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const t = TOOLS.find((x) => x.key === e.key);
-      if (t) setTool(t.id);
-    }
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []);
 
   const lightsHour = shownSim && shownHour >= 0 ? shownSim.lit[Math.min(shownHour, HOURS - 1)] : null;
   const num = puzzleNumber(date);
@@ -323,7 +330,7 @@ function Board({
         ? 'Solved!'
         : 'No tries left'
       : used === 0
-        ? 'Place a part to run the day'
+        ? 'Place a piece to run the day'
         : unchanged
           ? 'Change something to try again'
           : offWarning
@@ -343,7 +350,7 @@ function Board({
             {firstVisit && !rulesDismissed && (
               <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
                 <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
-                  <li>Connect every part to a home, directly or through other parts.</li>
+                  <li>Connect every piece to a home, directly or through other pieces.</li>
                   <li>Trees shade panels; gardens and windy ridges boost them.</li>
                   <li>Batteries carry daytime sun into the night. Then run the day.</li>
                 </ol>
@@ -359,10 +366,10 @@ function Board({
             <>
             <p className="text-small leading-snug sm:text-copy sm:leading-normal">
               <span className="sm:hidden">
-                Light every hour with up to <strong>{puzzle.budget} parts</strong>. Pick a part in the bar below, then tap a plot; tap again to remove.{' '}
+                Light every hour with up to <strong>{puzzle.budget} pieces</strong>. Pick a piece in the bar below, then tap a plot; tap again to remove.{' '}
               </span>
               <span className="hidden sm:inline">
-                Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} parts</strong>. Pick a part, then tap a plot; tap it again to remove it.{' '}
+                Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} pieces</strong>. Pick a piece, then tap a plot; tap it again to remove it.{' '}
               </span>
               <a href="#how" onClick={openHow} className="font-bold">
                 How it works
@@ -370,7 +377,7 @@ function Board({
             </p>
 
             {/* On phones the parts live in the bar at the bottom of the screen, always in reach; this row is for wider screens. */}
-            <div role="radiogroup" aria-label="Part to place" className="hidden max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:grid md:max-w-[400px]">
+            <div role="radiogroup" aria-label="Piece to place" className="hidden max-w-[460px] grid-cols-4 gap-1.5 sm:gap-2 md:grid md:max-w-[400px]">
               {TOOLS.map((t) => (
                 <button
                   key={t.id}
@@ -390,9 +397,6 @@ function Board({
                     {t.id === 'garden' && <GardenIcon />}
                   </span>
                   {t.label}
-                  <kbd className="absolute right-1.5 top-1 hidden rounded border border-current px-1 text-micro font-normal leading-4 md:inline" aria-hidden="true">
-                    {t.key}
-                  </kbd>
                 </button>
               ))}
             </div>
@@ -404,7 +408,7 @@ function Board({
 
             <div
               role="grid"
-              aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected part, Delete to clear.`}
+              aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected piece, Delete to clear.`}
               className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
               style={{ background: 'var(--board)' }}
               onKeyDown={onGridKey}
@@ -461,13 +465,23 @@ function Board({
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-small">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-small">
               <span>
-                Parts used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
+                Pieces used: <strong className="num">{used}</strong> of <span className="num">{puzzle.budget}</span>
               </span>
               <span className="hidden text-muted sm:inline">
                 Homes: <span className="num">{puzzle.terrain.filter((t) => t === 'home').length}</span>
               </span>
+              {!dayOver && (clearedBoard || used > 0) && (
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  disabled={running}
+                  className="ml-auto inline-flex min-h-10 items-center rounded-full border-2 border-line-strong bg-card px-3.5 font-bold text-ink hover:border-leaf disabled:opacity-50"
+                >
+                  {clearedBoard ? 'Undo clear' : 'Clear all'}
+                </button>
+              )}
             </div>
             {!dayOver && (
               <div className="hidden max-w-[400px] flex-col gap-2 md:flex">
@@ -601,6 +615,9 @@ function Board({
     <section aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
       <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
         <h2 className="font-serif text-heading font-semibold">Today’s forecast</h2>
+        <p className="-mt-1 text-small leading-snug text-body">
+          Each hour, sun and wind make power and the homes need some (demand). When demand is higher than what sun and wind make, batteries have to cover the gap.
+        </p>
         <ForecastChart puzzle={puzzle} demand={demand} />
       </div>
       {withRules && howWideEl}
@@ -656,7 +673,7 @@ function Board({
                   {forecastEl(true)}
                   {extras}
                 </>,
-                'Today’s forecast, bonus grids and your stats.',
+                'Today’s forecast and your stats.',
               )}
             </>
           ) : (
@@ -675,15 +692,15 @@ function Board({
         </div>
       )}
 
-      {/* Bonus grids and stats: in full while playing; once the day is over, folded away so the day itself is the ending. */}
-      {wide && dayOver ? extras && moreEl(extras, 'Bonus grids and your stats.') : !dayOver && extras}
+      {/* Stats: in full while playing; once the day is over, folded away so the day itself is the ending. */}
+      {wide && dayOver ? extras && moreEl(extras, 'Your stats.') : !dayOver && extras}
 
       {/* On phones, the run button stays within thumb's reach while you place parts. */}
       {!done && (
         <div className="run-bar on-forest fixed inset-x-0 bottom-0 z-30 border-t-2 border-sun/70 bg-forest px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 text-on-forest shadow-[0_-8px_24px_-12px_rgba(13,24,18,.5)] md:hidden">
           {offWarning && <p className="mb-2 text-small font-bold text-on-forest-gold">{offText(offCount)}</p>}
           {/* The phone game controller: pick a part, then run, without scrolling away from the board. */}
-          <div role="radiogroup" aria-label="Part to place" className="mb-2.5 grid grid-cols-4 gap-1.5">
+          <div role="radiogroup" aria-label="Piece to place" className="mb-2.5 grid grid-cols-4 gap-1.5">
             {TOOLS.map((t) => (
               <button
                 key={t.id}
@@ -707,7 +724,7 @@ function Board({
           </div>
           <div className="flex items-center gap-3">
             <p className="shrink-0 text-small">
-              Parts <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
+              Pieces <strong className="num">{used}</strong>/<span className="num">{puzzle.budget}</span>
             </p>
             <button
               type="button"
@@ -758,7 +775,7 @@ export function BoardSkeleton({ label }: { label: string }) {
 }
 
 function offText(n: number): string {
-  return `${n === 1 ? 'One part is' : `${n} parts are`} off grid and won’t make power. Connect ${n === 1 ? 'it' : 'them'} to a home, or press again to run anyway.`;
+  return `${n === 1 ? 'One piece is' : `${n} pieces are`} off grid and won’t make power. Connect ${n === 1 ? 'it' : 'them'} to a home, or press again to run anyway.`;
 }
 
 /** "Dark: 3 am to 5 am, 9 pm." The heading already gives the count, so the sentence starts at the gaps. */
@@ -804,111 +821,68 @@ function formatDate(key: string) {
   return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'long', day: 'numeric' });
 }
 
-/** The map key lists only what is on today's board. */
+/** What each kind of square on today's map means for you; only the kinds on today's board are listed. */
 function TerrainKey({ terrain }: { terrain: Terrain[] }) {
-  const all: [Terrain, string, React.ReactNode][] = [
-    ['home', 'Home', <HomeIcon key="h" lit={null} />],
-    ['tree', 'Tree (shades panels)', <TreeIcon key="t" />],
-    ['pond', 'Pond', <PondIcon key="p" />],
-    ['ridge', 'Windy ridge', <RidgeMark key="r" />],
-    ['rock', 'Rocky ground (can’t build)', <RockIcon key="k" />],
+  const all: [Terrain, string, string, React.ReactNode][] = [
+    ['open', 'Open ground', 'place your pieces here', null],
+    ['home', 'Home', 'keep it lit all day', <HomeIcon key="h" lit={null} />],
+    ['ridge', 'Windy ridge', 'a turbine here makes more power', <RidgeMark key="r" />],
+    ['tree', 'Tree', 'shades the solar panels beside it', <TreeIcon key="t" />],
+    ['pond', 'Pond', 'nothing can be built here', <PondIcon key="p" />],
+    ['rock', 'Rocky ground', 'nothing can be built here, and power can’t cross it', <RockIcon key="k" />],
   ];
-  const items = all.filter(([t]) => terrain.includes(t)).map(([t, label, icon]) => [label, icon, TERRAIN_BG[t]] as [string, React.ReactNode, string]);
-  // Two windy ridges sit together on many boards, so say plainly what a turbine on each costs.
-  if (terrain.filter((t) => t === 'ridge').length > 1) {
-    items.push(['Turbines side by side: ×0.6 each', <WindIcon key="w" />, 'var(--g-wind)']);
-  }
-  // The ×0.5 / ×1.5 badges on panels and turbines, so their numbers are never a mystery.
-  items.push([
-    'Badge: how much a part makes (×1 is normal)',
-    <span key="b" className="rounded-full bg-card px-1 text-micro font-bold leading-4 text-ink shadow-sm">
-      ×1.5
-    </span>,
-    'var(--g-solar)',
-  ]);
+  const items = all.filter(([t]) => terrain.includes(t));
   return (
-    <ul className="flex flex-wrap gap-x-4 gap-y-2 text-small text-body" aria-label="Map key">
-      {items.map(([label, icon, bg]) => (
-        <li key={label} className="flex items-center gap-1.5">
-          <span className="relative flex h-6 w-6 items-center justify-center rounded-md" style={{ background: bg }} aria-hidden="true">
-            {icon}
-          </span>
-          {label}
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-col gap-2">
+      <h3 id="map-key" className="text-small font-bold">
+        Map key
+      </h3>
+      <ul aria-labelledby="map-key" className="grid gap-x-5 gap-y-2 text-small text-body sm:grid-cols-2">
+        {items.map(([t, name, meaning, icon]) => (
+          <li key={t} className="flex items-center gap-2.5">
+            <span className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-md" style={{ background: TERRAIN_BG[t] }} aria-hidden="true">
+              {icon}
+            </span>
+            <span>
+              <strong className="font-bold text-ink">{name}:</strong> {meaning}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
 /** Opens every copy of the rules (one for phones, one for wide screens) and scrolls to the visible one. */
-function showHow(target: 'how' | 'rewards') {
+function showHow(_target: 'how') {
   const all = Array.from(document.querySelectorAll<HTMLDetailsElement>('details[data-how]'));
   all.forEach((d) => (d.open = true));
-  const visible = all.find((d) => d.offsetParent !== null);
-  const rewards = visible?.querySelector<HTMLDetailsElement>('details[data-rewards]');
-  if (target === 'rewards' && rewards) rewards.open = true;
-  const el = target === 'rewards' ? rewards : visible;
-  el?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  all.find((d) => d.offsetParent !== null)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
 }
 
+/** The rules, short enough to read in a moment. The map key under the board explains the badges. */
 function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; className?: string }) {
   return (
     <details id={id} data-how open={open} className={`scroll-mt-4 rounded-[20px] border border-line bg-card p-5 ${className}`}>
       <summary className="cursor-pointer font-serif text-title font-semibold">How it works</summary>
       <ul className="mt-3 flex list-disc flex-col gap-2 pl-5 text-copy leading-normal text-body">
         <li>
-          <strong>Connect everything.</strong> A part only joins the grid if it touches a home or another connected part (up, down, left, or right). Parts marked “off grid” do nothing.
+          <strong>Keep every home lit</strong> for all 24 hours, using the pieces you’re given.
         </li>
         <li>
-          <strong>Solar panels</strong> follow the sun. A panel next to a tree is shaded and makes half as much. A panel next to a garden stays cool and makes <span className="num-i">{Math.round((RULES.gardenBoost - 1) * 100)}%</span> more (that’s agrivoltaics).
+          <strong>Connect</strong> every piece to a home, directly or through other pieces.
         </li>
         <li>
-          <strong>Wind turbines</strong> work day and night, whenever the wind blows. On a windy ridge they make <span className="num-i">{Math.round((RULES.ridgeBoost - 1) * 100)}%</span> more, but two turbines side by side slow each other down.
+          <strong>Solar</strong> follows the sun; trees shade it, gardens cool it. <strong>Wind</strong> blows day and night; ridges boost it, and
+          turbines side by side slow each other.
         </li>
         <li>
-          <strong>Batteries</strong> save extra power for later. Each one holds a few hours of evening use and starts the day half full. During a run, each battery on the board fills and empties to show its charge.
+          <strong>Batteries</strong> carry daytime power into the night. Nothing can be built on rocky ground.
         </li>
         <li>
-          <strong>Gardens</strong> make no power, but they cool the panels beside them and shade homes, cutting those homes’ afternoon use by a quarter.
-        </li>
-        <li>
-          <strong>Rocky ground</strong> can’t be built on, and power can’t pass across it, so plan your routes around it.
-        </li>
-        <li>
-          <strong>Harder through the week.</strong> Monday’s grid is the gentlest; Sunday’s is the toughest, with demand close to the best possible layout.
-        </li>
-        <li>
-          You have <strong>three tries</strong>. After each run, the lights strip shows which hours went dark so you can adjust.
-        </li>
-        <li>
-          <strong>Badges</strong> like ×0.5 or ×1.5 show how much a panel or turbine makes compared with normal: shade halves it, gardens and ridges boost it, and turbines side by side slow each other.
-        </li>
-        {/* Keyboard play, for anyone with a keyboard (phones use the bar at the bottom). */}
-        <li className="hidden md:list-item">
-          <strong>Keyboard:</strong> keys 1 to 4 pick a part, arrow keys move around the map, Enter places, and Delete clears.
+          <strong>Three tries.</strong> After each run, the lights strip shows which hours went dark. Grids get harder through the week.
         </li>
       </ul>
-      {/* The one place the extras are explained; everywhere else links here. */}
-      <details data-rewards id={id === 'how' ? 'rewards' : undefined} className="mt-5 scroll-mt-4 border-t border-line pt-4">
-        <summary className="cursor-pointer font-serif text-lede font-semibold">How rewards work</summary>
-        <ul className="mt-2 flex list-disc flex-col gap-2 pl-5 text-copy leading-normal text-body">
-          <li>
-            <strong>Your streak</strong> counts the days you play the daily grid. Your score and share result only ever come from that grid.
-          </li>
-          <li>
-            <strong>Field notes</strong> come from library pages: open a reading (or spend a little time with its summary) and answer one short question.
-          </li>
-          <li>
-            Each field note opens a <strong>bonus grid</strong> themed on what you read, up to {MAX_BONUS_PER_DAY} a day. Bonus grids are just for fun.
-          </li>
-          <li>
-            Every three field notes earn a <strong>rest day</strong> (hold up to two). A rest day keeps your streak going on a day you miss.
-          </li>
-          <li>
-            <strong>Your garden</strong> on the home page grows a plant for every page you read. It is a record of curiosity, not a score.
-          </li>
-        </ul>
-      </details>
     </details>
   );
 }
@@ -943,7 +917,7 @@ function LayoutPreview({ puzzle, layout, label }: { puzzle: Puzzle; layout: Layo
 
 function layoutText(layout: Layout): string {
   const parts = layout.map((part, i) => (part ? `${PART_NAME[part]} at row ${Math.floor(i / SIZE) + 1}, column ${(i % SIZE) + 1}` : null)).filter(Boolean);
-  return parts.length ? `${parts.join('; ')}.` : 'no parts placed.';
+  return parts.length ? `${parts.join('; ')}.` : 'no pieces placed.';
 }
 
 /** Whether a short day ran out at night (storage) or in daylight (panels and shade). */

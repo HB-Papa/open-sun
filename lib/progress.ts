@@ -5,11 +5,7 @@
 // is wrapped and the site keeps working with in-memory state.
 
 import { useSyncExternalStore } from 'react';
-import { daysBetween, localDateKey, type Layout, type Variant } from './microgrid';
-
-export const MAX_BONUS_PER_DAY = 3;
-export const MAX_REST_DAYS = 2;
-export const NOTES_PER_REST_DAY = 3;
+import { daysBetween, localDateKey, type Layout } from './microgrid';
 
 export interface DailyGame {
   tries: number;
@@ -20,25 +16,15 @@ export interface DailyGame {
   done: boolean;
 }
 
-export interface BonusRound {
-  id: string;
-  slug: string; // the library item that earned it
-  title: string;
-  variant: Variant;
-  game?: DailyGame;
-}
-
 export interface Progress {
   v: 1;
   games: Record<string, DailyGame>;
   streak: number;
   best: number;
   lastDone: string | null;
-  restDays: number;
-  restUsed: string[];
-  notes: Record<string, string>; // slug -> date earned
-  notesTowardRest: number;
-  bonus: Record<string, BonusRound[]>; // date -> rounds
+  // Field-note questions answered (slug -> date). A reflection only: nothing is earned.
+  // Saves from before rewards were removed may still carry restDays/bonus fields; they are ignored.
+  notes: Record<string, string>;
   visited: Record<string, string>; // slug -> first visit date
   histogram: [number, number, number, number]; // won in 1, 2, 3, not won
 }
@@ -51,11 +37,7 @@ const empty = (): Progress => ({
   streak: 0,
   best: 0,
   lastDone: null,
-  restDays: 0,
-  restUsed: [],
   notes: {},
-  notesTowardRest: 0,
-  bonus: {},
   visited: {},
   histogram: [0, 0, 0, 0],
 });
@@ -120,18 +102,9 @@ export function saveDaily(date: string, game: DailyGame) {
 }
 
 function finishDay(p: Progress, date: string, game: DailyGame) {
-  // Streak counts days played in a row. Missed days are covered by rest days if you have them.
+  // The streak counts days played in a row; a missed day ends it.
   if (p.lastDone !== date) {
-    if (!p.lastDone) p.streak = 1;
-    else {
-      const gap = daysBetween(p.lastDone, date);
-      if (gap === 1) p.streak += 1;
-      else if (gap > 1 && gap - 1 <= p.restDays) {
-        p.restDays -= gap - 1;
-        for (let i = 1; i < gap; i++) p.restUsed.push(addDaysKey(p.lastDone, i));
-        p.streak += 1;
-      } else if (gap > 1) p.streak = 1;
-    }
+    p.streak = p.lastDone && daysBetween(p.lastDone, date) === 1 ? p.streak + 1 : 1;
     p.lastDone = date;
     p.best = Math.max(p.best, p.streak);
   }
@@ -139,18 +112,10 @@ function finishDay(p: Progress, date: string, game: DailyGame) {
   p.histogram[slot] += 1;
 }
 
-function addDaysKey(key: string, n: number) {
-  const [y, m, d] = key.split('-').map(Number);
-  return localDateKey(new Date(y, m - 1, d + n));
-}
-
-/** The streak as it stands today, counting rest days that would cover a gap. */
-export function currentStreak(p: Progress, today = localDateKey()): { streak: number; coveredByRest: number } {
-  if (!p.lastDone) return { streak: 0, coveredByRest: 0 };
-  const gap = daysBetween(p.lastDone, today);
-  if (gap <= 1) return { streak: p.streak, coveredByRest: 0 };
-  if (gap - 1 <= p.restDays) return { streak: p.streak, coveredByRest: gap - 1 };
-  return { streak: 0, coveredByRest: 0 };
+/** The streak as it stands today: still alive if the last game was today or yesterday, otherwise over. */
+export function currentStreak(p: Progress, today = localDateKey()): number {
+  if (!p.lastDone) return 0;
+  return daysBetween(p.lastDone, today) <= 1 ? p.streak : 0;
 }
 
 export function stats(p: Progress) {
@@ -159,7 +124,7 @@ export function stats(p: Progress) {
   return { played, wins, winRate: played ? Math.round((wins / played) * 100) : 0 };
 }
 
-// ---------- reading: visits, field notes, bonus rounds ----------
+// ---------- reading: visits and field notes ----------
 
 export function recordVisit(slug: string) {
   const p = load();
@@ -170,58 +135,11 @@ export function recordVisit(slug: string) {
   });
 }
 
-const VARIANT_BY_TOPIC: [string[], Variant][] = [
-  [['community-energy', 'energy-justice', 'commons', 'libraries', 'governance'], 'commons'],
-  [['resilience', 'climate-futures', 'education'], 'storm'],
-  [['agriculture', 'ecology', 'multispecies', 'urban', 'design'], 'garden'],
-  [['fiction', 'solarpunk', 'indigenous-futures', 'degrowth', 'technology', 'justice'], 'longnight'],
-];
-
-export function variantForTopics(topics: string[]): Variant {
-  for (const [list, v] of VARIANT_BY_TOPIC) if (topics.some((t) => list.includes(t))) return v;
-  return 'commons';
-}
-
-export interface NoteResult {
-  earned: boolean; // false if this item already gave a note
-  bonus?: BonusRound;
-  restDay: boolean;
-  bonusCapReached: boolean;
-}
-
-export function earnFieldNote(slug: string, title: string, topics: string[]): NoteResult {
-  const p = load();
-  if (p.notes[slug]) return { earned: false, restDay: false, bonusCapReached: false };
-  const today = localDateKey();
-  let result: NoteResult = { earned: true, restDay: false, bonusCapReached: false };
+/** Remember that a reading's field-note question was answered, so it shows as done next time. */
+export function recordReflection(slug: string) {
+  if (load().notes[slug]) return;
   update((q) => {
-    q.notes[slug] = today;
-    q.notesTowardRest += 1;
-    if (q.notesTowardRest >= NOTES_PER_REST_DAY) {
-      q.notesTowardRest = 0;
-      if (q.restDays < MAX_REST_DAYS) {
-        q.restDays += 1;
-        result.restDay = true;
-      }
-    }
-    const rounds = q.bonus[today] ?? [];
-    if (rounds.length < MAX_BONUS_PER_DAY) {
-      const round: BonusRound = { id: `${today}-${slug}`, slug, title, variant: variantForTopics(topics) };
-      q.bonus[today] = [...rounds, round];
-      result = { ...result, bonus: round };
-    } else result.bonusCapReached = true;
+    q.notes[slug] = localDateKey();
     return q;
   });
-  return result;
-}
-
-export function saveBonus(date: string, id: string, game: DailyGame) {
-  update((p) => {
-    p.bonus[date] = (p.bonus[date] ?? []).map((b) => (b.id === id ? { ...b, game } : b));
-    return p;
-  });
-}
-
-export function notesToday(p: Progress, today = localDateKey()) {
-  return Object.values(p.notes).filter((d) => d === today).length;
 }

@@ -35,14 +35,15 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-x-2 gap-y-4 px-4 py-3 min-[400px]:gap-x-3 sm:px-6 sm:py-4">
         <Link href="/" className="mr-auto flex min-w-0 items-center gap-2 text-ink no-underline hover:text-ink min-[400px]:gap-2.5">
           <Logo size={32} />
-          <span className="font-serif text-heading font-bold">Open Sun</span>
+          {/* On narrow phones the wordmark steps down a size (and on the narrowest, only the sun shows) so the header stays one row. */}
+          <span className="font-serif text-title font-bold max-[359px]:sr-only min-[400px]:text-heading">Open Sun</span>
         </Link>
-        {/* The home hero has its own Play row, and /play is the game itself. */}
-        {pathname !== '/play' && pathname !== '/' && <PlayPill />}
+        {/* The home page has its own Microgrid tile, and /microgrid is the game itself. */}
+        {pathname !== '/microgrid' && pathname !== '/' && <PlayPill />}
         <button
           ref={menuButton}
           type="button"
-          className="min-h-11 rounded-full border-2 border-line-strong bg-card px-3 font-bold text-ink min-[360px]:px-4 md:hidden"
+          className="min-h-11 rounded-full border-2 border-line-strong bg-card px-3 font-bold text-ink min-[400px]:px-4 md:hidden"
           aria-expanded={open}
           aria-controls="main-nav"
           onClick={() => setOpen((o) => !o)}
@@ -91,10 +92,9 @@ function PlayPill() {
   const status = dayStatus(today ? progress?.games[today] : undefined);
   return (
     <Link
-      href="/play"
-      className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 font-bold ${status ? '' : 'min-[360px]:px-3.5'} text-on-forest no-underline hover:text-on-forest md:hidden dark:ring-1 dark:ring-sun/60`}
+      href="/microgrid"
+      className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full bg-forest px-3 text-small font-bold text-on-forest no-underline hover:text-on-forest md:hidden dark:ring-1 dark:ring-sun/60`}
     >
-      {!status && <span aria-hidden="true" className="hidden h-2.5 w-2.5 rounded-full bg-sun min-[360px]:block" />}
       {/* After today's game, the pill shows how it went in a few characters; screen readers hear the full words. */}
       {status ? (
         <>
@@ -108,7 +108,7 @@ function PlayPill() {
           <span className="sr-only">{status.spoken}, see your day</span>
         </>
       ) : (
-        'Play'
+        'Microgrid'
       )}
     </Link>
   );

@@ -12,7 +12,18 @@ export function authorsLine(item: Pick<Card, 'authors' | 'edited'>): string {
   return s;
 }
 
-export function ItemCardView({ item, headingLevel = 3, compact = false }: { item: Card; headingLevel?: 2 | 3; compact?: boolean }) {
+export function ItemCardView({
+  item,
+  headingLevel = 3,
+  compact = false,
+  phoneCompact = false,
+}: {
+  item: Card;
+  headingLevel?: 2 | 3;
+  compact?: boolean;
+  /** On phones show only title, authors and year (the home page's short list); full card from sm up. */
+  phoneCompact?: boolean;
+}) {
   const H = `h${headingLevel}` as 'h2' | 'h3';
   return (
     <Link
@@ -21,7 +32,7 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
     >
       <LeafSprout />
       {/* Tags stay on one line; a long topic name shortens with an ellipsis rather than wrapping. */}
-      <div className="flex min-w-0 gap-2 pr-6">
+      <div className={`min-w-0 gap-2 pr-6 ${phoneCompact ? 'hidden sm:flex' : 'flex'}`}>
         {/* The type is a plain outline; colour is kept for the idea family of the topic beside it. */}
         <span className="shrink-0 rounded-full border border-line-strong px-2.5 py-[3px] text-caption font-bold">{item.type}</span>
         {item.language !== 'en' ? (
@@ -44,7 +55,7 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
         {authorsLine(item)} · <span className="num">{yearText(item.year)}</span>
       </p>
       {!compact && (
-        <p className="line-clamp-4 text-small leading-normal text-body">
+        <p className={`line-clamp-4 text-small leading-normal text-body ${phoneCompact ? 'hidden sm:block' : ''}`}>
           <Nums text={item.summary} />
         </p>
       )}

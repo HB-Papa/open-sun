@@ -8,18 +8,20 @@ web
 
 ## Users
 
-Primary: **daily puzzle players**. People who come for Microgrid, a short daily game played mostly on phones, and who can be drawn deeper into the reading. When audiences conflict, their needs win.
+Primary: **curious readers and researchers**. People who want to understand solarpunk or find trustworthy, free sources on it, often on a phone. When audiences conflict, their needs win.
 
-Also served:
+This includes:
 - curious newcomers who have seen the word "solarpunk" and want to understand it;
-- students, teachers and librarians looking for trustworthy, free sources;
+- students, teachers, librarians and researchers looking for trustworthy, free sources;
 - writers, artists, designers and organizers looking for inspiration and evidence.
+
+Also served: **daily puzzle players**. Microgrid, a short daily game played mostly on phones, is a reason to come back to the site each day. It supports the library rather than leading it.
 
 ## Product Purpose
 
 Open Sun is a free, public digital library of open access solarpunk resources: scholarship, books, journals, fiction and practical guides. It is easy to browse and stays current through a weekly, human-reviewed update agent.
 
-A 2–5 minute daily game gives people a reason to come back, and reading the library unlocks a little more play.
+A 2–5 minute daily game gives people a reason to come back. The library is the heart of the site: reading grows a personal garden, but nothing in the library is a reward for play, and play earns nothing beyond its own result.
 
 Success:
 - People can find a resource in seconds.
@@ -28,7 +30,7 @@ Success:
 
 ## Positioning
 
-Open Sun is a curated, open-access-only solarpunk library whose daily game is built from its own subject matter. Microgrid is about powering a neighborhood with sun, wind, storage and gardens. Reading the library (field notes) unlocks themed bonus rounds and rest days. No other library or puzzle site pairs the two.
+Open Sun is a curated, open-access-only solarpunk library whose daily game is built from its own subject matter. Microgrid is about powering a neighborhood with sun, wind, storage and gardens. Readings carry an optional field-note question for reflection, and each page read grows the visitor's garden. There are no bonus rounds, rest days or other rewards. No other library or puzzle site pairs the two.
 
 ## Operating Context
 
@@ -51,7 +53,9 @@ Open Sun is a curated, open-access-only solarpunk library whose daily game is bu
   - Pathways and the Field Guide.
   - New Arrivals.
   - Suggest a Resource, which creates a GitHub issue.
-  - Microgrid with streaks, rest days, field notes, bonus rounds and a personal garden.
+  - Microgrid (at /microgrid) with a daily streak and stats. Missing a day ends the streak.
+  - Field-note questions on readings, as reflection only (nothing earned).
+  - A personal garden on the home page that grows with each page read.
 - **Planned / being explored (not built):**
   - Email subscription with a weekly update of new articles.
   - Richer article tagging.
@@ -83,8 +87,8 @@ Open Sun is a curated, open-access-only solarpunk library whose daily game is bu
 
 ## Product Principles
 
-1. The daily puzzle is the front door; the library is the house it opens onto.
-2. Play should lead to reading, and reading should feel like its own reward.
+1. The library is the house; the daily puzzle is a reason to come back to it each day.
+2. The library leads; the game is a daily ritual beside it. Reading is its own reward, and the garden simply records it.
 3. Kind by default: forgiving streaks, no anxiety mechanics, no guilt.
 4. Trustworthy: every item is open access and approved by a person.
 5. Findable in seconds on a phone.

@@ -148,6 +148,10 @@ export function MiniForecast({ puzzle, demand, className = '' }: { puzzle: Puzzl
   ];
   return (
     <div className={`flex flex-col gap-1 rounded-[16px] border border-line bg-card px-3 py-2 ${className}`} aria-hidden="true">
+      {/* What the bars are for, in one line: the full forecast below carries the details. */}
+      <p className="mb-1 text-caption leading-snug text-body">
+        <strong className="text-ink">Today’s forecast.</strong> Sun and wind make power each hour; demand is what the homes need.
+      </p>
       {rows.map(([label, values, max, color, dim]) => (
         <div key={label} className="grid grid-cols-[58px_1fr] items-end gap-2">
           <span className="text-micro font-bold text-muted">{label}</span>

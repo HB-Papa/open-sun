@@ -28,7 +28,7 @@ export default function NotFound() {
           </button>
         </form>
         <p className="text-lede">
-          Or <Link href="/library">browse the library</Link>, <Link href="/play">play today’s puzzle</Link>, or <Link href="/">go back home</Link>.
+          Or <Link href="/library">browse the library</Link>, <Link href="/microgrid">play today’s Microgrid</Link>, or <Link href="/">go back home</Link>.
         </p>
       </main>
     </>

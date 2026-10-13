@@ -97,12 +97,11 @@ export function StepStatus({ slug }: { slug: string }) {
   const progress = useProgress();
   if (!progress) return null;
   const read = progress.visited[slug];
-  const noted = progress.notes[slug];
   if (!read) return null;
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-chip-leaf px-3 py-1 text-small font-bold text-leaf-ink">
       <span aria-hidden="true">✓</span>
-      {noted ? 'Read · field note' : 'Read'}
+      Read
     </span>
   );
 }
