@@ -8,12 +8,14 @@ web
 
 ## Users
 
-Primary: **daily puzzle players**. People who come for Microgrid, a short daily game played mostly on phones, and who can be drawn deeper into the reading. When audiences conflict, their needs win.
+Primary: **curious readers and researchers**. People who want to understand solarpunk or find trustworthy, free sources on it, often on a phone. When audiences conflict, their needs win.
 
-Also served:
+This includes:
 - curious newcomers who have seen the word "solarpunk" and want to understand it;
-- students, teachers and librarians looking for trustworthy, free sources;
+- students, teachers, librarians and researchers looking for trustworthy, free sources;
 - writers, artists, designers and organizers looking for inspiration and evidence.
+
+Also served: **daily puzzle players**. Microgrid, a short daily game played mostly on phones, is a reason to come back to the site each day. It supports the library rather than leading it.
 
 ## Product Purpose
 
@@ -85,7 +87,7 @@ Open Sun is a curated, open-access-only solarpunk library whose daily game is bu
 
 ## Product Principles
 
-1. The daily puzzle is the front door; the library is the house it opens onto.
+1. The library is the house; the daily puzzle is a reason to come back to it each day.
 2. The library leads; the game is a daily ritual beside it. Reading is its own reward, and the garden simply records it.
 3. Kind by default: forgiving streaks, no anxiety mechanics, no guilt.
 4. Trustworthy: every item is open access and approved by a person.
