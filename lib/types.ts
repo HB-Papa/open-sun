@@ -57,4 +57,5 @@ export interface GlossaryTerm {
   term: string;
   definition: string;
   related: string[]; // library slugs
+  family: 'sun' | 'energy' | 'land' | 'commons' | 'futures'; // idea family (see FAMILIES in lib/topics.ts)
 }

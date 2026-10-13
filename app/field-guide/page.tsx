@@ -6,6 +6,7 @@ import { yearText } from '@/lib/types';
 import { PageSky } from '@/components/PageSky';
 import { TermGlyph, VineRule } from '@/components/Ornaments';
 import { Nums } from '@/lib/nums';
+import { FAMILIES, type Family } from '@/lib/topics';
 import { TermSearch } from './TermSearch';
 
 export const metadata: Metadata = { title: 'Field Guide', description: 'Short, plain definitions of solarpunk ideas, each linked to readings in the library.' };
@@ -28,21 +29,42 @@ export default function FieldGuidePage() {
       <TermSearch total={terms.length} />
       <nav aria-label="Terms" className="flex flex-wrap gap-2">
         {terms.map((t) => (
-          <a key={t.slug} href={`#${t.slug}`} data-term-chip={t.slug} className="rounded-full border border-line bg-card px-3 py-1.5 text-small text-ink no-underline hover:bg-chip-hover hover:text-ink">
+          <a
+            key={t.slug}
+            href={`#${t.slug}`}
+            data-term-chip={t.slug}
+            className="rounded-full px-3 py-1.5 text-small text-ink no-underline hover:text-ink hover:underline"
+            style={{ background: FAMILIES[t.family].tint }}
+          >
             {t.term}
           </a>
         ))}
       </nav>
+      {/* What the colours mean, in words: each term belongs to one family of ideas. */}
+      <p className="-mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-small text-body">
+        <span className="font-bold">Colours group the ideas:</span>
+        {(Object.keys(FAMILIES) as Family[]).map((f) => (
+          <span key={f} className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: FAMILIES[f].dot }} />
+            {FAMILIES[f].label}
+          </span>
+        ))}
+      </p>
       <dl className="flex flex-col gap-4">
         {terms.map((t) => {
           const related = t.related.map(getItem).filter((x) => x !== undefined);
           return (
             <div key={t.slug} id={t.slug} data-term className="scroll-mt-6 rounded-[20px] border border-line bg-card p-6">
-              <dt className="flex items-center gap-3.5 font-serif text-heading font-semibold">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-chip-leaf text-leaf-ink">
+              <dt className="flex flex-wrap items-center gap-x-3.5 gap-y-1 font-serif text-heading font-semibold">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-ink" style={{ background: FAMILIES[t.family].tint }}>
                   <TermGlyph slug={t.slug} className="h-8 w-8" />
                 </span>
                 {t.term}
+                <span className="ml-auto inline-flex items-center gap-1.5 font-sans text-caption font-bold text-muted">
+                  <span className="sr-only">, </span>
+                  <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: FAMILIES[t.family].dot }} />
+                  {FAMILIES[t.family].label}
+                </span>
               </dt>
               <dd className="mt-2 max-w-[35rem] text-copy leading-relaxed text-body"><Nums text={t.definition} /></dd>
               {related.length > 0 && (

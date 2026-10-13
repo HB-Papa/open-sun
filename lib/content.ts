@@ -149,11 +149,12 @@ export function getGlossary(): GlossaryTerm[] {
   if (!existsSync(file)) return [];
   const { data } = matter(readFileSync(file, 'utf8'));
   return (data.terms ?? [])
-    .map((t: { term: string; definition: string; related?: string[] }) => ({
+    .map((t: { term: string; definition: string; related?: string[]; family?: GlossaryTerm['family'] }) => ({
       slug: String(t.term).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
       term: String(t.term),
       definition: String(t.definition),
       related: (t.related ?? []).map(String),
+      family: t.family ?? 'sun',
     }))
     .sort((a: GlossaryTerm, b: GlossaryTerm) => a.term.localeCompare(b.term));
 }

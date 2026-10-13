@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { Pages } from '@/components/Pages';
 import { Nums } from '@/lib/nums';
-import { languageName, topicLabel } from '@/lib/topics';
+import { familyOf, FAMILIES, languageName, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
 
 const yr = (y: number | null) => y ?? 0;
@@ -192,7 +192,8 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setTopics(on ? topics.filter((x) => x !== t) : [...topics, t])}
-                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-small ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-line-strong bg-card text-ink'}`}
+                className={`min-h-10 shrink-0 rounded-full border-2 px-3.5 text-small ${on ? 'border-leaf bg-leaf font-bold text-white' : 'border-transparent text-ink'}`}
+                style={on ? undefined : { background: FAMILIES[familyOf(t)].tint }}
               >
                 {topicLabel(t)}
               </button>
@@ -215,7 +216,14 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           aria-label="Filters"
           className={`${filtersOpen ? 'flex' : 'hidden'} max-w-full flex-[1_1_240px] flex-col gap-5 rounded-[18px] border border-line bg-card p-5 md:flex md:max-w-[280px]`}
         >
-          <CheckGroup legend="Topic" options={allTopics.map(([t, n]) => ({ value: t, label: topicLabel(t), n }))} selected={topics} onChange={setTopics} show={6} more="topics" />
+          <CheckGroup
+            legend="Topic"
+            options={allTopics.map(([t, n]) => ({ value: t, label: topicLabel(t), n, dot: FAMILIES[familyOf(t)].dot }))}
+            selected={topics}
+            onChange={setTopics}
+            show={6}
+            more="topics"
+          />
           <CheckGroup legend="Type" options={allTypes.map(([t, n]) => ({ value: t, label: t, n }))} selected={types} onChange={setTypes} show={4} more="types" />
           <Select id="since" label="Published since" value={since} onChange={setSince} options={[['any', 'Any year'], ...years.map((y) => [String(y), String(y)] as [string, string])]} />
           <Select
@@ -350,7 +358,8 @@ function CheckGroup({
   more,
 }: {
   legend: string;
-  options: { value: string; label: string; n: number }[];
+  /** dot: an optional idea-family colour shown beside the label. */
+  options: { value: string; label: string; n: number; dot?: string }[];
   selected: string[];
   onChange: (v: string[]) => void;
   /** How many options to show before "More …". */
@@ -368,12 +377,15 @@ function CheckGroup({
         <label key={o.value} className="flex min-h-8 items-center gap-2.5 text-copy">
           <input
             type="checkbox"
-            className="h-5 w-5 shrink-0 accent-[#2F6B45]"
+            className="h-5 w-5 shrink-0 accent-[var(--leaf)]"
             checked={selected.includes(o.value)}
             onChange={(e) => onChange(e.target.checked ? [...selected, o.value] : selected.filter((s) => s !== o.value))}
           />
-          <span>
-            {o.label} <span className="num text-muted">({o.n})</span>
+          <span className="flex items-center gap-2">
+            {o.dot && <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: o.dot }} />}
+            <span>
+              {o.label} <span className="num text-muted">({o.n})</span>
+            </span>
           </span>
         </label>
       ))}

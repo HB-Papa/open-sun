@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { yearText, type ItemCard as Card } from '@/lib/types';
-import { topicLabel, TYPE_COLORS, languageName } from '@/lib/topics';
+import { familyOf, FAMILIES, topicLabel, languageName } from '@/lib/topics';
 import { naturalName } from '@/lib/cite';
 import { LeafSprout } from './icons';
 import { Nums } from '@/lib/nums';
@@ -22,14 +22,17 @@ export function ItemCardView({ item, headingLevel = 3, compact = false }: { item
       <LeafSprout />
       {/* Tags stay on one line; a long topic name shortens with an ellipsis rather than wrapping. */}
       <div className="flex min-w-0 gap-2 pr-6">
-        <span className="shrink-0 rounded-full px-2.5 py-1 text-caption font-bold" style={{ background: TYPE_COLORS[item.type] ?? 'var(--chip)' }}>
-          {item.type}
-        </span>
+        {/* The type is a plain outline; colour is kept for the idea family of the topic beside it. */}
+        <span className="shrink-0 rounded-full border border-line-strong px-2.5 py-[3px] text-caption font-bold">{item.type}</span>
         {item.language !== 'en' ? (
           <span className="shrink-0 rounded-full bg-chip px-2.5 py-1 text-caption text-body">{languageName(item.language)}</span>
         ) : (
           item.topics[0] && (
-            <span className="min-w-0 truncate rounded-full bg-chip px-2.5 py-1 text-caption text-body" title={topicLabel(item.topics[0])}>
+            <span
+              className="min-w-0 truncate rounded-full px-2.5 py-1 text-caption text-ink"
+              style={{ background: FAMILIES[familyOf(item.topics[0])].tint }}
+              title={`${topicLabel(item.topics[0])} · ${FAMILIES[familyOf(item.topics[0])].label}`}
+            >
               {topicLabel(item.topics[0])}
             </span>
           )
