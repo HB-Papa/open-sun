@@ -74,7 +74,7 @@ export function FieldNoteCard({ slug, note }: { slug: string; note?: FieldNote }
             ? 'You’ve answered this one before.'
             : ''
           : picked === note.answer
-            ? 'That’s it.'
+            ? 'That’s it. Nicely read.'
             : 'Not quite. Have another look at the summary and try again.'}
       </p>
     </section>

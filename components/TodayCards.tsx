@@ -64,7 +64,7 @@ export function TodayPuzzleCard() {
             href="/microgrid"
             className="inline-flex min-h-11 items-center rounded-full bg-sun px-4 text-small font-bold text-[#1E3328] no-underline hover:text-[#1E3328] sm:min-h-12 sm:px-6 sm:text-copy"
           >
-            {status ? 'See your day' : game?.tries ? 'Keep playing' : <><span className="sm:hidden">Play</span><span className="hidden sm:inline">Play today’s grid</span></>}
+            {status ? 'See today’s result' : game?.tries ? 'Keep playing' : <><span className="sm:hidden">Play</span><span className="hidden sm:inline">Play today’s grid</span></>}
           </Link>
           {status ? null : (
             <Link href="/microgrid#how" className="hidden min-h-12 items-center px-2 text-on-forest hover:text-sun sm:inline-flex">

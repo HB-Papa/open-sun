@@ -64,7 +64,7 @@ export async function POST(req: Request) {
   });
   if (!res.ok) {
     console.error('GitHub issue failed', res.status, await res.text());
-    return NextResponse.json({ error: 'The review queue is unavailable right now. Please try again later.' }, { status: 502 });
+    return NextResponse.json({ error: 'We couldn’t add your suggestion to the review list just now. Please try again in a few minutes.' }, { status: 502 });
   }
   return NextResponse.json({ ok: true });
 }

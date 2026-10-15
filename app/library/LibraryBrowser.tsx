@@ -296,7 +296,11 @@ export function LibraryBrowser({ items }: { items: ItemCard[] }) {
           </div>
           {results.length === 0 ? (
             <div className="rounded-[18px] border border-line bg-card p-6 text-lede">
-              <p>Nothing matches yet. Try a shorter search or fewer filters.</p>
+              <p>
+                {query
+                  ? <>No readings match “{query}”{activeFilters > 0 ? ' with these filters' : ''}. Try a shorter search{activeFilters > 0 ? ' or fewer filters' : ''}.</>
+                  : 'No readings match these filters. Try turning one off.'}
+              </p>
               {/* Ways forward, not just a dead end. */}
               <div className="mt-4 flex flex-wrap gap-3 text-copy">
                 {(query || activeFilters > 0) && (
