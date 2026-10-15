@@ -24,9 +24,15 @@ export function FieldNoteCard({ slug, note }: { slug: string; note?: FieldNote }
   const answered = !!progress?.notes[slug];
   if (!note) return null;
 
-  function pick(k: number) {
+  function pick(k: number, el: HTMLButtonElement) {
     setPicked(k);
     if (k === note!.answer) recordReflection(slug);
+    // A wrong answer gives a small head-shake; with reduced motion the red border and words say it alone.
+    else if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+      el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(3px)' }, { transform: 'translateX(-2px)' }, { transform: 'translateX(0)' }], {
+        duration: 280,
+        easing: 'ease-out',
+      });
   }
 
   return (
@@ -46,9 +52,9 @@ export function FieldNoteCard({ slug, note }: { slug: string; note?: FieldNote }
             <button
               key={k}
               type="button"
-              onClick={() => pick(k)}
+              onClick={(e) => pick(k, e.currentTarget)}
               aria-describedby={isPicked ? 'note-result' : undefined}
-              className="flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-copy hover:border-sun"
+              className="flex min-h-12 items-center justify-between gap-3 rounded-xl border-2 px-4 py-2.5 text-left text-copy transition-[background-color,border-color,color] duration-200 hover:border-sun"
               style={{
                 color: right ? '#1E3328' : 'var(--option-ink)',
                 borderColor: right ? 'var(--sun)' : wrong ? 'var(--terracotta)' : 'var(--option-line)',
@@ -56,8 +62,8 @@ export function FieldNoteCard({ slug, note }: { slug: string; note?: FieldNote }
               }}
             >
               <span>{o}</span>
-              {right && <span className="text-small font-bold">✓ That’s it</span>}
-              {wrong && <span className="text-small font-bold">✗ Not this one</span>}
+              {right && <span className="piece-in shrink-0 text-small font-bold">✓ That’s it</span>}
+              {wrong && <span className="shrink-0 text-small font-bold">✗ Not this one</span>}
             </button>
           );
         })}

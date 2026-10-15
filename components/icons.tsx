@@ -97,7 +97,7 @@ export function HomeIcon({ lit, stroke = '#1E3328' }: { lit: boolean | null; str
     <svg viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="1.8" aria-hidden="true" className="h-[62%] w-[62%]">
       <path d="M3 11 12 4l9 7" />
       <path d="M5 10v10h14V10" />
-      <rect x="10" y="14" width="4" height="6" fill={lit ? '#E3A72F' : lit === false ? '#4A5A50' : 'none'} />
+      <rect x="10" y="14" width="4" height="6" className={lit ? 'window-lit' : undefined} fill={lit ? '#E3A72F' : lit === false ? '#4A5A50' : 'none'} />
     </svg>
   );
 }
