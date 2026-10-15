@@ -124,6 +124,8 @@ function Board({
   const [rulesDismissed, setRulesDismissed] = useState(false);
   // "Clear all" keeps the board it removed until the next piece is placed, so a mis-tap can be undone.
   const [clearedBoard, setClearedBoard] = useState<Layout | null>(null);
+  // Plots whose piece was just set down by the player, so only those settle in (not a saved board on load).
+  const [settling, setSettling] = useState<{ cells: number[]; n: number }>({ cells: [], n: 0 });
   const cellRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // "How it works" links open the rules where they are, rather than jumping away from the board.
@@ -185,6 +187,7 @@ function Board({
       next[i] = tool;
     }
     setClearedBoard(null);
+    if (next[i]) setSettling((p) => ({ cells: [i], n: p.n + 1 }));
     setNotice(next[i] ? `${PART_NAME[next[i]!]} placed. ${used + (layout[i] ? 0 : 1)} of ${puzzle.budget} pieces used.` : `Cleared. ${countParts(next)} of ${puzzle.budget} pieces used.`);
     setOffWarning(false);
     setLayout(next);
@@ -196,6 +199,7 @@ function Board({
     if (clearedBoard) {
       setLayout(clearedBoard);
       persist({ layout: clearedBoard });
+      setSettling((p) => ({ cells: clearedBoard.flatMap((x, k) => (x ? [k] : [])), n: p.n + 1 }));
       setNotice(`Board restored. ${countParts(clearedBoard)} of ${puzzle.budget} pieces used.`);
       setClearedBoard(null);
       return;
@@ -240,7 +244,7 @@ function Board({
         window.clearInterval(id);
         setNotice(msg);
       }
-    }, 70);
+    }, 90);
   }
 
   // Bring the day's result into view (on phones it sits below the board, under the run bar).
@@ -289,6 +293,7 @@ function Board({
   }
 
   const lightsHour = shownSim && shownHour >= 0 ? shownSim.lit[Math.min(shownHour, HOURS - 1)] : null;
+  const skyNow = running ? puzzle.sky[shownHour] : null;
   const num = puzzleNumber(date);
   const info = VARIANT_INFO[puzzle.variant];
   const share = done && lastLit ? shareText(num, won, tries, lastLit, ranked ? undefined : info.name) : null;
@@ -409,8 +414,8 @@ function Board({
             <div
               role="grid"
               aria-label={`Microgrid map, ${SIZE} by ${SIZE}. Use arrow keys to move, Enter to place the selected piece, Delete to clear.`}
-              className="board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5"
-              style={{ background: 'var(--board)' }}
+              className={`board board-fit grid grid-cols-5 gap-2 rounded-[22px] p-3 shadow-[inset_0_2px_6px_rgba(30,51,40,.15)] sm:p-3.5 ${running ? 'is-running' : ''} ${skyNow === 'night' ? 'is-night' : ''}`}
+              style={{ '--wash': running ? washFor(skyNow, puzzle.sun[shownHour]) : undefined } as React.CSSProperties}
               onKeyDown={onGridKey}
             >
               {Array.from({ length: SIZE }, (_, r) => (
@@ -433,7 +438,7 @@ function Board({
                           onClick={() => place(i)}
                           aria-label={cellLabel(i)}
                           aria-disabled={!buildable(t) || done}
-                          className={`relative flex aspect-square min-h-11 items-center justify-center rounded-xl border-0 p-0 transition-transform duration-150 ${
+                          className={`plot relative flex aspect-square min-h-11 items-center justify-center rounded-xl border-0 p-0 transition-transform duration-150 ${
                             buildable(t) && !done ? 'cursor-pointer hover:scale-[1.04]' : 'cursor-default'
                           } ${off ? 'outline-2 outline-dashed outline-terracotta' : ''}`}
                           style={{ background: part ? PART_BG[part] : TERRAIN_BG[t], opacity: off ? 0.6 : 1 }}
@@ -443,10 +448,18 @@ function Board({
                           {t === 'tree' && <TreeIcon />}
                           {t === 'pond' && <PondIcon />}
                           {t === 'rock' && <RockIcon />}
-                          {part === 'solar' && <SolarIcon tilt={running} />}
-                          {part === 'wind' && <WindIcon spin={running && !reduceMotion} />}
-                          {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
-                          {part === 'garden' && <GardenIcon />}
+                          {part && (
+                            <span
+                              key={`${part}-${settling.cells.includes(i) ? settling.n : 0}`}
+                              className={`flex h-full w-full items-center justify-center ${settling.cells.includes(i) ? 'piece-in' : ''}`}
+                              style={settling.cells.includes(i) ? ({ '--d': `${Math.min(settling.cells.indexOf(i), 8) * 30}ms` } as React.CSSProperties) : undefined}
+                            >
+                              {part === 'solar' && <SolarIcon tilt={running} />}
+                              {part === 'wind' && <WindIcon spin={running && !reduceMotion} />}
+                              {part === 'battery' && <BatteryIcon level={shownSim && shownSim.capacity ? shownSim.storage[Math.max(0, shownHour)] / shownSim.capacity : -1} />}
+                              {part === 'garden' && <GardenIcon />}
+                            </span>
+                          )}
                           {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
                             <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-micro font-bold leading-[18px] text-ink shadow-sm">
                               ×{fmt(m)}
@@ -511,7 +524,11 @@ function Board({
     setNotice(next === null ? `Showing your latest try: ${history[lastIndex].filter(Boolean).length} of 24 hours lit.` : `Showing try ${k + 1}: ${n} of 24 hours lit.`);
   }
   const resultEl = lastLit ? (
-    <section id="day-result" aria-label="The day" className="on-forest flex scroll-mt-4 flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest">
+    <section
+      id="day-result"
+      aria-label="The day"
+      className={`on-forest flex scroll-mt-4 flex-col gap-3 rounded-[20px] bg-forest p-5 text-on-forest ${running && tries === 1 ? 'rise-in' : ''}`}
+    >
       {viewing !== null && (
         <p className="text-small text-on-forest-muted">
           Showing try <span className="num">{viewing + 1}</span> ·{' '}
@@ -972,4 +989,12 @@ function SharePanel({ share }: { share: { emoji: string; plain: string } }) {
       </p>
     </div>
   );
+}
+
+/** The light over the board for one hour of the run: night blue, warm low sun, grey cloud, or a faint noon gold. */
+function washFor(sky: string | null, sun: number): string {
+  if (sky === 'night') return 'rgb(16 30 54 / 0.5)';
+  if (sky === 'cloudy') return 'rgb(96 112 124 / 0.22)';
+  if (sun < 0.3) return 'rgb(222 128 60 / 0.2)';
+  return 'rgb(255 226 140 / 0.1)';
 }

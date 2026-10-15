@@ -490,6 +490,57 @@ textarea {
   animation: os-spin 3s linear infinite;
   transform-origin: 12px 12px;
 }
+/* A turbine nobody can see doesn't need to turn. */
+[data-offscreen] .turbine-spin {
+  animation-play-state: paused;
+}
+
+/* Running the day: the board takes on the light of each hour, from night blue through dawn and noon and back.
+   The wash tints the plots (an inset shadow sits above a background but below the icons), so lit windows
+   stay bright against the dark. --wash is registered so it can be eased between hours. */
+@property --wash {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(0 0 0 / 0);
+}
+.board {
+  background: linear-gradient(var(--wash), var(--wash)), var(--board);
+  transition: --wash 0.6s ease-out;
+}
+.board.is-running {
+  transition: --wash 0.14s linear;
+}
+.board .plot {
+  box-shadow: inset 0 0 0 100px var(--wash);
+}
+.board .window-lit {
+  transition: filter 0.14s linear;
+}
+.board.is-night .window-lit {
+  filter: drop-shadow(0 0 2.5px #f3c55a);
+}
+
+/* A piece set down on a plot settles into place. */
+@keyframes os-set {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+.piece-in {
+  animation: os-set 0.22s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s) backwards;
+}
+
+/* The day's panel arrives under the board the first time a day is run. */
+@keyframes os-rise {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+.rise-in {
+  animation: os-rise 0.36s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
 
 @keyframes os-glow {
   0% {

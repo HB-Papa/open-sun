@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { currentTheme, subscribeTheme } from '@/lib/theme';
 import { useMinWidth } from '@/lib/useMinWidth';
 
@@ -199,6 +199,17 @@ export function Hero() {
   const farY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 20]);
   const midY = useTransform(scrollY, [0, 400], [0, reduce ? 0 : 10]);
 
+  // The ridge turbine only turns while the hero is on screen.
+  const sceneRef = useRef<SVGSVGElement>(null);
+  const [offscreen, setOffscreen] = useState(false);
+  useEffect(() => {
+    const el = sceneRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setOffscreen(!e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const ready = phase !== null;
   const p = PALETTES[phase ?? 'day'];
   const night = phase === 'night';
@@ -249,6 +260,8 @@ export function Hero() {
       </div>
 
       <svg
+        ref={sceneRef}
+        data-offscreen={offscreen || undefined}
         viewBox={wide ? '0 0 1200 400' : '560 46 640 294'}
         preserveAspectRatio="xMaxYMax slice"
         // On desktop the scene sits along the bottom at its own proportions (not stretched to the copy's height),
