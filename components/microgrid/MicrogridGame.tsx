@@ -181,7 +181,7 @@ function Board({
     if (next[i] === tool) next[i] = null;
     else {
       if (!next[i] && used >= puzzle.budget) {
-        setNotice(`You have used all ${puzzle.budget} pieces. Clear one first.`);
+        setNotice(`You have used all ${puzzle.budget} pieces. Remove one to place another.`);
         return;
       }
       next[i] = tool;
@@ -356,7 +356,7 @@ function Board({
               <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
                 <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
                   <li>Connect every piece to a home, directly or through other pieces.</li>
-                  <li>Trees shade panels; gardens and windy ridges boost them.</li>
+                  <li>A tree beside a panel shades it; a garden beside it helps. Turbines do best on windy ridges.</li>
                   <li>Batteries carry daytime sun into the night. Then run the day.</li>
                 </ol>
                 <div className="flex gap-4 text-small">
@@ -371,10 +371,10 @@ function Board({
             <>
             <p className="text-small leading-snug sm:text-copy sm:leading-normal">
               <span className="sm:hidden">
-                Light every hour with up to <strong>{puzzle.budget} pieces</strong>. Pick a piece in the bar below, then tap a plot; tap again to remove.{' '}
+                Light every hour with up to <strong>{puzzle.budget} pieces</strong>. Pick a piece in the bar below, then tap open ground to place it; tap again to remove it.{' '}
               </span>
               <span className="hidden sm:inline">
-                Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} pieces</strong>. Pick a piece, then tap a plot; tap it again to remove it.{' '}
+                Keep every home lit for all 24 hours using up to <strong>{puzzle.budget} pieces</strong>. Pick a piece, then click open ground to place it; click again to remove it.{' '}
               </span>
               <a href="#how" onClick={openHow} className="font-bold">
                 How it works
@@ -633,7 +633,7 @@ function Board({
       <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
         <h2 className="font-serif text-heading font-semibold">Today’s forecast</h2>
         <p className="-mt-1 text-small leading-snug text-body">
-          Each hour, sun and wind make power and the homes need some (demand). When demand is higher than what sun and wind make, batteries have to cover the gap.
+          Each hour, sun and wind make power and the homes use some: that’s demand. When demand is more than sun and wind can make, batteries cover the gap.
         </p>
         <ForecastChart puzzle={puzzle} demand={demand} />
       </div>
@@ -807,7 +807,7 @@ function hint(p: Puzzle, lit: boolean[], layout: Layout): string {
   if (touchingTurbines) return 'Your turbines sit side by side and slow each other, so try spreading them out.';
   if (dark <= 2) return `Only ${dark === 1 ? 'one hour' : 'two hours'} short, so one more battery or panel could do it.`;
   if (shortfall(p, lit) === 'night') {
-    return layout.includes('battery') ? 'Nights are the hard part, so more storage or wind could help.' : 'Batteries carry daytime sun into the night.';
+    return layout.includes('battery') ? 'Nights are the hard part, so more storage or wind could help.' : 'The nights went dark. A battery stores daytime sun for after dark, so try adding one.';
   }
   const shaded = layout.some((part, i) => part === 'solar' && neighbors(i).some((n) => p.terrain[n] === 'tree'));
   return shaded ? 'Some panels sit in a tree’s shade, so move them into the open.' : 'The days fall short, so try more panels, or a garden beside them.';
@@ -887,17 +887,17 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
           <strong>Keep every home lit</strong> for all 24 hours, using the pieces you’re given.
         </li>
         <li>
-          <strong>Connect</strong> every piece to a home, directly or through other pieces.
+          <strong>Connect</strong> every piece to a home, directly or through other pieces. Power can’t cross rocky ground.
         </li>
         <li>
-          <strong>Solar</strong> follows the sun; trees shade it, gardens cool it. <strong>Wind</strong> blows day and night; ridges boost it, and
+          <strong>Solar</strong> follows the sun; a tree beside a panel shades it, and a garden beside it keeps it cool. <strong>Wind</strong> blows day and night; ridges boost it, and
           turbines side by side slow each other.
         </li>
         <li>
-          <strong>Batteries</strong> carry daytime power into the night. Nothing can be built on rocky ground.
+          <strong>Batteries</strong> store daytime power for the night.
         </li>
         <li>
-          <strong>Three tries.</strong> After each run, the lights strip shows which hours went dark. Grids get harder through the week.
+          <strong>Three tries.</strong> After each run, the Lights row shows which hours went dark. Grids get harder through the week.
         </li>
       </ul>
     </details>

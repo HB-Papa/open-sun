@@ -28,7 +28,8 @@ export function SuggestForm() {
   if (status.kind === 'sent')
     return (
       <div role="status" className="rounded-[18px] bg-chip-leaf p-6 text-lede">
-        <p className="font-bold">Thank you! Your suggestion is in the review queue.</p>
+        <p className="font-bold">Thank you! Your suggestion is on the public review list.</p>
+        <p className="mt-2 text-copy">A person reads every suggestion before anything is added to the library.</p>
         <p className="mt-2 text-copy">
           <button type="button" className="font-bold text-sky underline" onClick={() => setStatus({ kind: 'idle' })}>
             Suggest another
@@ -65,7 +66,7 @@ export function SuggestForm() {
       </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="s-name" className="font-bold">
-          Your name <span className="font-normal text-muted">(optional, shown publicly in the review queue)</span>
+          Your name <span className="font-normal text-muted">(optional, shown on the public review list)</span>
         </label>
         <input id="s-name" name="name" type="text" maxLength={100} autoComplete="name" className={field} />
       </div>
