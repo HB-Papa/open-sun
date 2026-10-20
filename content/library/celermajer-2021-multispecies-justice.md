@@ -15,7 +15,7 @@ topics: [multispecies, justice, indigenous-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 This essay opens a conversation about extending justice beyond humans. It surveys the fields that shaped the idea of multispecies justice, asks who counts as a subject of justice and how they can be recognized, argues that Western ideas of justice need to make room for Indigenous and other non-Western views, and begins to sketch what multispecies justice could ask of politics and policy.

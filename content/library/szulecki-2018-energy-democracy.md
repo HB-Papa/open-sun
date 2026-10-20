@@ -15,7 +15,7 @@ topics: [community-energy, energy-justice, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Who is the ideal citizen of energy democracy, according to Szulecki?"
   options: ["The shareholder", "The prosumer", "The regulator"]

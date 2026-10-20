@@ -15,7 +15,7 @@ topics: [indigenous-futures, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How many framings of Indigenous futures thinking does the review identify?"
   options: ["Two", "Four", "Ten"]

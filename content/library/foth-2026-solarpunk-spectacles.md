@@ -13,13 +13,13 @@ topics: [solarpunk, urban, design, technology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors warn solarpunk aesthetics can become?"
   options: ["A vehicle for greenwashing", "A new kind of currency", "A sports brand"]
   answer: 0
 ---
 
-As solarpunk aesthetics move into smart-city branding, the authors warn they can become a spectacle of sustainability, or greenwashing, rather than real ecological change. They trace how Singapore’s technology-controlled, biophilic eco-urbanism has become a template copied in cities like Brisbane, Australia, and challenge interaction designers to stop exporting generic “green” tech templates.
+As solarpunk aesthetics move into smart-city branding, the authors warn they can become a spectacle of sustainability, or greenwashing, rather than real ecological change. They trace how Singapore’s style of eco-city, full of plants but run by technology, has become a template copied in cities like Brisbane, Australia, and challenge interaction designers to stop exporting generic “green” tech templates.
 
 **Why it matters:** A timely critique of how solarpunk looks can be used without solarpunk values.

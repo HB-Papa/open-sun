@@ -11,7 +11,7 @@ topics: [solarpunk, design, resilience]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Flynn imagines a “smart citizenry” in place of what?"
   options: ["The smart city", "The smartphone", "The smart grid"]

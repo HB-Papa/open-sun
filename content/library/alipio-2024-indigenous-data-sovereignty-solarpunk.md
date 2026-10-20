@@ -13,7 +13,7 @@ topics: [solarpunk, indigenous-futures, technology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which Hawaiian value guides the authors’ proposal?"
   options: ["Aloha ʻāina, love for the land", "Mana, personal power", "Ohana, family business"]

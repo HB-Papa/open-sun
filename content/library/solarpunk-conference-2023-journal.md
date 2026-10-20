@@ -13,7 +13,7 @@ topics: [solarpunk, fiction, design]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What was the theme of the 2023 Solarpunk Conference?"
   options: ["Imagine, Act, Thrive", "Build, Sell, Grow", "Reduce, Reuse, Recycle"]

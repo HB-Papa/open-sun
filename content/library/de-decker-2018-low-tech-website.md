@@ -11,13 +11,13 @@ topics: [technology, design, degrowth]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What does the solar-powered site accept during long cloudy spells?"
   options: ["Going offline sometimes", "Switching to diesel", "Showing ads"]
   answer: 0
 ---
 
-Low-Tech Magazine explains how it rebuilt its website to run on a small solar panel and battery. Static pages, compressed “dithered” images, and no tracking or custom fonts cut page weight about five-fold. The site accepts that it will sometimes go offline during long cloudy spells instead of relying on oversized batteries.
+Low-Tech Magazine explains how it rebuilt its website to run on a small solar panel and battery. Simple pages that never change, small “dithered” images made of dots, and no tracking or custom fonts made each page about five times lighter. The site accepts that it will sometimes go offline during long cloudy spells instead of relying on oversized batteries.
 
 **Why it matters:** A working example of designing technology around the sun’s rhythms, which is the same challenge as the Microgrid game.

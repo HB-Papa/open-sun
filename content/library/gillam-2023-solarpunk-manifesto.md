@@ -15,7 +15,7 @@ topics: [solarpunk, degrowth, justice, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which three principles does Gillam name?"
   options: ["Sun, wind, and water", "Anarchism, ecology, and justice", "Growth, technology, and markets"]

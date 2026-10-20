@@ -12,7 +12,7 @@ topics: [technology, degrowth, commons]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 Small-scale alternatives to Big Tech’s energy-hungry internet are often hard to see. De Valk maps the many names that people building low-energy networks and websites use for their work. Drawing on published research and a survey on the decentralized social network Mastodon, she makes the thinking behind these alternatives easier to see.

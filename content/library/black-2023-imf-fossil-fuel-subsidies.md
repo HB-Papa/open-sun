@@ -12,7 +12,7 @@ topics: [energy-justice, governance, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "About how much were global fossil fuel subsidies in 2022?"
   options: ["$7 billion", "$700 billion", "$7 trillion"]

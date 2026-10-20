@@ -15,7 +15,7 @@ topics: [solarpunk, community-energy, fiction, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which lenses does Reina-Rozo use to trace solarpunk?"
   options: ["Financial, legal, and military", "Historical, literary, and academic", "Chemical, physical, and biological"]

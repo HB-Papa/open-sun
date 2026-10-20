@@ -14,7 +14,7 @@ topics: [degrowth, energy-justice, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "To what level could global energy use fall by 2050 in this scenario?"
   options: ["The levels of the 1960s", "Half of today’s level in 2100", "No change"]

@@ -15,7 +15,7 @@ topics: [energy-justice, community-energy, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call solar development that builds community wealth and solidarity?"
   options: ["Solar capitalism", "Solidaric solarities", "Grid parity"]

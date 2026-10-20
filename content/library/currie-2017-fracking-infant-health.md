@@ -15,7 +15,7 @@ topics: [energy-justice, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Within what distance of fracking sites were the largest health effects found?"
   options: ["1 kilometer", "50 kilometers", "500 kilometers"]

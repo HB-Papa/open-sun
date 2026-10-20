@@ -12,7 +12,7 @@ topics: [solarpunk, education, design, technology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which film do the authors analyze for solarpunk themes?"
   options: ["The Wild Robot", "The Terminator", "Blade Runner"]

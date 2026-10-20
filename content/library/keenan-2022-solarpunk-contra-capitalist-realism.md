@@ -15,7 +15,7 @@ topics: [solarpunk, justice, degrowth]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Whose idea of “capitalist realism” does Keenan respond to?"
   options: ["Mark Fisher", "Adam Smith", "Rachel Carson"]

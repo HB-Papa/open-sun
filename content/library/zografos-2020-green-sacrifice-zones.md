@@ -16,7 +16,7 @@ topics: [energy-justice, justice, indigenous-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call places that bear the costs of clean energy?"
   options: ["Green sacrifice zones", "Solar havens", "Carbon credits"]

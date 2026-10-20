@@ -12,7 +12,7 @@ topics: [solarpunk, design, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How does the manifesto see science fiction?"
   options: ["As pure escapism", "As a tool for social and political change", "As a way to sell products"]

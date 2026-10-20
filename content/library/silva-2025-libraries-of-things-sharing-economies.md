@@ -13,7 +13,7 @@ topics: [libraries, commons, degrowth]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How many libraries of things did the study include?"
   options: ["9", "90", "900"]

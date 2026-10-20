@@ -12,9 +12,9 @@ topics: [community-energy, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
-A regularly updated, two-page overview of renewable energy in the United States. It reports that fossil fuels still supply about 82% of U.S. energy and renewables about 9%, that the country’s renewable technical potential is more than 100 times its 2020 electricity use, and that solar generated 6.7% of U.S. electricity in 2025, with solar and storage making up most new capacity.
+A regularly updated, two-page overview of renewable energy in the United States. It reports that fossil fuels still supply about 82% of U.S. energy and renewables about 9%, that the renewable energy the country could technically produce is more than 100 times its 2020 electricity use, and that solar generated 6.7% of U.S. electricity in 2025, with solar and storage making up most new capacity.
 
 **Why it matters:** Quick, sourced numbers for anyone who wants to know where U.S. clean energy stands today.

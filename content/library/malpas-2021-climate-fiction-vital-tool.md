@@ -15,7 +15,7 @@ topics: [fiction, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 A short comment arguing that fiction is a powerful way to explore hopes and fears about climate change and to imagine solutions. Malpas also argues it can widen whose voices help chart the way forward.

@@ -12,7 +12,7 @@ topics: [libraries, commons, design]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How does Mattern ask us to see libraries?"
   options: ["As infrastructure", "As museums", "As shops"]

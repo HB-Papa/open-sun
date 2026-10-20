@@ -11,7 +11,7 @@ topics: [solarpunk, multispecies, urban, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What did Rossi use as the starting point for backcasting?"
   options: ["Economic forecasts", "Solarpunk stories", "Traffic data"]

@@ -15,7 +15,7 @@ topics: [ecology, community-energy, agriculture]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What share of the California installations were in “compatible” areas?"
   options: ["Fewer than 15%", "About half", "Over 90%"]

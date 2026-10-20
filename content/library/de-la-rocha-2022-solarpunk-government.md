@@ -11,7 +11,7 @@ topics: [solarpunk, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What kind of government does De La Rocha imagine?"
   options: ["One that supports people to live good lives", "No government at all", "A government run by corporations"]

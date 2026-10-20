@@ -14,7 +14,7 @@ topics: [solarpunk, urban, design]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which two Singapore projects does Keeton study?"
   options: ["Gardens by the Bay and Jewel Changi Airport", "Marina Bay Sands and Sentosa", "The Merlion and Orchard Road"]

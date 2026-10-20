@@ -13,7 +13,7 @@ topics: [energy-justice, community-energy, multispecies]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How does Solarities treat solar power?"
   options: ["As a simple fix for climate change", "As plural and sometimes contradictory, needing justice", "As too expensive to matter"]

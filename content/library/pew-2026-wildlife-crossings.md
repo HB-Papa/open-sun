@@ -12,7 +12,7 @@ topics: [ecology, multispecies]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Roughly how many wildlife-vehicle collisions happen in the U.S. each year?"
   options: ["About 1,000", "More than 1 million", "About 100 million"]

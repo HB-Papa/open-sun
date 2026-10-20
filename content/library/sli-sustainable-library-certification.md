@@ -12,7 +12,7 @@ topics: [libraries, resilience]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 A program that helps public, academic, and school libraries become more sustainable and earn certification. Members get a mentor, monthly meetups with other libraries, and a step-by-step action guide, and the certification lets a library show its community its commitment to sustainability.

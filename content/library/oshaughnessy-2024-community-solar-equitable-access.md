@@ -15,7 +15,7 @@ topics: [community-energy, energy-justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How much more likely were community solar adopters to rent?"
   options: ["About 4.4 times", "Exactly the same", "Half as likely"]

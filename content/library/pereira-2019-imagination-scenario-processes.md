@@ -14,7 +14,7 @@ topics: [climate-futures, ecology, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How many qualities for more imaginative scenarios do the authors name?"
   options: ["Two", "Six", "Twenty"]

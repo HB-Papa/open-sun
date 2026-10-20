@@ -14,7 +14,7 @@ topics: [solarpunk, fiction]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which motif does Klata find almost everywhere in solarpunk stories?"
   options: ["Space travel", "Solar imagery", "Haunted houses"]

@@ -15,7 +15,7 @@ topics: [agriculture, community-energy, ecology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What did crops growing under the panels do for the panels?"
   options: ["Shaded them so they made less power", "Cooled them so they worked more efficiently", "Nothing measurable"]

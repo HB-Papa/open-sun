@@ -12,13 +12,13 @@ topics: [degrowth, indigenous-futures, commons, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Roughly how many essays does Pluriverse contain?"
   options: ["About 10", "More than 100", "Over 1,000"]
   answer: 1
 ---
 
-More than 100 short essays on alternatives to globalized “development” and its roots in modernity, capitalism, state power, and patriarchal values. The book criticizes mainstream solutions that greenwash business as usual and presents worldviews and practices from around the world, such as buen vivir, degrowth, and the commons, that point toward an ecologically wise and socially just world.
+More than 100 short essays on alternatives to globalized “development” and its roots in modernity, capitalism, state power, and patriarchal values. The book criticizes mainstream solutions that greenwash business as usual and presents worldviews and practices from around the world, such as buen vivir (an Andean idea of living well together with nature), degrowth, and the commons, that point toward an ecologically wise and socially just world.
 
 **Why it matters:** A free, global reference book of ideas that solarpunk draws on, many from the Global South.

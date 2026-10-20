@@ -14,13 +14,13 @@ topics: [solarpunk, fiction, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which kind of fiction does Więckowska set beside solarpunk?"
   options: ["Romance novels", "Post-apocalyptic fiction", "Detective stories"]
   answer: 1
 ---
 
-Więckowska sets the hopeful stories of solarpunk beside the dark visions of post-apocalyptic fiction such as Cormac McCarthy’s The Road. Drawing on three solarpunk anthologies, she argues the two stand “in apposition”: the apocalypse expresses a dominant mood of the present, while solarpunk is an emerging one that tries to imagine a livable future.
+Więckowska sets the hopeful stories of solarpunk beside the dark visions of post-apocalyptic fiction such as Cormac McCarthy’s The Road. Drawing on three solarpunk anthologies, she argues the two stand “in apposition,” side by side as two answers to the same moment: the apocalypse expresses a dominant mood of the present, while solarpunk is an emerging one that tries to imagine a livable future.
 
 **Why it matters:** Helps readers see solarpunk as a deliberate response to environmental pessimism, not a naive escape from it.

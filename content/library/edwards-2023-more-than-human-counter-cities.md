@@ -14,7 +14,7 @@ topics: [multispecies, urban, design, education]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 Cities are usually designed as places for humans alone. In an interdisciplinary master’s course in Trondheim, Norway, students used speculative design (designing for imagined futures) to picture how people could encounter, protect, and live alongside other species in the city. The authors analyze these visions of multispecies “counter-cities” for what they offer just and sustainable transitions.

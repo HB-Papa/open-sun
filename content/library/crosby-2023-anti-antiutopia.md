@@ -15,7 +15,7 @@ topics: [solarpunk, urban, design]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Who does Crosby say solarpunk can especially inspire?"
   options: ["Architects and urban designers", "Stock traders", "Mining companies"]

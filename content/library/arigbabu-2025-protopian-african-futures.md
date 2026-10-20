@@ -15,7 +15,7 @@ topics: [solarpunk, design, indigenous-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Whose architecture does Arigbabu connect to solarpunk?"
   options: ["Frank Lloyd Wright", "Demas Nwoko", "Zaha Hadid"]

@@ -15,7 +15,7 @@ topics: [libraries, resilience, urban]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How many library directors did the survey include?"
   options: ["15", "415", "4,150"]

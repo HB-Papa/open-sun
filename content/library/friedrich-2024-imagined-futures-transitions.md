@@ -14,7 +14,7 @@ topics: [climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 Research on how societies shift to sustainability is always about the future, but it rarely says so. The authors argue that researchers should look openly at how futures are imagined, so they don’t simply repeat the futures that powerful groups already prefer. Because futures look different from place to place, and because our sense of time is shaped by society, they suggest ways to study, and take part in, many kinds of “future-making.”

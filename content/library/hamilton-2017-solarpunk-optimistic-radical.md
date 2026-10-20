@@ -12,7 +12,7 @@ topics: [solarpunk]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How does Hamilton say solarpunk stays “punk”?"
   options: ["By imagining futures that need radical change", "By rejecting all technology", "By playing loud music"]

@@ -12,7 +12,7 @@ topics: [solarpunk, degrowth, fiction]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the two stories Rivero-Vadillo reads push back against?"
   options: ["Techno-optimism", "Gardening", "Public transit"]
