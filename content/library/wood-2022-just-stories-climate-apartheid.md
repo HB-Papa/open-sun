@@ -15,7 +15,7 @@ topics: [fiction, justice, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call stories that challenge climate inequality?"
   options: ["Narrative justice", "Green marketing", "Climate realism"]

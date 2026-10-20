@@ -15,13 +15,13 @@ topics: [climate-futures, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What capacity do the authors call essential for transformation?"
   options: ["Imagination", "Speed", "Obedience"]
   answer: 0
 ---
 
-The authors argue that imagination, the shared mental and social work of picturing possible futures, is an essential capacity for responding deliberately to sustainability crises rather than being swept along by forced change. Introducing a special journal issue, they sketch a research agenda on imagination’s role in transformation, including its links to agency and power.
+The authors argue that imagination, the shared mental and social work of picturing possible futures, is essential if societies are to choose how they respond to sustainability crises, rather than being swept along by change forced on them. Introducing a special journal issue, they sketch a research agenda on imagination’s role in transformation, including its links to agency and power.
 
 **Why it matters:** The scholarly case for why imagining better futures, solarpunk’s core activity, matters.

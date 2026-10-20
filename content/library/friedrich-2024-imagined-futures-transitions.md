@@ -14,9 +14,9 @@ topics: [climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
-Research on sustainability transitions always involves the future, but often only implicitly. The authors argue for engaging explicitly with how futures are imagined, to avoid reproducing the futures favored by those already in power. Considering how futures vary by place and how time is socially shaped, they outline ways to both study and take part in diverse “future-making.”
+Research on how societies shift to sustainability is always about the future, but it rarely says so. The authors argue that researchers should look openly at how futures are imagined, so they don’t simply repeat the futures that powerful groups already prefer. Because futures look different from place to place, and because our sense of time is shaped by society, they suggest ways to study, and take part in, many kinds of “future-making.”
 
 **Why it matters:** A reminder that there is not one future to predict but many to choose between and build.

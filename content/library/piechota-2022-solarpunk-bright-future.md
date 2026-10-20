@@ -15,13 +15,13 @@ topics: [solarpunk, fiction]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which novel does Piechota read alongside solarpunk?"
   options: ["Ecotopia", "Dune", "Neuromancer"]
   answer: 0
 ---
 
-Using ecocriticism and comparative cultural studies, Piechota places solarpunk among other speculative genres, reading Ernest Callenbach’s novel Ecotopia and a Brazilian solarpunk short-story anthology. Unlike post-apocalyptic fiction, he notes, solarpunk trusts that modern technology can help overcome the ecological crisis, and like steampunk it reaches beyond books into lifestyle, such as the idea of slow living.
+Reading literature with an eye on nature and comparing cultures, Piechota places solarpunk among other speculative genres, reading Ernest Callenbach’s novel Ecotopia and a Brazilian solarpunk short-story anthology. Unlike post-apocalyptic fiction, he notes, solarpunk trusts that modern technology can help overcome the ecological crisis, and like steampunk it reaches beyond books into lifestyle, such as the idea of slow living.
 
 **Why it matters:** Connects solarpunk to the older ecotopian tradition and to Brazil’s early solarpunk writing.

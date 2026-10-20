@@ -15,7 +15,7 @@ topics: [community-energy, agriculture, ecology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What does covering canals with solar panels reduce?"
   options: ["Water lost to evaporation", "Rainfall", "Fish populations"]

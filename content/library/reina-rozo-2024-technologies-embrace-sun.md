@@ -15,13 +15,13 @@ topics: [solarpunk, community-energy, indigenous-futures, energy-justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Where did the “tech to embrace the sun” project take place?"
   options: ["La Guajira, Colombia", "Lagos, Nigeria", "Portland, Oregon"]
   answer: 0
 ---
 
-Large electricity projects in Latin America often threaten the livelihoods of local and Indigenous communities. This study follows “tech to embrace the sun,” a project in which the Selvatorium community in La Guajira, Colombia, used solarpunk storytelling to co-design small-scale solar devices. It produced seven “future ancestral” stories, build guides for two prototypes, and a fanzine.
+Large electricity projects in Latin America often threaten the livelihoods of local and Indigenous communities. This study follows “tech to embrace the sun,” a project in which the Selvatorium community in La Guajira, Colombia, used solarpunk storytelling to design small solar devices together. It produced seven “future ancestral” stories, build guides for two prototypes, and a fanzine.
 
 **Why it matters:** Shows solarpunk used as a practical, community-led design method rather than only a literary genre.

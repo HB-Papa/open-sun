@@ -15,7 +15,7 @@ topics: [solarpunk, design, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 In Portuguese. Vieceli explores where the solarpunk movement meets the UN’s 2030 Agenda. She argues that solarpunk’s picture of technology, ecology, and social justice coexisting complements the 17 Sustainable Development Goals, which offer a practical framework for turning those visions into collective, local action.

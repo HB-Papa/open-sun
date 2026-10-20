@@ -12,7 +12,7 @@ topics: [resilience, community-energy, commons]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Who does the guide say should lead resilience hubs?"
   options: ["Community members and organizations", "Private utilities", "The military"]

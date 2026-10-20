@@ -15,9 +15,9 @@ topics: [energy-justice, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
-Drawing on fieldwork in New York City’s sustainable energy industry, Lennon examines the everyday language of “solutions.” He argues that this discourse grew out of polluting industries and greenwashing, and that it now frames corporations as the natural center of environmental action, even among people who are critical of corporate environmentalism.
+Drawing on fieldwork in New York City’s sustainable energy industry, Lennon examines the everyday language of “solutions.” He argues that this way of talking grew out of polluting industries and greenwashing, and that it now frames corporations as the natural center of environmental action, even among people who are critical of corporate environmentalism.
 
-**Why it matters:** A thoughtful warning for any hopeful movement about the difference between optimism and depoliticization.
+**Why it matters:** A thoughtful warning for any hopeful movement: optimism can quietly take the politics out of change.

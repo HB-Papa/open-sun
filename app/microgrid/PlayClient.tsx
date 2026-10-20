@@ -35,7 +35,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
   const s = stats(progress);
   const streak = currentStreak(progress, today);
   const maxBar = Math.max(1, ...progress.histogram);
-  const labels = ['1 try', '2 tries', '3 tries', 'Not yet'];
+  const labels = ['1 try', '2 tries', '3 tries', 'Not solved'];
   return (
     <section aria-labelledby="stats-h" className="flex min-w-0 flex-col gap-4 rounded-[20px] border border-line bg-card p-5">
       <h2 id="stats-h" className="font-serif text-heading font-semibold">
@@ -49,7 +49,7 @@ function StatsCard({ progress, today }: { progress: Progress; today: string }) {
       </dl>
       <div>
         <h3 className="mb-2 text-small font-bold">Tries needed</h3>
-        <ul className="flex flex-col gap-1.5" aria-label="Tries histogram">
+        <ul className="flex flex-col gap-1.5" aria-label="Tries needed each day">
           {progress.histogram.map((n, k) => (
             <li key={k} className="grid grid-cols-[70px_1fr] items-center gap-2 text-small">
               <span>{labels[k]}</span>

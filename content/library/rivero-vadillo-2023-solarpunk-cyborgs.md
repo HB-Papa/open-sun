@@ -14,9 +14,9 @@ topics: [solarpunk, fiction, technology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
-This article looks at how some solarpunk stories by women writers borrow the cyborg figure from feminist cyberpunk. Reading Lauren Beukes, Camille Meyers, and Brenda Cooper, it argues that solarpunk dropped cyberpunk’s idea of rebellion in cyberspace but kept its alliances between humans and technology, now aimed at the material structures of capitalism.
+This article looks at how some solarpunk stories by women writers borrow the cyborg figure from feminist cyberpunk. Reading Lauren Beukes, Camille Meyers, and Brenda Cooper, it argues that solarpunk dropped cyberpunk’s idea of rebellion in cyberspace but kept its alliances between people and technology, now turned against capitalism’s real-world structures.
 
 **Why it matters:** Traces how solarpunk inherits from, and argues with, the cyberpunk genre it is often contrasted with.

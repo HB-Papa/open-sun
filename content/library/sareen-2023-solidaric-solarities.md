@@ -15,13 +15,13 @@ topics: [energy-justice, community-energy, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call solar development that builds community wealth and solidarity?"
   options: ["Solar capitalism", "Solidaric solarities", "Grid parity"]
   answer: 1
 ---
 
-Solar power is now the cheapest, fastest-growing electricity source, but utility-scale projects can displace marginalized people and deepen inequality. The authors propose “solidaric solarities”: ways of developing solar that build empowerment, connection, and community wealth for people harmed by energy injustice. They offer practical governance principles for getting there.
+Solar power is now the cheapest, fastest-growing electricity source, but utility-scale projects can displace marginalized people and deepen inequality. The authors propose “solidaric solarities”: ways of developing solar that build empowerment, connection, and community wealth for people harmed by energy injustice. They offer practical principles for how such projects should be run.
 
 **Why it matters:** Turns the hope of solar power into concrete principles for making it fair.

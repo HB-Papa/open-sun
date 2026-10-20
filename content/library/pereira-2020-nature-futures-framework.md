@@ -16,7 +16,7 @@ topics: [climate-futures, ecology, multispecies]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What shape does the Nature Futures Framework use?"
   options: ["A circle", "A triangle", "A pyramid"]

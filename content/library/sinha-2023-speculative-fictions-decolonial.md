@@ -15,7 +15,7 @@ topics: [indigenous-futures, fiction, justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 ---
 
 Sinha observes that it is often easier to imagine landscapes of injustice than landscapes of repair. She explores how repair can be world-building, but also how corporate “development” stories can disguise extraction as repair. Speculative fiction, she argues, helps us imagine repair that is genuinely decolonial.

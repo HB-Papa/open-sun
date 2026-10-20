@@ -11,7 +11,7 @@ topics: [commons, governance, degrowth]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call people organizing together to meet shared needs?"
   options: ["Commoning", "Outsourcing", "Privatizing"]

@@ -15,7 +15,7 @@ topics: [indigenous-futures, community-energy, energy-justice]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which goal do many Indigenous communities pursue through renewables, according to the review?"
   options: ["Energy autonomy", "Selling coal", "Building highways"]

@@ -14,7 +14,7 @@ topics: [multispecies, ecology, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Whose needs does “multispecies sustainability” include?"
   options: ["Only current humans", "All species, now and in the future", "Only endangered animals"]

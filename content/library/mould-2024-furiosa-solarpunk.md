@@ -12,13 +12,13 @@ topics: [solarpunk, fiction]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What is the solarpunk place in Furiosa called?"
   options: ["The Green Place", "The Citadel", "Gas Town"]
   answer: 0
 ---
 
-Mould points to “The Green Place,” Furiosa’s childhood home glimpsed in a single sweeping shot: lush, fruitful, crafted by women, and powered by wind and sun. He contrasts it with the franchise’s hyper-masculine “dieselpunk” wasteland and uses it to explain solarpunk’s hope, its democratic ideals, and its ecofeminist roots.
+Mould points to “The Green Place,” Furiosa’s childhood home glimpsed in a single sweeping shot: lush, fruitful, crafted by women, and powered by wind and sun. He contrasts it with the franchise’s hyper-masculine “dieselpunk” wasteland and uses it to explain solarpunk’s hope, its democratic ideals, and its ecofeminist roots, which tie the care of nature to the freedom of women.
 
 **Why it matters:** A fun way into solarpunk through a blockbuster many readers have already seen.

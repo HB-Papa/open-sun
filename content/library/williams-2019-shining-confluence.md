@@ -15,7 +15,7 @@ topics: [solarpunk, fiction, community-energy]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Williams treats solarpunk mainly as what kind of thing?"
   options: ["An energy imaginary", "A fashion trend", "A political party"]

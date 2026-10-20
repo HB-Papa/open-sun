@@ -16,13 +16,13 @@ topics: [energy-justice, justice, indigenous-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What do the authors call places that bear the costs of clean energy?"
   options: ["Green sacrifice zones", "Solar havens", "Carbon credits"]
   answer: 0
 ---
 
-Green New Deal proposals promise a “just transition,” but the authors warn that mining, transporting, installing, and disposing of clean-energy materials can create “green sacrifice zones,” places and people who bear the costs. They argue that shifting these costs onto others, together with a rhetoric of salvation, echoes colonial patterns and undermines the justice these plans claim.
+Green New Deal proposals promise a “just transition,” but the authors warn that mining, transporting, installing, and disposing of clean-energy materials can create “green sacrifice zones,” places and people who bear the costs. They argue that pushing these costs onto others, while talking about clean energy as salvation, repeats colonial patterns and undermines the justice these plans promise.
 
 **Why it matters:** An essential caution for solar futures: clean energy must not be built on someone else’s sacrifice.

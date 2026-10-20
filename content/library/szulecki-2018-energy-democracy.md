@@ -15,13 +15,13 @@ topics: [community-energy, energy-justice, governance]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Who is the ideal citizen of energy democracy, according to Szulecki?"
   options: ["The shareholder", "The prosumer", "The regulator"]
   answer: 1
 ---
 
-“Energy democracy” is a popular rallying cry but a vague idea. Szulecki traces its activist roots and defines it along three dimensions: popular sovereignty, participatory governance, and civic ownership. He casts the “prosumer,” a citizen who both produces and consumes energy, as its ideal participant.
+“Energy democracy” is a popular rallying cry but a vague idea. Szulecki traces its activist roots and defines it along three dimensions: popular sovereignty (people have the final say), participatory governance (people take part in decisions), and civic ownership (people own energy together). He casts the “prosumer,” a citizen who both produces and consumes energy, as its ideal participant.
 
 **Why it matters:** Gives clear language for what community-owned energy is actually aiming at.

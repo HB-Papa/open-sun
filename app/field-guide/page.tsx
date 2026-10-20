@@ -42,7 +42,7 @@ export default function FieldGuidePage() {
       </nav>
       {/* What the colours mean, in words: each term belongs to one family of ideas. */}
       <p className="-mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-small text-body">
-        <span className="font-bold">Colours group the ideas:</span>
+        <span className="font-bold">Each color is a family of ideas:</span>
         {(Object.keys(FAMILIES) as Family[]).map((f) => (
           <span key={f} className="inline-flex items-center gap-1.5">
             <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full" style={{ background: FAMILIES[f].dot }} />

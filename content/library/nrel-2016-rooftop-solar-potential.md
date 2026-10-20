@@ -12,7 +12,7 @@ topics: [community-energy, urban]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What share of U.S. electricity sales could rooftop solar match?"
   options: ["About 9%", "About 39%", "About 99%"]

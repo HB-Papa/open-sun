@@ -15,13 +15,13 @@ topics: [solarpunk, education, fiction]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What kind of pedagogy do the authors propose?"
   options: ["A pedagogy of hope", "A pedagogy of fear", "A pedagogy of competition"]
   answer: 0
 ---
 
-The authors argue that young people need help envisioning a better future before they can work toward one, and that literature-based English classes are well placed to do this. They propose a “pedagogy of hope” and show how solarpunk fiction and nonfiction can support literary, cultural, and communicative language learning, with two classroom examples.
+The authors argue that young people need help envisioning a better future before they can work toward one, and that literature-based English classes are well placed to do this. They propose a “pedagogy of hope” and show how solarpunk fiction and nonfiction can help students learn about literature and culture and practice communicating in English, with two classroom examples.
 
 **Why it matters:** A practical bridge from solarpunk ideas to everyday teaching.

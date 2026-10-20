@@ -15,13 +15,13 @@ topics: [indigenous-futures, climate-futures]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "How many framings of Indigenous futures thinking does the review identify?"
   options: ["Two", "Four", "Ten"]
   answer: 1
 ---
 
-This systematic review gathers research in which Indigenous peoples contribute to or lead futures thinking. It identifies four framings: adaptation-oriented, participatory, culturally grounded, and Indigenising. Innovation comes from strong Indigenous involvement in research teams, co-design and authorship, Indigenous methods, and decolonising and trauma-informed approaches. The authors also build a living glossary of terms.
+This systematic review gathers research in which Indigenous peoples contribute to or lead futures thinking. It identifies four framings: adaptation-oriented, participatory, culturally grounded, and Indigenising. The most innovative work comes when Indigenous people are part of the research team, help design and write it, and use their own methods, with approaches that undo colonial habits and take past trauma into account. The authors also build a living glossary of terms.
 
 **Why it matters:** A map of how Indigenous knowledge is already shaping how we imagine and plan futures.

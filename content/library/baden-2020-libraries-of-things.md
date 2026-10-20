@@ -15,13 +15,13 @@ topics: [commons, libraries, degrowth]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "What did all six Libraries of Things rely on?"
   options: ["Large corporate sponsors", "Volunteers and public support", "Membership fees alone"]
   answer: 1
 ---
 
-Libraries of Things lend tools and other rarely used items the way libraries lend books. Studying six in the UK, the authors found shared values: cutting waste and resource use and widening access to goods. All relied on volunteers and donated or discounted space, and none paid for itself yet.
+Libraries of Things lend tools and other rarely used items the way libraries lend books. Studying six in the UK, the authors found shared values: cutting waste and resource use and widening access to goods. All relied on volunteers and donated or discounted space, and none yet covered its own costs.
 
 **Why it matters:** A grounded look at one of the most practical solarpunk ideas: sharing instead of owning.

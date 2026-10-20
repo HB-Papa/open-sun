@@ -12,13 +12,13 @@ topics: [solarpunk, education, design, technology]
 date_added: 2026-10-11
 source: curated
 reviewed: true
-summary_status: draft
+summary_status: edited
 field_note:
   question: "Which film do the authors analyze for solarpunk themes?"
   options: ["The Wild Robot", "The Terminator", "Blade Runner"]
   answer: 0
 ---
 
-Most stories about artificial intelligence are dystopian, which the authors argue narrows how designers imagine it and pushes them into simple for-or-against positions. They propose solarpunk as a hopeful counter-narrative, review the literature, and analyze solarpunk themes in the film The Wild Robot to identify story elements that design educators can use to help students shape inclusive, sustainable futures with AI.
+Most stories about artificial intelligence are dystopian, which the authors argue narrows how designers imagine it and pushes them into simple for-or-against positions. They propose solarpunk as a hopeful alternative story. After reviewing past research, they analyze solarpunk themes in the film The Wild Robot and pick out story elements that design teachers can use to help students imagine fair, sustainable futures with AI.
 
 **Why it matters:** A practical bridge from solarpunk to classrooms where tomorrow’s designers learn to think about AI.
