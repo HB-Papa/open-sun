@@ -22,6 +22,6 @@ field_note:
   answer: 0
 ---
 
-Studying more than 160 utility-scale solar installations in California, the authors found that the largest share of capacity was built on shrublands and scrublands and 28% of installations on croplands and pastures. Fewer than 15% were in environmentally compatible areas, and installations sat on average within a few kilometers of protected areas. They argue that siting decisions must weigh energy, food, and conservation together.
+Studying more than 160 large solar installations in California, the authors found that the largest share of solar capacity was built on shrubland and scrubland, and 28% of installations on cropland and pasture. Fewer than 15% were in “compatible” areas, where they do little environmental harm, and installations were on average only a few kilometers from protected areas. They argue that siting decisions must weigh energy, food, and conservation together.
 
 **Why it matters:** A reminder that where solar goes matters, and a case for rooftops, canals, and already-disturbed land.

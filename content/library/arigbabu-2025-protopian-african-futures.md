@@ -22,6 +22,6 @@ field_note:
   answer: 1
 ---
 
-Arigbabu argues that the Nigerian artist and architect Demas Nwoko anticipated solarpunk ideals decades ago. Nwoko’s climate-responsive, culturally grounded tropical architecture and his “Natural Synthesis” philosophy blended knowledge systems rather than choosing between “Western” and Indigenous ones. The paper draws parallels between his work and solarpunk’s hopeful, “protopian” outlook.
+Arigbabu argues that the Nigerian artist and architect Demas Nwoko anticipated solarpunk ideals decades ago. Nwoko’s climate-responsive, culturally grounded tropical architecture and his “Natural Synthesis” philosophy blended knowledge systems rather than choosing between “Western” and Indigenous ones. The paper draws parallels between his work and solarpunk’s hopeful, “protopian” outlook: steady improvement rather than a perfect utopia.
 
 **Why it matters:** Shows that solarpunk-like practice has deep roots outside the internet subculture where the word was coined.

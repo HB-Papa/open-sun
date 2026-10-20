@@ -22,6 +22,6 @@ field_note:
   answer: 1
 ---
 
-“Energy democracy” is a popular rallying cry but a vague idea. Szulecki traces its activist roots and defines it along three dimensions: popular sovereignty, participatory governance, and civic ownership. He casts the “prosumer,” a citizen who both produces and consumes energy, as its ideal participant.
+“Energy democracy” is a popular rallying cry but a vague idea. Szulecki traces its activist roots and defines it along three dimensions: popular sovereignty (people have the final say), participatory governance (people take part in decisions), and civic ownership (people own energy together). He casts the “prosumer,” a citizen who both produces and consumes energy, as its ideal participant.
 
 **Why it matters:** Gives clear language for what community-owned energy is actually aiming at.

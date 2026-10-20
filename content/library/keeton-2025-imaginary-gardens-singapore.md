@@ -21,6 +21,6 @@ field_note:
   answer: 0
 ---
 
-Singapore brands itself a “Garden City” and “Smart Nation,” relying on state-led, technocratic projects that echo solarpunk imagery. Keeton closely reads official and designer reports on Gardens by the Bay and Jewel Changi Airport, finding that they look solarpunk but are put to uses that undercut its ideals, and argues that the energy transition must be rethought around climate justice and freedom.
+Singapore brands itself a “Garden City” and “Smart Nation,” relying on government-led projects, run by experts, that echo solarpunk imagery. Keeton closely reads official and designer reports on Gardens by the Bay and Jewel Changi Airport, finding that they look solarpunk but are put to uses that undercut its ideals, and argues that the energy transition must be rethought around climate justice and freedom.
 
 **Why it matters:** An undergraduate study that tests solarpunk ideals against one of the world’s greenest-looking cities.

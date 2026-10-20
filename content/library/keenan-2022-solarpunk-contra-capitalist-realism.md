@@ -22,6 +22,6 @@ field_note:
   answer: 0
 ---
 
-Mark Fisher described “capitalist realism” as a system that makes it hard to imagine any alternative to capitalism. Keenan proposes solarpunk as the utopian counter-ideology needed to break that spell, drawing on Marx and Engels on ideology and Gramsci on cultural hegemony, and arguing that climate collapse, inequality, depression, and alienation call for more than critique alone.
+Mark Fisher described “capitalist realism” as a system that makes it hard to imagine any alternative to capitalism. Keenan proposes solarpunk as the hopeful, utopian set of ideas needed to break that spell. Drawing on Marx, Engels, and Gramsci on how ruling ideas shape what seems possible, he argues that climate collapse, inequality, depression, and alienation call for more than critique alone.
 
 **Why it matters:** Places solarpunk in a long line of political thought about how societies imagine their futures.

@@ -16,11 +16,11 @@ source: curated
 reviewed: true
 summary_status: draft
 field_note:
-  question: "How many key characteristics for scenario processes do the authors identify?"
+  question: "How many qualities for more imaginative scenarios do the authors name?"
   options: ["Two", "Six", "Twenty"]
   answer: 1
 ---
 
-Global biodiversity assessments have relied mostly on biophysical and economic models, which the authors argue miss the complexity of real problems. They identify six qualities that more imaginative scenario processes need, including working across contexts, including diverse knowledge and values, engaging stakeholders while facing power and politics, and handling uncertainty.
+Global assessments of biodiversity have mostly relied on models of physical systems and economies, which the authors argue miss how messy real problems are. They name six qualities that more imaginative ways of building future scenarios need, including working across different settings, including diverse knowledge and values, involving the people affected while facing questions of power, and handling uncertainty.
 
 **Why it matters:** Shows how imagination can be built into the way international science guides policy.

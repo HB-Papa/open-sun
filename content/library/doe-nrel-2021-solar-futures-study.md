@@ -19,6 +19,6 @@ field_note:
   answer: 1
 ---
 
-This U.S. government study explores how solar power could drive deep decarbonization of the electric grid. It finds that with steep cost reductions, supportive policies, and widespread electrification, solar could supply about 40% of U.S. electricity by 2035 and 45% by 2050, and that ground-mounted solar would need only about half a percent of the contiguous United States’ land.
+This U.S. government study explores how solar power could help remove most carbon emissions from the electric grid. It finds that with steep cost reductions, supportive policies, and widespread electrification, solar could supply about 40% of U.S. electricity by 2035 and 45% by 2050, and that ground-mounted solar would need only about half a percent of the contiguous United States’ land.
 
 **Why it matters:** The official roadmap for what a solar-powered United States could look like.

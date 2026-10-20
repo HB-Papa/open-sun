@@ -23,6 +23,6 @@ field_note:
   answer: 0
 ---
 
-Green New Deal proposals promise a “just transition,” but the authors warn that mining, transporting, installing, and disposing of clean-energy materials can create “green sacrifice zones,” places and people who bear the costs. They argue that shifting these costs onto others, together with a rhetoric of salvation, echoes colonial patterns and undermines the justice these plans claim.
+Green New Deal proposals promise a “just transition,” but the authors warn that mining, transporting, installing, and disposing of clean-energy materials can create “green sacrifice zones,” places and people who bear the costs. They argue that pushing these costs onto others, while talking about clean energy as salvation, repeats colonial patterns and undermines the justice these plans promise.
 
 **Why it matters:** An essential caution for solar futures: clean energy must not be built on someone else’s sacrifice.

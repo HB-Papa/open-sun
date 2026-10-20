@@ -18,6 +18,6 @@ reviewed: true
 summary_status: draft
 ---
 
-This essay opens a conversation about extending justice beyond humans. It surveys the fields that shaped the idea of multispecies justice, asks who counts as a subject of justice and how they can be recognized, stresses the importance of decolonizing liberal political thought, and begins to sketch what multispecies justice could ask of politics and policy.
+This essay opens a conversation about extending justice beyond humans. It surveys the fields that shaped the idea of multispecies justice, asks who counts as a subject of justice and how they can be recognized, argues that Western ideas of justice need to make room for Indigenous and other non-Western views, and begins to sketch what multispecies justice could ask of politics and policy.
 
 **Why it matters:** Puts a name and a research agenda to solarpunk’s hope that humans and other species can flourish together.

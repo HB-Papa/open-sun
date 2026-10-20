@@ -17,6 +17,6 @@ reviewed: true
 summary_status: draft
 ---
 
-In Spanish. This article examines solarpunk through an ecocritical lens. It gives a short history of the genre, mostly in its English-language form, outlines the philosophical debate between technophilia and technophobia, and analyzes two solarpunk short stories against contemporary techno-optimist and eco-optimist theories, from a degrowth perspective.
+In Spanish. This article looks at solarpunk with an eye on nature and the environment. It gives a short history of the genre, mostly in English, sets out the old debate between loving technology and fearing it, and reads two solarpunk short stories from a degrowth point of view, testing them against today’s optimistic theories about technology and ecology.
 
 **Why it matters:** A Spanish-language entry point into the debate over solarpunk’s relationship with technology.

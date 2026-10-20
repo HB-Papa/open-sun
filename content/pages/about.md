@@ -33,4 +33,4 @@ Open Sun is an independent, non-commercial project.
 
 ## Accessibility
 
-Open Sun aims to meet WCAG 2.2 AA. The site works with a keyboard and screen readers, respects your device's "reduce motion" setting, and never uses color as the only signal. The puzzle describes every result in words as well as pictures. If something doesn't work for you, please [tell us on GitHub](https://github.com/HB-Papa/open-sun/issues/new) (a free account is needed) and we'll fix it.
+Open Sun aims to meet WCAG 2.2 AA. The site works with a keyboard and screen readers, respects your device's "reduce motion" setting, and never uses color as the only signal. The puzzle describes every result in words as well as pictures. If something doesn't work for you, please [tell us on GitHub](https://github.com/HB-Papa/open-sun/issues/new) (you’ll need a free GitHub account) and we'll fix it.

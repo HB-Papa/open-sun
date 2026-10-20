@@ -22,6 +22,6 @@ field_note:
   answer: 1
 ---
 
-Gillam argues that science fiction can give us future visions worth building toward. Reading solarpunk fiction and online writing, he names three guiding principles: anarchism (a post-scarcity, post-capitalist society without hierarchy), ecology (local, self-sufficient living where human and non-human life both flourish), and justice (a society free of marginalization).
+Gillam argues that science fiction can give us future visions worth building toward. Reading solarpunk fiction and online writing, he names three guiding principles: anarchism (a society beyond capitalism, with enough for everyone and no ruling hierarchy), ecology (local, self-sufficient living where human and non-human life both flourish), and justice (a society free of marginalization).
 
 **Why it matters:** One of the few peer-reviewed attempts to turn solarpunk into concrete principles, which makes it a good starting point for debate.

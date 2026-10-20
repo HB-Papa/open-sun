@@ -21,6 +21,6 @@ field_note:
   answer: 1
 ---
 
-Klata analyzes short stories from five solarpunk anthologies using the structural methods of Vladimir Propp and Claude Lévi-Strauss. He maps recurring plot types, character constellations, and motifs. Solar imagery is everywhere, and so is sustainability: stories often criticize consumerism and center practical fixes for waste, recycling, durable materials, and energy.
+Klata analyzes short stories from five solarpunk anthologies using classic methods for finding patterns in stories, from Vladimir Propp and Claude Lévi-Strauss. He maps the plots, groups of characters, and motifs that keep coming back. Solar imagery is everywhere, and so is sustainability: stories often criticize consumerism and center practical fixes for waste, recycling, durable materials, and energy.
 
 **Why it matters:** A rare systematic look at what solarpunk stories actually contain, useful for writers and teachers.

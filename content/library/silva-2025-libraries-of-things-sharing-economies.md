@@ -20,6 +20,6 @@ field_note:
   answer: 1
 ---
 
-Drawing on data from 90 libraries of things across North America, Europe, and Australia, Silva and Mont study why they start and how they run. They build a framework of business models and identify four types: public-to-citizen, community-driven free, community-driven paid, and scaling paid. They also map the trade-offs between sustainability and financial viability.
+Drawing on data from 90 libraries of things across North America, Europe, and Australia, Silva and Mont study why they start and how they run. They identify four ways these libraries are run: by a public body for residents, by the community for free, by the community for a fee, and as paid services that aim to grow. They also map the trade-offs between sustainability and financial viability.
 
 **Why it matters:** Practical guidance for anyone hoping to start or sustain a library of things.

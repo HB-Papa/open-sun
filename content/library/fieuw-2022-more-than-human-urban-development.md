@@ -22,6 +22,6 @@ field_note:
   answer: 0
 ---
 
-“Sustainability” has become an overused umbrella term, the authors argue, and cities need deeper change. Reviewing key writing from urban studies and the environmental humanities, they show how a “more-than-human” approach can recognize our entanglement with planetary systems and the need for multispecies justice, and how it can be put into practice in smart-city planning and design.
+“Sustainability” has become an overused umbrella term, the authors argue, and cities need deeper change. Reviewing key writing from urban studies and the environmental humanities, they show how a “more-than-human” approach, one that counts animals, plants, and ecosystems as well as people, can recognize how tightly human lives are bound up with the living planet and the need for justice for other species. They also show how it can be used in smart-city planning and design.
 
 **Why it matters:** A map of the ideas behind designing cities for animals, plants, and people together.

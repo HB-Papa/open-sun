@@ -19,6 +19,6 @@ field_note:
   answer: 2
 ---
 
-The International Monetary Fund estimates that fossil fuels were subsidized by about $7 trillion worldwide in 2022, or 7.1% of global GDP. Only 18% of that was direct undercharging for supply costs; nearly 60% came from not charging for climate and air-pollution damage. Full price reform could cut carbon dioxide emissions 43% below baseline by 2030 and prevent 1.6 million air-pollution deaths a year.
+The International Monetary Fund estimates that fossil fuels were subsidized by about $7 trillion worldwide in 2022, or 7.1% of global GDP. Only 18% of that was fuel sold for less than it cost to supply; nearly 60% came from leaving the cost of climate and air-pollution damage off the bill. Charging the full price could, by 2030, cut carbon dioxide emissions to 43% below where they would otherwise be, and prevent 1.6 million deaths from air pollution each year.
 
 **Why it matters:** Shows how heavily today’s energy system is tilted toward fossil fuels, and what fixing that could achieve.

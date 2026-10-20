@@ -19,6 +19,6 @@ field_note:
   answer: 0
 ---
 
-Most stories about artificial intelligence are dystopian, which the authors argue narrows how designers imagine it and pushes them into simple for-or-against positions. They propose solarpunk as a hopeful counter-narrative, review the literature, and analyze solarpunk themes in the film The Wild Robot to identify story elements that design educators can use to help students shape inclusive, sustainable futures with AI.
+Most stories about artificial intelligence are dystopian, which the authors argue narrows how designers imagine it and pushes them into simple for-or-against positions. They propose solarpunk as a hopeful alternative story. After reviewing past research, they analyze solarpunk themes in the film The Wild Robot and pick out story elements that design teachers can use to help students imagine fair, sustainable futures with AI.
 
 **Why it matters:** A practical bridge from solarpunk to classrooms where tomorrow’s designers learn to think about AI.
