@@ -27,6 +27,8 @@ export interface Progress {
   notes: Record<string, string>;
   visited: Record<string, string>; // slug -> first visit date
   histogram: [number, number, number, number]; // won in 1, 2, 3, not won
+  /** When the Microgrid tutorial was first closed, so it only opens by itself once. */
+  tutorialSeen?: string;
 }
 
 const KEY = 'opensun:v1';
@@ -140,6 +142,15 @@ export function recordReflection(slug: string) {
   if (load().notes[slug]) return;
   update((q) => {
     q.notes[slug] = localDateKey();
+    return q;
+  });
+}
+
+/** The Microgrid tutorial has been seen: it won't open by itself again. */
+export function markTutorialSeen() {
+  if (load().tutorialSeen) return;
+  update((q) => {
+    q.tutorialSeen = localDateKey();
     return q;
   });
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { hourLabel, HOURS, RULES, type Puzzle, type SimResult } from '@/lib/microgrid';
+import { hourLabel, hourRanges, HOURS, RULES, type Puzzle, type SimResult } from '@/lib/microgrid';
 import { MoonGlyph } from '@/components/icons';
 import { Nums } from '@/lib/nums';
 
@@ -242,26 +242,12 @@ const hourReadout = (p: Puzzle, demand: number[], h: number) =>
   `${cap(hourLabel(h))}: sun ${pct(p.sun[h])} (${p.sky[h]}), wind ${pct(p.wind[h])}, demand ${demand[h].toFixed(1)} units.`;
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-function ranges(flags: boolean[]): string[] {
-  const out: string[] = [];
-  let h = 0;
-  while (h < HOURS) {
-    if (!flags[h]) {
-      h++;
-      continue;
-    }
-    const s = h;
-    while (h < HOURS && flags[h]) h++;
-    out.push(s === h - 1 ? hourLabel(s) : `${hourLabel(s)} to ${hourLabel(h - 1)}`);
-  }
-  return out;
-}
 
 export function forecastSentence(p: Puzzle, demand: number[]): string {
-  const clouds = ranges(p.sky.map((s) => s === 'cloudy'));
-  const haze = ranges(p.sky.map((s) => s === 'hazy'));
-  const windy = ranges(p.wind.map((w) => w >= 0.6));
-  const calm = ranges(p.wind.map((w) => w < 0.2));
+  const clouds = hourRanges(p.sky.map((s) => s === 'cloudy'));
+  const haze = hourRanges(p.sky.map((s) => s === 'hazy'));
+  const windy = hourRanges(p.wind.map((w) => w >= 0.6));
+  const calm = hourRanges(p.wind.map((w) => w < 0.2));
   const peak = demand.indexOf(Math.max(...demand));
   const parts = [`Sunrise ${hourLabel(p.sunrise)}, sunset ${hourLabel(p.sunset)}.`];
   if (clouds.length) parts.push(`Heavy cloud ${clouds.join(' and ')}.`);

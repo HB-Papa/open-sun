@@ -35,6 +35,7 @@ import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, RockIcon, Solar
 import { ForecastChart, MiniForecast, ResultChart } from './DayCharts';
 import { Nums } from '@/lib/nums';
 import { VillageLights } from './VillageLights';
+import { PART_BG, PART_NAME, TERRAIN_BG, TERRAIN_NAME, washFor } from './tiles';
 
 type Tool = Part;
 
@@ -46,12 +47,6 @@ const TOOLS: { id: Tool; label: string }[] = [
   { id: 'garden', label: 'Garden' },
 ];
 
-const PART_NAME: Record<Part, string> = { solar: 'Solar panel', wind: 'Wind turbine', battery: 'Battery', garden: 'Garden' };
-const TERRAIN_NAME: Record<Terrain, string> = { open: 'Open ground', ridge: 'Windy ridge', home: 'Home', tree: 'Tree', pond: 'Pond', rock: 'Rocky ground' };
-
-// Colors come from CSS tokens so the board dims to a moonlit version in dark mode.
-const PART_BG: Record<Part, string> = { solar: 'var(--g-solar)', wind: 'var(--g-wind)', battery: 'var(--g-battery)', garden: 'var(--g-garden)' };
-const TERRAIN_BG: Record<Terrain, string> = { open: 'var(--g-open)', ridge: 'var(--g-ridge)', home: 'var(--g-home)', tree: 'var(--g-wild)', pond: 'var(--g-wild)', rock: 'var(--g-rock)' };
 
 export interface GameProps {
   date: string;
@@ -64,9 +59,11 @@ export interface GameProps {
   firstVisit?: boolean;
   /** The rest of the page (your stats): shown below while playing, folded into "More about today" once the day is over. */
   extras?: React.ReactNode;
+  /** Opens the step-by-step tutorial. */
+  onTutorial?: () => void;
 }
 
-export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked, firstVisit = false, extras }: GameProps) {
+export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ranked, firstVisit = false, extras, onTutorial }: GameProps) {
   const reduceMotion = usePrefersReducedMotion();
   const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +83,7 @@ export function MicrogridGame({ date, variant, extraSeed = '', saved, onSave, ra
 
   if (error) return <p role="alert">Sorry, today’s grid could not be drawn. Please reload the page.</p>;
   if (!puzzle) return <BoardSkeleton label="Drawing today’s map…" />;
-  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} extras={extras} />;
+  return <Board key={puzzle.seed} puzzle={puzzle} date={date} saved={saved} onSave={onSave} ranked={ranked} reduceMotion={!!reduceMotion} firstVisit={firstVisit} extras={extras} onTutorial={onTutorial} />;
 }
 
 function Board({
@@ -98,6 +95,7 @@ function Board({
   reduceMotion,
   firstVisit,
   extras,
+  onTutorial,
 }: {
   puzzle: Puzzle;
   date: string;
@@ -107,6 +105,7 @@ function Board({
   reduceMotion: boolean;
   firstVisit: boolean;
   extras?: React.ReactNode;
+  onTutorial?: () => void;
 }) {
   const [layout, setLayout] = useState<Layout>(() => saved?.layout ?? new Array(CELLS).fill(null));
   const [history, setHistory] = useState<boolean[][]>(() => saved?.history ?? []);
@@ -121,7 +120,6 @@ function Board({
   const [notice, setNotice] = useState('');
   // Set when the player tries to run with parts that aren't connected; a second press runs anyway.
   const [offWarning, setOffWarning] = useState(false);
-  const [rulesDismissed, setRulesDismissed] = useState(false);
   // "Clear all" keeps the board it removed until the next piece is placed, so a mis-tap can be undone.
   const [clearedBoard, setClearedBoard] = useState<Layout | null>(null);
   // Plots whose piece was just set down by the player, so only those settle in (not a saved board on load).
@@ -351,21 +349,6 @@ function Board({
 
   const boardEl = (
           <section aria-label="Neighborhood grid" className="flex min-w-0 flex-col gap-2.5 sm:gap-3.5">
-            {/* Rules first on phones: a short version on a first visit; the full rules sit below the board. */}
-            {firstVisit && !rulesDismissed && (
-              <div className="flex flex-col gap-2 rounded-[18px] border border-line bg-card p-4 md:hidden">
-                <ol className="flex list-decimal flex-col gap-1 pl-5 text-small leading-snug text-body">
-                  <li>Connect every piece to a home, directly or through other pieces.</li>
-                  <li>A tree beside a panel shades it; a garden beside it helps. Turbines do best on windy ridges.</li>
-                  <li>Batteries carry daytime sun into the night. Then run the day.</li>
-                </ol>
-                <div className="flex gap-4 text-small">
-                  <button type="button" className="font-bold text-sky underline" onClick={() => setRulesDismissed(true)}>
-                    Got it
-                  </button>
-                </div>
-              </div>
-            )}
             {/* Once the day is over the board stays as a keepsake: the tools and instructions step aside. */}
             {!dayOver && (
             <>
@@ -379,6 +362,14 @@ function Board({
               <a href="#how" onClick={openHow} className="font-bold">
                 How it works
               </a>
+              {onTutorial && (
+                <>
+                  {' · '}
+                  <button type="button" onClick={onTutorial} className="font-bold text-sky underline">
+                    Watch the tutorial
+                  </button>
+                </>
+              )}
             </p>
 
             {/* On phones the parts live in the bar at the bottom of the screen, always in reach; this row is for wider screens. */}
@@ -509,7 +500,7 @@ function Board({
             </p>
             <TerrainKey terrain={puzzle.terrain} />
             {/* On phones the full rules live below the board, one tap away from the "How it works" links. */}
-            <HowToPlay open={false} id="how" className="md:hidden" />
+            <HowToPlay open={false} id="how" className="md:hidden" onTutorial={onTutorial} />
           </section>
   );
   // A try chip shows that try everywhere in the panel (heading, strip, words and board), not just its board.
@@ -627,7 +618,7 @@ function Board({
     </details>
   );
   // Wide screens show the full rules beside the board; once the day is over they move under it, so the columns stay level.
-  const howWideEl = <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" />;
+  const howWideEl = <HowToPlay open={firstVisit} id="how-wide" className="hidden md:block" onTutorial={onTutorial} />;
   const forecastEl = (withRules: boolean) => (
     <section aria-label="Today’s forecast" className="flex min-w-0 flex-col gap-4">
       <div className="flex flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
@@ -878,7 +869,7 @@ function showHow(_target: 'how') {
 }
 
 /** The rules, short enough to read in a moment. The map key under the board explains the badges. */
-function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; className?: string }) {
+function HowToPlay({ open, id, className = '', onTutorial }: { open: boolean; id: string; className?: string; onTutorial?: () => void }) {
   return (
     <details id={id} data-how open={open} className={`scroll-mt-4 rounded-[20px] border border-line bg-card p-5 ${className}`}>
       <summary className="cursor-pointer font-serif text-title font-semibold">How it works</summary>
@@ -900,6 +891,14 @@ function HowToPlay({ open, id, className = '' }: { open: boolean; id: string; cl
           <strong>Three tries.</strong> After each run, the Lights row shows which hours went dark. Grids get harder through the week.
         </li>
       </ul>
+      {onTutorial && (
+        <p className="mt-3 text-copy">
+          <button type="button" onClick={onTutorial} className="font-bold text-sky underline">
+            Watch the step-by-step tutorial
+          </button>{' '}
+          to see a past grid solved.
+        </p>
+      )}
     </details>
   );
 }
@@ -991,10 +990,3 @@ function SharePanel({ share }: { share: { emoji: string; plain: string } }) {
   );
 }
 
-/** The light over the board for one hour of the run: night blue, warm low sun, grey cloud, or a faint noon gold. */
-function washFor(sky: string | null, sun: number): string {
-  if (sky === 'night') return 'rgb(16 30 54 / 0.5)';
-  if (sky === 'cloudy') return 'rgb(96 112 124 / 0.22)';
-  if (sun < 0.3) return 'rgb(222 128 60 / 0.2)';
-  return 'rgb(255 226 140 / 0.1)';
-}

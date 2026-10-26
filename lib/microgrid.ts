@@ -556,3 +556,19 @@ export function hourLabel(h: number): string {
   if (h === 12) return 'noon';
   return h < 12 ? `${h} am` : `${h - 12} pm`;
 }
+
+/** Runs of true hours as words: "5 pm to 6 pm", "10 am". */
+export function hourRanges(flags: boolean[]): string[] {
+  const out: string[] = [];
+  let h = 0;
+  while (h < HOURS) {
+    if (!flags[h]) {
+      h++;
+      continue;
+    }
+    const s = h;
+    while (h < HOURS && flags[h]) h++;
+    out.push(s === h - 1 ? hourLabel(s) : `${hourLabel(s)} to ${hourLabel(h - 1)}`);
+  }
+  return out;
+}
