@@ -159,7 +159,3 @@ export function getGlossary(): GlossaryTerm[] {
     .sort((a: GlossaryTerm, b: GlossaryTerm) => a.term.localeCompare(b.term));
 }
 
-export function getPage(name: string): { title: string; html: string; data: Record<string, unknown> } {
-  const { data, content } = matter(readFileSync(join(ROOT, 'pages', `${name}.md`), 'utf8'));
-  return { title: String(data.title ?? name), html: marked.parse(content.trim(), { async: false }) as string, data };
-}
