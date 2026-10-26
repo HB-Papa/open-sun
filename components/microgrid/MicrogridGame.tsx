@@ -878,7 +878,7 @@ function HowToPlay({ open, id, className = '', onTutorial }: { open: boolean; id
           <strong>Keep every home lit</strong> for all 24 hours, using the pieces you’re given.
         </li>
         <li>
-          <strong>Connect</strong> every piece to a home, directly or through other pieces. Power can’t cross rocky ground.
+          <strong>Connect</strong> every piece to a home, directly or through other pieces. Pieces connect through their sides, not diagonally, and power can’t cross rocky ground.
         </li>
         <li>
           <strong>Solar</strong> follows the sun; a tree beside a panel shades it, and a garden beside it keeps it cool. <strong>Wind</strong> blows day and night; ridges boost it, and

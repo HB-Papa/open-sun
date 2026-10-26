@@ -106,7 +106,7 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Connect everything',
-      note: 'Every piece must connect to a home, directly or through the pieces it touches. A piece on its own makes nothing, and power can’t cross rocky ground.',
+      note: 'Every piece must connect to a home, directly or through the pieces it touches. Pieces connect through their sides, not their corners, so diagonal pieces aren’t linked. A piece on its own makes nothing, and power can’t cross rocky ground.',
       layout: sol,
       highlight: [...pieces, ...homes],
     },
