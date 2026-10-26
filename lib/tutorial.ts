@@ -91,14 +91,14 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Add turbines',
-      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they’re less effective. The top one isn’t linked to a home yet, so its badge stays grey until the next step.',
+      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they’re less effective.',
       layout: layouts.wind,
       highlight: cellsOf('wind'),
       placed: cellsOf('wind'),
     },
     {
       title: 'Add batteries',
-      note: 'Batteries store spare power for later, usually daytime sun for the night. Each one starts the day half full. The one beside the top turbine links it to a home, so its badge turns on. Together with the turbines, they carry the homes through the dark.',
+      note: 'Batteries store spare power for later, usually daytime sun for the night. Each one starts the day half full. Together with the turbines, they carry the homes through the dark.',
       layout: layouts.battery,
       // The batteries, and any piece they link to a home on this step (its badge turns on).
       highlight: [...cellsOf('battery'), ...newlyLinked(layouts.wind, layouts.battery)],
