@@ -33,9 +33,9 @@ const CRITERIA: [string, string][] = [
 ];
 
 const STEPS: [string, string][] = [
-  ['A weekly search', 'Every Monday, an automated search checks three open scholarly databases (OpenAlex, the Directory of Open Access Journals, and Crossref) for newly published open access work on these topics.'],
-  ['A person reviews it', 'Anything promising is read by a person, who writes or edits its summary before anything is added.'],
-  ['It joins the library', 'New readings appear in the library and on New arrivals, and in the RSS feed.'],
+  ['A weekly search', 'Every Monday, an automated search checks OpenAlex, the Directory of Open Access Journals and Crossref for new open access work on these topics.'],
+  ['A person’s review', 'Anything promising is read by a person, who writes or edits its summary before anything is added.'],
+  ['Into the library', 'New readings appear in the library, on New arrivals and in the RSS feed.'],
 ];
 
 export default function AboutPage() {
@@ -141,31 +141,34 @@ export default function AboutPage() {
 
         <section aria-labelledby="found" className="flex flex-col gap-6">
           <SectionHeading id="found">How new readings arrive</SectionHeading>
-          <ol className="relative grid gap-6 md:grid-cols-3 md:gap-8">
-            {/* The vine that links the three stops. */}
-            <span aria-hidden="true" className="absolute bottom-4 left-[19px] top-4 w-0.5 rounded bg-leaf/40 md:bottom-auto md:left-[16%] md:right-[16%] md:top-[19px] md:h-0.5 md:w-auto" />
+          {/* Three stops, left to right on wide screens and top to bottom below that, with an arrow between each. */}
+          <ol className="grid gap-10 lg:grid-cols-3 lg:gap-12">
             {STEPS.map(([title, text], k) => (
-              <li key={title} className="relative flex gap-4 md:flex-col md:gap-3">
-                <span
-                  aria-hidden="true"
-                  className="num relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-[50%_50%_50%_6px] border-2 border-leaf bg-leaf text-copy font-bold text-white md:mx-auto"
-                >
-                  {k + 1}
-                </span>
-                <div className="flex flex-col gap-1 md:text-center">
-                  <h3 className="font-serif text-title font-semibold">{title}</h3>
+              <li key={title} className="relative flex">
+                <div className="flex w-full flex-col gap-3 rounded-[20px] border border-line bg-card p-5">
+                  <div className="flex items-center gap-3">
+                    <span
+                      aria-hidden="true"
+                      className="num flex h-9 w-9 shrink-0 items-center justify-center rounded-[50%_50%_50%_6px] bg-leaf text-copy font-bold text-white"
+                    >
+                      {k + 1}
+                    </span>
+                    <h3 className="font-serif text-title font-semibold leading-tight">{title}</h3>
+                  </div>
                   <p className="text-copy leading-normal text-body">{text}</p>
+                  {k === 1 && (
+                    <p className="mt-auto border-t border-dashed border-line pt-3 text-small text-body">
+                      Readers’ suggestions are reviewed here too.{' '}
+                      <Link href="/suggest" className="font-bold">
+                        Suggest a resource
+                      </Link>
+                    </p>
+                  )}
                 </div>
+                {k < STEPS.length - 1 && <StepArrow />}
               </li>
             ))}
           </ol>
-          <p className="text-copy text-body">
-            Know something that belongs here?{' '}
-            <Link href="/suggest" className="font-bold">
-              Suggest a resource
-            </Link>
-            .
-          </p>
         </section>
 
         <section aria-labelledby="puzzle" className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_280px]">
@@ -174,10 +177,6 @@ export default function AboutPage() {
             <p className="text-lede leading-normal text-body">
               Microgrid is a three-minute daily puzzle: keep a small solar neighborhood lit for all <span className="num">24</span> hours with sun, wind, batteries and gardens.
               Everyone gets the same grid each day, with three tries to solve it.
-            </p>
-            <p className="text-copy leading-normal text-body">
-              There are no rewards to chase. Your result is your own play, your streak counts the days in a row you finish, and missing a day ends it. Reading has its own
-              quiet record: the garden on the home page grows with every page you read.
             </p>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
               <Link href="/microgrid" className="inline-flex min-h-12 items-center rounded-full bg-leaf px-6 font-bold text-white no-underline hover:text-white">
@@ -245,5 +244,24 @@ function SolvedBoard() {
       </div>
       <figcaption className="text-small text-muted">A solved grid, every home lit.</figcaption>
     </figure>
+  );
+}
+
+/** The leafy arrow between two stops: pointing right on wide screens, down on phones. */
+function StepArrow() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 32 24"
+      className="absolute -bottom-9 left-1/2 h-8 w-8 -translate-x-1/2 rotate-90 text-leaf lg:-right-11 lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 12h22M19 6l6 6-6 6" />
+      <path d="M9 12c0-4 3-6 6-6-1 3-3 5-6 6Z" fill="currentColor" fillOpacity="0.45" stroke="none" />
+    </svg>
   );
 }
