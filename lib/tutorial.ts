@@ -1,4 +1,4 @@
-import { baseDemand, hourLabel, hourRanges, HOURS, neighbors, simulate, type Layout, type Part } from './microgrid.ts';
+import { baseDemand, connectedParts, hourLabel, hourRanges, HOURS, neighbors, simulate, type Layout, type Part } from './microgrid.ts';
 import { TUTORIAL_PUZZLE as p } from './tutorialPuzzle.ts';
 
 export type Step = {
@@ -42,6 +42,11 @@ export function buildSteps(): Step[] {
     layouts[kind] = building.slice();
   }
   const pieces = sol.flatMap((x, i) => (x ? [i] : []));
+  const newlyLinked = (before: Layout, after: Layout) => {
+    const was = connectedParts(p.terrain, before);
+    const now = connectedParts(p.terrain, after);
+    return before.flatMap((x, i) => (x && !was[i] && now[i] ? [i] : []));
+  };
 
   return [
     {
@@ -86,16 +91,17 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Add turbines',
-      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they’re less effective.',
+      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they’re less effective. The top one isn’t linked to a home yet, so its badge stays grey until the next step.',
       layout: layouts.wind,
       highlight: cellsOf('wind'),
       placed: cellsOf('wind'),
     },
     {
       title: 'Add batteries',
-      note: 'Batteries store spare power for later, usually daytime sun for the night. Each one starts the day half full. Together with the turbines, they carry the homes through the dark.',
+      note: 'Batteries store spare power for later, usually daytime sun for the night. Each one starts the day half full. The one beside the top turbine links it to a home, so its badge turns on. Together with the turbines, they carry the homes through the dark.',
       layout: layouts.battery,
-      highlight: cellsOf('battery'),
+      // The batteries, and any piece they link to a home on this step (its badge turns on).
+      highlight: [...cellsOf('battery'), ...newlyLinked(layouts.wind, layouts.battery)],
       placed: cellsOf('battery'),
     },
     {

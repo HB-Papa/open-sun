@@ -116,9 +116,10 @@ export function Tutorial({ onClose }: { onClose: () => void }) {
 
 function TutorialBoard({ puzzle, step, stepKey }: { puzzle: Puzzle; step: Step; stepKey: number }) {
   const { layout, highlight, hour } = step;
-  // Badges use the finished answer's connections, so a piece shows its boost as soon as it's placed,
-  // even if the piece that links it to a home arrives on a later step.
+  // A piece shows its boost as soon as it's placed, worked out as if the finished answer were connected.
+  // Until something links it to a home on this step, the badge is greyed out: the boost is waiting, not working.
   const connected = connectedParts(puzzle.terrain, puzzle.solution);
+  const linked = connectedParts(puzzle.terrain, layout);
   const mult = cellMultipliers(puzzle, layout, connected);
   const sim = hour !== undefined ? simulate(puzzle, layout) : null;
   const pointing = highlight.length > 0;
@@ -156,7 +157,12 @@ function TutorialBoard({ puzzle, step, stepKey }: { puzzle: Puzzle; step: Step; 
               </span>
             )}
             {part && connected[i] && (part === 'solar' || part === 'wind') && m !== 1 && (
-              <span aria-hidden="true" className="absolute right-1 top-1 rounded-full bg-card px-1.5 text-micro font-bold leading-[18px] text-ink shadow-sm">
+              <span
+                aria-hidden="true"
+                className={`absolute right-1 top-1 rounded-full px-1.5 text-micro font-bold leading-[18px] transition-colors duration-300 ${
+                  linked[i] ? 'bg-card text-ink shadow-sm' : 'border border-dashed border-muted bg-chip/80 text-muted'
+                }`}
+              >
                 ×{Number.isInteger(m) ? m : m.toFixed(2).replace(/0$/, '')}
               </span>
             )}
