@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BoardSkeleton, MicrogridGame } from '@/components/microgrid/MicrogridGame';
+import { Tutorial } from '@/components/microgrid/Tutorial';
 import { localDateKey } from '@/lib/microgrid';
-import { currentStreak, saveDaily, stats, useProgress, type DailyGame, type Progress } from '@/lib/progress';
+import { currentStreak, markTutorialSeen, saveDaily, stats, useProgress, type DailyGame, type Progress } from '@/lib/progress';
 
 export function PlayClient() {
   const progress = useProgress();
@@ -12,7 +13,32 @@ export function PlayClient() {
 
   const onSaveDaily = useCallback((g: DailyGame) => today && saveDaily(today, g), [today]);
 
+  // The tutorial opens by itself on a first visit, and again whenever someone asks for it (#tutorial).
+  const [tutorial, setTutorial] = useState(false);
+  const checked = useRef(false);
+  useEffect(() => {
+    if (!progress || checked.current) return;
+    checked.current = true;
+    if (window.location.hash === '#tutorial' || (Object.keys(progress.games).length === 0 && !progress.tutorialSeen)) setTutorial(true);
+  }, [progress]);
+  useEffect(() => {
+    const go = () => window.location.hash === '#tutorial' && openTutorial();
+    window.addEventListener('hashchange', go);
+    return () => window.removeEventListener('hashchange', go);
+  }, []);
+  function openTutorial() {
+    setTutorial(true);
+    window.scrollTo({ top: 0 });
+  }
+  function closeTutorial() {
+    markTutorialSeen();
+    setTutorial(false);
+    if (window.location.hash === '#tutorial') history.replaceState(null, '', window.location.pathname);
+    window.scrollTo({ top: 0 });
+  }
+
   if (!today || !progress) return <BoardSkeleton label="Loading the puzzle…" />;
+  if (tutorial) return <Tutorial onClose={closeTutorial} />;
 
   // Stats appear after the first game, so a first visit isn't a wall of zeros. They sit below the game while
   // it's played, and fold into "More about today" once it's done.
@@ -27,6 +53,7 @@ export function PlayClient() {
       ranked
       firstVisit={Object.keys(progress.games).length === 0}
       extras={extras}
+      onTutorial={openTutorial}
     />
   );
 }
