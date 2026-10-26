@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getAllItems, getGlossary, getPathways } from '@/lib/content';
 import { PageSky } from '@/components/PageSky';
 import { NouveauCorners, PathwayGlyph, SectionHeading, VineRule } from '@/components/Ornaments';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, RockIcon, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
@@ -39,10 +38,6 @@ const STEPS: [string, string][] = [
 ];
 
 export default function AboutPage() {
-  const items = getAllItems().length;
-  const pathways = getPathways().length;
-  const terms = getGlossary().length;
-
   return (
     <>
       <PageSky />
@@ -55,10 +50,6 @@ export default function AboutPage() {
           <p className="max-w-[40rem] font-serif text-heading leading-snug text-ink">
             A free, public library of open access writing about solarpunk and the ideas around it: solar power and energy justice, living land and multispecies cities, the
             commons, and hopeful futures.
-          </p>
-          <p className="max-w-[38rem] text-lede leading-normal text-body">
-            <span className="num">{items}</span> readings, <span className="num">{pathways}</span> guided pathways and a Field Guide of{' '}
-            <span className="num">{terms}</span> ideas, each chosen by a person and explained in plain language. Everything here is free to read.
           </p>
         </header>
 
