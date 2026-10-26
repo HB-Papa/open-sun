@@ -116,7 +116,9 @@ export function Tutorial({ onClose }: { onClose: () => void }) {
 
 function TutorialBoard({ puzzle, step, stepKey }: { puzzle: Puzzle; step: Step; stepKey: number }) {
   const { layout, highlight, hour } = step;
-  const connected = connectedParts(puzzle.terrain, layout);
+  // Badges use the finished answer's connections, so a piece shows its boost as soon as it's placed,
+  // even if the piece that links it to a home arrives on a later step.
+  const connected = connectedParts(puzzle.terrain, puzzle.solution);
   const mult = cellMultipliers(puzzle, layout, connected);
   const sim = hour !== undefined ? simulate(puzzle, layout) : null;
   const pointing = highlight.length > 0;

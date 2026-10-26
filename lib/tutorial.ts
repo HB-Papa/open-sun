@@ -86,7 +86,7 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Add turbines',
-      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they steal each other’s wind.',
+      note: 'Turbines make power day and night, whenever the wind blows. These two stand on windy ridges, which makes them 1.5 times as strong. Keep turbines apart. Side by side, they’re less effective.',
       layout: layouts.wind,
       highlight: cellsOf('wind'),
       placed: cellsOf('wind'),
@@ -115,7 +115,7 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Daylight',
-      note: `From sunrise at ${hourLabel(rise)} until sunset at ${hourLabel(set)}, the solar panel and turbines power the homes, and the spare power fills the batteries. They’re full by ${hourLabel(full)}. Cloud from ${cloud} slows the panel, but there’s enough.`,
+      note: `From sunrise at ${hourLabel(rise)} until sunset at ${hourLabel(set)}, the solar panel and turbines power the homes, and the spare power fills the batteries. They’re full by ${hourLabel(full)}. Cloud from ${cloud} slows the panel, but there’s enough power to go around.`,
       layout: sol,
       highlight: [],
       panel: 'run',
@@ -141,7 +141,7 @@ export function buildSteps(): Step[] {
     },
     {
       title: 'Every day is different',
-      note: 'Each day’s grid has its own map and weather. Your goal is to pick the mix that best suits the day’s weather. On a windy day, turbines may be the answer. On a calm, sunny one, solar panels and batteries may do most of the work.',
+      note: 'Each day’s grid has its own map and forecast. Your goal is to pick the mix that best suits the day’s weather. On a windy day, turbines may be the answer. On a calm, sunny one, solar panels and batteries may do most of the work.',
       layout: sol,
       highlight: [],
     },
