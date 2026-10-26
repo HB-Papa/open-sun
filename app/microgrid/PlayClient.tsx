@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BoardSkeleton, MicrogridGame } from '@/components/microgrid/MicrogridGame';
 import { Tutorial } from '@/components/microgrid/Tutorial';
-import { addDays, localDateKey } from '@/lib/microgrid';
+import { localDateKey } from '@/lib/microgrid';
 import { currentStreak, markTutorialSeen, saveDaily, stats, useProgress, type DailyGame, type Progress } from '@/lib/progress';
 
 export function PlayClient() {
@@ -38,7 +38,7 @@ export function PlayClient() {
   }
 
   if (!today || !progress) return <BoardSkeleton label="Loading the puzzle…" />;
-  if (tutorial) return <Tutorial date={addDays(today, -1)} onClose={closeTutorial} />;
+  if (tutorial) return <Tutorial onClose={closeTutorial} />;
 
   // Stats appear after the first game, so a first visit isn't a wall of zeros. They sit below the game while
   // it's played, and fold into "More about today" once it's done.

@@ -1,45 +1,24 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { baseDemand, cellMultipliers, connectedParts, puzzleNumber, simulate, type Layout, type Puzzle } from '@/lib/microgrid';
-import { buildSteps, type Step } from '@/lib/tutorial';
-import { getPuzzle } from '@/lib/puzzleCache';
+import { baseDemand, cellMultipliers, connectedParts, simulate, type Layout, type Puzzle } from '@/lib/microgrid';
+import { buildSteps, TUTORIAL_PUZZLE as puzzle, type Step } from '@/lib/tutorial';
 import { BatteryIcon, GardenIcon, HomeIcon, PondIcon, RidgeMark, RockIcon, SolarIcon, TreeIcon, WindIcon } from '@/components/icons';
 import { Nums } from '@/lib/nums';
 import { ForecastChart, ResultChart } from './DayCharts';
 import { PART_BG, PART_NAME, TERRAIN_BG, washFor } from './tiles';
 
-
-
 /**
- * A step-through walk round a solved grid: yesterday's, so it never gives away today's.
- * Every note is worked out from that day's map, weather and solution, so the words always match the board.
+ * A step-through of one example grid (never a real day's puzzle), solved a piece at a time,
+ * with a short note on each step saying what the board shows and why it works.
  */
-export function Tutorial({ date, onClose }: { date: string; onClose: () => void }) {
-  const [puzzle, setPuzzle] = useState<Puzzle | null>(null);
+export function Tutorial({ onClose }: { onClose: () => void }) {
   const [k, setK] = useState(0);
   const headingRef = useRef<HTMLHeadingElement>(null);
-
-  useEffect(() => {
-    const t = setTimeout(() => setPuzzle(getPuzzle(date)), 30);
-    return () => clearTimeout(t);
-  }, [date]);
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
-
-  const steps = useMemo(() => (puzzle ? buildSteps(puzzle) : []), [puzzle]);
-
-  if (!puzzle) {
-    return (
-      <div className="flex flex-col gap-4">
-        <h1 className="font-serif text-section font-bold leading-tight sm:text-page-lg">How to play Microgrid</h1>
-        <p role="status" className="text-copy text-body">
-          Setting up the tutorial…
-        </p>
-      </div>
-    );
-  }
+  const steps = useMemo(() => buildSteps(), []);
 
   const step = steps[k];
   const last = k === steps.length - 1;
@@ -69,7 +48,7 @@ export function Tutorial({ date, onClose }: { date: string; onClose: () => void 
             How to play Microgrid
           </h1>
           <p className="mt-1 hidden text-copy text-body sm:block">
-            A walk through yesterday’s grid, <span className="num">#{puzzleNumber(date)}</span>, solved one step at a time.
+            A walk through an example grid, solved one step at a time.
           </p>
         </div>
         <button type="button" onClick={onClose} className="min-h-11 font-bold text-sky underline">
