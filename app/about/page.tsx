@@ -33,7 +33,7 @@ const CRITERIA: [string, string][] = [
 
 const STEPS: [string, string][] = [
   ['A weekly search', 'Every Monday, an automated search checks OpenAlex, the Directory of Open Access Journals and Crossref for new open access work on these topics.'],
-  ['A person’s review', 'Anything promising is read by a person, who writes and edits its summary before anything is added.'],
+  ['A person’s review', 'An AI agent drafts each summary and a second agent checks it against the source. A person approves every reading before it’s added.'],
   ['Into the library', 'New readings appear in the library, on New arrivals and in the RSS feed.'],
 ];
 
