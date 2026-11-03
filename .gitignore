@@ -9,7 +9,9 @@ next-env.d.ts
 npm-debug.log*
 .DS_Store
 Thumbs.db
-.claude/
+.claude/*
+!.claude/agents/
+!.claude/skills/
 .update-agent-report.md
 
 # Private planning files (kept locally, not published)

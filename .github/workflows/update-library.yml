@@ -2,8 +2,9 @@ name: Weekly library update
 
 # Every Monday, look for newly published open access work and open a pull
 # request with one file per item (abstract included, summary to be written).
-# Summaries are drafted in the Claude app, not through the paid API. Nothing is
-# published until a person reviews each file, sets `reviewed: true`, and merges.
+# Summaries are not written here, so no paid API is used: `/library-update` in
+# Claude Code drafts and proofreads them, then opens a pull request. Nothing is
+# published until the site owner merges that pull request.
 on:
   schedule:
     - cron: '0 14 * * 1' # Mondays, 14:00 UTC

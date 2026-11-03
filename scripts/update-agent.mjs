@@ -413,10 +413,9 @@ async function main() {
     '',
     `Open access work published since ${since}, found in OpenAlex, DOAJ, and Crossref.`,
     '',
-    '**Before merging, for each file:**',
-    '1. Open the link and check it is free to read and on topic. Delete the file if not (and add its DOI to `content/rejected.txt` so it isn’t suggested again).',
-    '2. Write the summary and “Why it matters” (the abstract is in a hidden comment at the top of each file; you can ask Claude in the Claude app to draft them from it), then set `summary_status: edited`.',
-    '3. Check the field note question, then set `reviewed: true`. Items stay hidden on the live site until you do.',
+    '**Don’t merge this one.** Run `/library-update` in Claude Code on your computer. Agents draft and proofread these items and open a separate pull request for you to merge.',
+    '',
+    'This branch is rewritten every Monday and only searches the last 14 days, so an item left here can drop out. Items stay hidden on the live site until they’re approved and merged.',
     '',
     ...added.map(({ slug, c, drafted }) => `- [ ] \`content/library/${slug}.md\`: [${c.title}](${c.url}) (${c.source}${drafted ? '' : ', no draft summary'})`),
   ];
