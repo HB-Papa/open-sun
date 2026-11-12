@@ -52,6 +52,28 @@ export interface Pathway {
   steps: { slug: string; note: string }[];
 }
 
+/** A research guide: how to search for and judge sources on a subject, with links into the library. */
+export interface Guide {
+  slug: string;
+  title: string;
+  blurb: string;
+  family: string;
+  order: number;
+  lastReviewed: string;
+  html: string;
+  relatedPathways: string[];
+  relatedItems: string[];
+}
+
+/** A published policy or statement about how the library is run. */
+export interface Policy {
+  slug: string;
+  title: string;
+  blurb: string;
+  lastReviewed: string;
+  html: string;
+}
+
 export interface GlossaryTerm {
   slug: string;
   term: string;

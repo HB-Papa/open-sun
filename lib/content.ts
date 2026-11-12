@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
-import type { GlossaryTerm, ItemCard, LibraryItem, Pathway } from './types';
+import type { GlossaryTerm, Guide, ItemCard, LibraryItem, Pathway, Policy } from './types';
 
 const ROOT = join(process.cwd(), 'content');
 
@@ -142,6 +142,54 @@ export function getPathways(): Pathway[] {
 
 export function getPathway(slug: string): Pathway | undefined {
   return getPathways().find((p) => p.slug === slug);
+}
+
+function mdFiles(folder: string) {
+  const dir = join(ROOT, folder);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md') && f !== 'README.md')
+    .map((file) => ({ slug: file.replace(/\.md$/, ''), ...matter(readFileSync(join(dir, file), 'utf8')) }));
+}
+const slugList = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+
+/** Research guides, in their set order. Links to pathways or items that don't exist are dropped. */
+export function getGuides(): Guide[] {
+  const pathways = new Set(getPathways().map((p) => p.slug));
+  return mdFiles('guides')
+    .map(({ slug, data, content }) => ({
+      slug,
+      title: String(data.title),
+      blurb: String(data.blurb ?? ''),
+      family: String(data.family ?? 'sun'),
+      order: Number(data.order ?? 99),
+      lastReviewed: asDate(data.last_reviewed),
+      html: marked.parse(content.trim(), { async: false }) as string,
+      relatedPathways: slugList(data.related_pathways).filter((s) => pathways.has(s)),
+      relatedItems: slugList(data.related_items).filter((s) => getItem(s)),
+    }))
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+
+export function getGuide(slug: string): Guide | undefined {
+  return getGuides().find((g) => g.slug === slug);
+}
+
+/** Published policies and statements about how the library is run. */
+export function getPolicies(): Policy[] {
+  return mdFiles('policies')
+    .map(({ slug, data, content }) => ({
+      slug,
+      title: String(data.title),
+      blurb: String(data.blurb ?? ''),
+      lastReviewed: asDate(data.last_reviewed),
+      html: marked.parse(content.trim(), { async: false }) as string,
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
+export function getPolicy(slug: string): Policy | undefined {
+  return getPolicies().find((p) => p.slug === slug);
 }
 
 export function getGlossary(): GlossaryTerm[] {

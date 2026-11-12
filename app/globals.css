@@ -480,6 +480,58 @@ textarea {
 .prose-os strong {
   color: var(--ink);
 }
+/* Longer documents (research guides, policies): sub-headings, numbered steps, tables and search strings. */
+.prose-os h3 {
+  font-family: var(--font-serif);
+  font-size: var(--text-title);
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 1.4em;
+}
+.prose-os ol {
+  list-style: decimal;
+  padding-left: 1.4em;
+}
+.prose-os code {
+  font-family: ui-monospace, 'Cascadia Mono', Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  background: var(--chip);
+  border-radius: 6px;
+  padding: 0.1em 0.35em;
+  overflow-wrap: anywhere;
+}
+.prose-os pre {
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.75em 1em;
+  overflow-x: auto;
+}
+.prose-os pre code {
+  background: none;
+  padding: 0;
+  overflow-wrap: normal;
+}
+/* A wide table scrolls inside itself, so the page never scrolls sideways on a phone. */
+.prose-os table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: var(--text-copy);
+  line-height: 1.45;
+}
+.prose-os th,
+.prose-os td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5em 0.9em 0.5em 0;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-os th {
+  color: var(--ink);
+  border-bottom: 2px solid var(--line-strong);
+}
 
 @keyframes os-spin {
   to {

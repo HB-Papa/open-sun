@@ -1,0 +1,53 @@
+name: Monthly collection audit
+
+# On the 1st of each month, check every library item (links, required fields,
+# topics, duplicates, unfinished drafts) and open an issue with the report.
+# It never commits to the repository. How to act on the issue:
+# docs/procedures/collection-audit.md
+on:
+  schedule:
+    - cron: '0 14 1 * *' # the 1st of each month, 14:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Audit the collection
+        id: audit
+        continue-on-error: true
+        env:
+          AUDIT_REPORT: ${{ runner.temp }}/collection-audit.md
+        run: npm run audit
+
+      - name: Open an issue with the report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          REPORT: ${{ runner.temp }}/collection-audit.md
+        run: |
+          if [ ! -s "$REPORT" ]; then
+            echo "The audit stopped before it wrote a report. See the log of this workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$REPORT"
+          fi
+          gh label create collection-audit --description "Monthly collection audit reports" --color 2E7D32 --force
+          gh issue create --title "Collection audit: $(date -u +%Y-%m)" --label collection-audit --body-file "$REPORT"
+
+      - name: Fail the run if the audit found failures
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo "The audit found failures. See the issue it opened."
+          exit 1

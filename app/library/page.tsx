@@ -23,7 +23,11 @@ export default function LibraryPage() {
           <VineRule className="hidden sm:flex" />
         </div>
         <p className="max-w-[35rem] text-lede leading-normal text-body">
-          Every item here is free to read. Search by idea, or filter by type, topic, year, language, and license. Know something that belongs here?{' '}
+          Every item here is free to read. Search by idea, or filter by type, topic, year, language, and license. Looking beyond this collection? The{' '}
+          <Link href="/guides" className="font-bold">
+            research guides
+          </Link>{' '}
+          show where and how to search. Know something that belongs here?{' '}
           <Link href="/suggest" className="font-bold">
             Suggest a resource
           </Link>

@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getAllItems, getItem, getPathways, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
+import { citationMeta, jsonLd } from '@/lib/metadata';
+import { SITE } from '@/lib/site';
 import { familyOf, FAMILIES, languageName, topicLabel } from '@/lib/topics';
 import { yearText } from '@/lib/types';
 import { ExternalIcon } from '@/components/icons';
@@ -24,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = getItem(slug);
   if (!item) return {};
-  return { title: `${item.title} (${shortAuthors(item)}, ${yearText(item.year)})`, description: item.summary.slice(0, 200) };
+  return { title: `${item.title} (${shortAuthors(item)}, ${yearText(item.year)})`, description: item.summary.slice(0, 200), other: citationMeta(item) };
 }
 
 export default async function ResourcePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -46,6 +48,8 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
   return (
     <>
       <PageSky />
+      {/* The same record for machines: schema.org JSON-LD. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd(item, SITE.url)).replace(/</g, '\\u003c') }} />
       <main id="main" tabIndex={-1} className="mx-auto grid max-w-[1200px] gap-x-14 gap-y-5 px-4 pb-16 pt-7 sm:px-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
         {/* The title runs the full width; below it, the reading on the left and its references on the right. */}
         <header className="flex min-w-0 flex-col gap-5 lg:col-span-2">

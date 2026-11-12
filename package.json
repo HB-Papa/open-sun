@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test \"tests/**/*.test.ts\"",
     "check-links": "node scripts/check-links.mjs",
+    "audit": "node scripts/collection-audit.mjs",
     "update-library": "node scripts/update-agent.mjs"
   },
   "dependencies": {
