@@ -9,7 +9,10 @@ issue: "9"
 pages: "848–855"
 doi: 10.1038/s41893-019-0364-5
 url: https://www.osti.gov/servlets/purl/1567040
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "OSTI, U.S. Department of Energy"
 language: en
 topics: [agriculture, community-energy, ecology]
 date_added: 2026-10-11

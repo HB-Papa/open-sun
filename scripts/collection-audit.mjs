@@ -1,5 +1,6 @@
-// Audits every library item: link, required fields, controlled lists,
-// duplicates, unfinished drafts and field notes. Prints a Markdown report.
+// Audits every library item: link, required fields, controlled lists (topics,
+// type and the four rights fields), duplicates, unfinished drafts and field
+// notes. Prints a Markdown report.
 // Usage: npm run audit              (checks links too)
 //        npm run audit -- --no-links   (offline: skips the network checks)
 // Environment:
@@ -7,12 +8,14 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
+// The controlled lists and checks for license, rights_status, version and access_note. Node runs the .ts file directly.
+import { parseRights } from '../lib/rights.ts';
 
 const ROOT = process.cwd();
 const DIR = join(ROOT, 'content', 'library');
 const NO_LINKS = process.argv.includes('--no-links');
 const UA = 'Mozilla/5.0 (compatible; OpenSunLinkCheck/1.0; +https://github.com/)';
-const REQUIRED = ['title', 'authors', 'year', 'type', 'url', 'license', 'language', 'topics', 'date_added'];
+const REQUIRED = ['title', 'authors', 'year', 'type', 'url', 'license', 'rights_status', 'language', 'topics', 'date_added'];
 
 // Fallback copies, used only if lib/topics.ts can't be parsed. Keep in sync with it.
 const FALLBACK_TOPICS = [
@@ -113,6 +116,17 @@ for (const f of files) {
   if (!isEmpty(data.type) && !TYPES.includes(data.type)) fail(f, `type "${data.type}" is not in the TYPES list`);
   if (!isEmpty(data.date_added) && !/^\d{4}-\d{2}-\d{2}$/.test(dateText(data.date_added))) fail(f, `date_added "${dateText(data.date_added)}" is not YYYY-MM-DD`);
 
+  // Rights: the same check that stops the site build. A missing license or rights_status is reported above.
+  if (!isEmpty(data.license) && !isEmpty(data.rights_status)) {
+    try {
+      parseRights(data, f);
+    } catch (e) {
+      fail(f, String(e.message).replace(`${f}: `, '').replace(/ See docs\/metadata\/application-profile\.md\.$/, ''));
+    }
+  }
+  if (data.version && !['Article', 'Essay'].includes(data.type)) warn(f, `\`version\` is ${data.version}, but NISO versions are for journal articles and this is a ${data.type}`);
+  if (typeof data.access_note === 'string' && /needs? check/i.test(data.access_note)) warn(f, `rights not yet confirmed: "${data.access_note}"`);
+
   if (data.reviewed !== true) warn(f, '`reviewed` is not true, so the item is hidden on the live site');
   if (data.summary_status !== 'edited') warn(f, `summary_status is "${data.summary_status ?? 'missing'}", not "edited"`);
   if (/\bTODO\b/.test(raw)) fail(f, 'contains leftover "TODO" text');
@@ -166,11 +180,15 @@ if (!NO_LINKS) {
 const byType = new Map();
 const byLanguage = new Map();
 const byLicense = new Map();
+const byRights = new Map();
+const byVersion = new Map();
 const byYearAdded = new Map();
 for (const { data } of items) {
   tally(byType, isEmpty(data.type) ? '(missing)' : String(data.type));
   tally(byLanguage, isEmpty(data.language) ? '(missing)' : String(data.language));
   tally(byLicense, isEmpty(data.license) ? '(missing)' : String(data.license));
+  tally(byRights, isEmpty(data.rights_status) ? '(missing)' : String(data.rights_status));
+  tally(byVersion, isEmpty(data.version) ? '(not recorded)' : String(data.version));
   tally(byYearAdded, dateText(data.date_added).slice(0, 4) || '(missing)');
 }
 
@@ -207,6 +225,14 @@ const report = [
   '### By license',
   '',
   ...countLines(byLicense),
+  '',
+  '### By rights status',
+  '',
+  ...countLines(byRights),
+  '',
+  '### By version',
+  '',
+  ...countLines(byVersion),
   '',
   '### By year added',
   '',

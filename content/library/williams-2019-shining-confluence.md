@@ -9,7 +9,9 @@ issue: "1"
 pages: "60"
 doi: 10.16995/olh.329
 url: https://doi.org/10.16995/olh.329
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, fiction, community-energy]
 date_added: 2026-10-11

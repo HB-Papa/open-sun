@@ -60,12 +60,6 @@ In OpenAlex, join ideas with AND, OR and NOT in capital letters.
 "community energy" NOT perovskite
 ```
 
-In Google Scholar, use a minus sign straight in front of the word.
-
-```
-"community energy" -perovskite -inverter
-```
-
 Spellings and terms vary by country. “Energy community” is common in European research, and “community solar” in the United States. Try both.
 
 ## How to tell if a source is trustworthy

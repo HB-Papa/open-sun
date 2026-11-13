@@ -12,6 +12,7 @@ export function SiteFooter() {
         <nav aria-label="Footer" className="flex flex-wrap content-start gap-x-6 gap-y-3 text-copy">
           <Link href="/about" className="text-on-forest hover:text-sun">About</Link>
           <Link href="/guides" className="text-on-forest hover:text-sun">Research guides</Link>
+          <Link href="/lessons" className="text-on-forest hover:text-sun">Lesson plans</Link>
           <Link href="/suggest" className="text-on-forest hover:text-sun">Suggest a resource</Link>
           <Link href="/new" className="text-on-forest hover:text-sun">New arrivals</Link>
           <a href="/rss.xml" className="text-on-forest hover:text-sun">RSS feed</a>

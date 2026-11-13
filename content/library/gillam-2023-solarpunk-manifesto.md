@@ -9,7 +9,9 @@ issue: "4"
 pages: "73"
 doi: 10.3390/philosophies8040073
 url: https://doi.org/10.3390/philosophies8040073
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, degrowth, justice, governance]
 date_added: 2026-10-11

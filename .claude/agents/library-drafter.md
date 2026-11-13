@@ -13,7 +13,7 @@ You are given one or more paths to Markdown files. Each has front matter, a hidd
 - `type` and `topics` in the front matter, if the abstract shows they're wrong
 - the `field_note` block
 
-Never change `title`, `authors`, `year`, `venue`, `volume`, `issue`, `pages`, `doi`, `url`, `license`, `language`, `date_added`, `source`, `reviewed` or `summary_status`. Keep the abstract comment.
+Never change `title`, `authors`, `year`, `venue`, `volume`, `issue`, `pages`, `doi`, `url`, `license`, `rights_status`, `version`, `access_note`, `language`, `date_added`, `source`, `reviewed` or `summary_status`. Keep the abstract comment.
 
 ## Sources
 

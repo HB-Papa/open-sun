@@ -5,7 +5,9 @@ year: 2018
 type: Article
 venue: "In the Library with the Lead Pipe"
 url: https://www.inthelibrarywiththeleadpipe.org/2018/vocational-awe/
-license: "Free to read"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [libraries, justice]
 date_added: 2026-10-11

@@ -6,7 +6,7 @@ last_reviewed: 2026-11-12
 
 ## Purpose and scope
 
-Open Sun is a free, public library of open access writing about solarpunk and the ideas around it. It is an independent, non-commercial project run by the site owner.
+Open Sun is a free, public library of open access writing about solarpunk and the ideas around it. It is an independent, non-commercial project run by Chris Misciagna, MLIS, referred to below as the site owner.
 
 ## What we collect
 

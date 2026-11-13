@@ -6,7 +6,8 @@ type: Article
 venue: "LIMITS 2021: Workshop on Computing within Limits"
 doi: 10.21428/bf6fb269.1e37d8be
 url: https://doi.org/10.21428/bf6fb269.1e37d8be
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
 language: en
 topics: [technology, degrowth, commons]
 date_added: 2026-10-11

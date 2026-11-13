@@ -26,6 +26,13 @@ export default function GuidesPage() {
             The library holds a small, chosen collection. These guides help you search beyond it: where to look for open access work on a subject, which words to try, and
             how to judge what you find.
           </p>
+          <p className="max-w-[35rem] text-copy leading-normal text-body">
+            Teaching a class? The{' '}
+            <Link href="/lessons" className="font-bold">
+              lesson plans
+            </Link>{' '}
+            turn these guides into ready-to-run sessions.
+          </p>
         </div>
         {guides.length === 0 ? (
           <p className="text-lede text-body">The first guides are being written.</p>

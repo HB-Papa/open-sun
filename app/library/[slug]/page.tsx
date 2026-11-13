@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { getAllItems, getItem, getPathways, relatedItems } from '@/lib/content';
 import { apa, chicago, shortAuthors } from '@/lib/cite';
 import { citationMeta, jsonLd } from '@/lib/metadata';
+import { rightsLabel } from '@/lib/rights';
 import { SITE } from '@/lib/site';
 import { familyOf, FAMILIES, languageName, topicLabel } from '@/lib/topics';
 import { yearText } from '@/lib/types';
@@ -69,7 +70,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
             <span className="rounded-full border border-line-strong px-3 py-[3px] text-caption font-bold">
               {item.type}
             </span>
-            <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {item.license}</span>
+            <span className="rounded-full bg-chip-leaf px-3 py-1 text-caption font-bold">Open access · {rightsLabel(item)}</span>
             <span className="num rounded-full bg-chip px-3 py-1 text-caption">{yearText(item.year)}</span>
             {item.language !== 'en' && <span className="rounded-full bg-chip px-3 py-1 text-caption">In {languageName(item.language)}</span>}
           </div>
@@ -91,6 +92,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
               </a>
             )}
           </div>
+          {item.accessNote && <p className="text-small text-muted">About this copy: {item.accessNote}</p>}
         </header>
 
         <article aria-labelledby="sum" className="flex min-w-0 flex-col gap-5">
@@ -116,7 +118,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
         </article>
 
         <aside aria-label="Cite and explore" className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-6 lg:self-start">
-          <CitationBox apa={cites.apa} chicago={cites.chicago} />
+          <CitationBox apa={cites.apa} chicago={cites.chicago} slug={item.slug} />
           <ul className="flex flex-wrap gap-2" aria-label="Topics">
             {item.topics.map((t) => (
               <li key={t}>

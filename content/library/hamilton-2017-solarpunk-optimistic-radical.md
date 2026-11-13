@@ -6,7 +6,8 @@ type: Essay
 venue: "The Conversation"
 doi: 10.64628/aa.ptweck67c
 url: https://theconversation.com/explainer-solarpunk-or-how-to-be-an-optimistic-radical-80275
-license: "CC BY-ND 4.0"
+license: CC-BY-ND-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk]
 date_added: 2026-10-11

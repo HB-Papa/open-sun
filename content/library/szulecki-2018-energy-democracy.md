@@ -9,7 +9,10 @@ issue: "1"
 pages: "21–41"
 doi: 10.1080/09644016.2017.1387294
 url: http://hdl.handle.net/10852/62331
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "DUO, University of Oslo"
 language: en
 topics: [community-energy, energy-justice, governance]
 date_added: 2026-10-11

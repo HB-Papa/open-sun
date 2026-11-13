@@ -6,7 +6,8 @@ year: 2024
 type: Guide
 venue: "American Library Association"
 url: https://www.ala.org/advocacy/advocacy/intfreedom/corevalues
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [libraries, justice, resilience]
 date_added: 2026-10-11

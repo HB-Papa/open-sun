@@ -1,7 +1,8 @@
 name: Monthly collection audit
 
 # On the 1st of each month, check every library item (links, required fields,
-# topics, duplicates, unfinished drafts) and open an issue with the report.
+# topics, duplicates, unfinished drafts), add a list of overdue suggestions,
+# and open an issue with the report.
 # It never commits to the repository. How to act on the issue:
 # docs/procedures/collection-audit.md
 on:
@@ -34,15 +35,31 @@ jobs:
           AUDIT_REPORT: ${{ runner.temp }}/collection-audit.md
         run: npm run audit
 
+      # Runs before the suggestion report appends to the file, so an empty audit report is still noticed.
+      - name: Note if the audit stopped early
+        env:
+          REPORT: ${{ runner.temp }}/collection-audit.md
+        run: |
+          if [ ! -s "$REPORT" ]; then
+            echo "The audit stopped before it wrote a report. See the log of this workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$REPORT"
+          fi
+
+      # Adds overdue suggestions (open longer than 14 days) to the same report.
+      # docs/procedures/suggestions.md. It never fails the run.
+      - name: Report on suggestions
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          AUDIT_REPORT: ${{ runner.temp }}/collection-audit.md
+        run: npm run suggestions
+
       - name: Open an issue with the report
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           REPORT: ${{ runner.temp }}/collection-audit.md
         run: |
-          if [ ! -s "$REPORT" ]; then
-            echo "The audit stopped before it wrote a report. See the log of this workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" > "$REPORT"
-          fi
           gh label create collection-audit --description "Monthly collection audit reports" --color 2E7D32 --force
           gh issue create --title "Collection audit: $(date -u +%Y-%m)" --label collection-audit --body-file "$REPORT"
 

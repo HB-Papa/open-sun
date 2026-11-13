@@ -7,7 +7,8 @@ venue: "Companion Publication of the 2026 ACM Designing Interactive Systems Conf
 pages: "397–402"
 doi: 10.1145/3802974.3809454
 url: https://doi.org/10.1145/3802974.3809454
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, urban, design, technology]
 date_added: 2026-10-11

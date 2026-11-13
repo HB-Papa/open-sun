@@ -5,7 +5,8 @@ year: 2022
 type: Guide
 venue: "RMI"
 url: https://rmi.org/resources/weathering-climate-disasters-with-resilience-hubs/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [resilience, community-energy, urban]
 date_added: 2026-10-11

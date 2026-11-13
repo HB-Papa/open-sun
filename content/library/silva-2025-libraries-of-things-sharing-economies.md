@@ -7,7 +7,8 @@ venue: "Understanding the Urban Sharing Economy (Edward Elgar)"
 pages: "42–64"
 doi: 10.4337/9781035320547.00013
 url: https://doi.org/10.4337/9781035320547.00013
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
 language: en
 topics: [libraries, commons, degrowth]
 date_added: 2026-10-11

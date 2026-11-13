@@ -9,7 +9,9 @@ issue: "1"
 pages: "162–187"
 doi: 10.26754/ojs_ried/ijds.871
 url: https://doi.org/10.26754/ojs_ried/ijds.871
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, community-energy, indigenous-futures, energy-justice]
 date_added: 2026-10-11

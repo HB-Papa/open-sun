@@ -6,7 +6,8 @@ year: null
 type: Guide
 venue: "Sustainable Libraries Initiative"
 url: https://www.sustainablelibrariesinitiative.org/SLIcertification-program
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [libraries, resilience]
 date_added: 2026-10-11

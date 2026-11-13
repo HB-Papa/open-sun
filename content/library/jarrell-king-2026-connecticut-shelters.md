@@ -5,7 +5,8 @@ year: 2026
 type: Essay
 venue: "Conservation Law Foundation"
 url: https://www.clf.org/blog/connecticut-extreme-weather-shelters/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [resilience, community-energy, climate-futures]
 date_added: 2026-10-11

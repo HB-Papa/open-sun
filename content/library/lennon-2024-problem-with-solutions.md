@@ -9,7 +9,9 @@ issue: "S26"
 pages: "S130–S154"
 doi: 10.1086/731293
 url: https://doi.org/10.1086/731293
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
 language: en
 topics: [energy-justice, climate-futures]
 date_added: 2026-10-11

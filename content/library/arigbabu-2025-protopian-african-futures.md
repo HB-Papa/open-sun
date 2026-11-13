@@ -9,7 +9,9 @@ issue: "2"
 pages: "47–74"
 doi: 10.25120/etropic.24.2.2025.4166
 url: https://doi.org/10.25120/etropic.24.2.2025.4166
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, design, indigenous-futures]
 date_added: 2026-10-11

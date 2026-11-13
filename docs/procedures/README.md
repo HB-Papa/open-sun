@@ -18,7 +18,7 @@ A new volunteer who has never worked on the project. Each procedure is a list of
 | [Broken links](broken-links.md) | An item's link no longer opens |
 | [Adding items](adding-items.md) | The weekly scan has found new items |
 | [Withdrawing items](withdrawing-items.md) | An item should leave the library |
-| [Suggestions](suggestions.md) | Someone sends a suggestion through the site's form |
+| [Suggestions](suggestions.md) | Someone sends a suggestion through the site's form, or a suggestion is close to its 14-day decision time |
 
 ## How to read these pages
 

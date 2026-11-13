@@ -8,7 +8,9 @@ issue: "1"
 pages: "106–121"
 doi: 10.18318/td.2025.1.6
 url: https://doi.org/10.18318/td.2025.1.6
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: pl
 topics: [solarpunk, technology, multispecies]
 date_added: 2026-10-11

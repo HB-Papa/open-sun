@@ -6,7 +6,8 @@ year: 2019
 type: Guide
 venue: "Urban Sustainability Directors Network"
 url: https://www.usdn.org/resilience-hubs.html
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [resilience, community-energy, commons]
 date_added: 2026-10-11

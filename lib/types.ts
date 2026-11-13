@@ -1,3 +1,5 @@
+import type { License, RightsStatus, Version } from './rights.ts';
+
 export interface FieldNote {
   question: string;
   options: string[];
@@ -20,7 +22,10 @@ export interface LibraryItem {
   pages?: string;
   doi?: string;
   url: string;
-  license: string;
+  license: License; // SPDX identifier, or "none"
+  rightsStatus: RightsStatus;
+  version?: Version; // NISO Journal Article Version, journal articles only
+  accessNote?: string;
   language: string;
   topics: string[];
   dateAdded: string;
@@ -62,6 +67,23 @@ export interface Guide {
   lastReviewed: string;
   html: string;
   relatedPathways: string[];
+  relatedItems: string[];
+}
+
+/** An information-literacy lesson plan, mapped to frames of the ACRL Framework. */
+export interface Lesson {
+  slug: string;
+  title: string;
+  blurb: string;
+  order: number;
+  level: string;
+  duration: string;
+  format: string;
+  frames: string[];
+  outcomes: string[];
+  lastReviewed: string;
+  html: string;
+  relatedGuides: string[];
   relatedItems: string[];
 }
 

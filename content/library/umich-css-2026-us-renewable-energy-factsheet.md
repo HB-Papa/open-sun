@@ -6,7 +6,8 @@ year: 2026
 type: Report
 venue: "Center for Sustainable Systems, University of Michigan (Pub. No. CSS03-12)"
 url: https://css.umich.edu/publications/factsheets/energy/us-renewable-energy-factsheet
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [community-energy, climate-futures]
 date_added: 2026-10-11

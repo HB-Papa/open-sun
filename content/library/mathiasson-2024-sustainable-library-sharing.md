@@ -9,7 +9,10 @@ issue: "4"
 pages: "1057–1070"
 doi: 10.1177/09610006231190131
 url: https://researchprofiles.ku.dk/da/publications/8fa9b715-6f11-4788-8b42-43b89fadc905
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "University of Copenhagen research portal"
 language: en
 topics: [libraries, commons]
 date_added: 2026-10-11

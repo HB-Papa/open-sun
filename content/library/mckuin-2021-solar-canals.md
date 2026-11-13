@@ -9,7 +9,10 @@ issue: "7"
 pages: "609–617"
 doi: 10.1038/s41893-021-00693-8
 url: https://escholarship.org/uc/item/8cj5j07p
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "eScholarship, University of California"
 language: en
 topics: [community-energy, agriculture, ecology]
 date_added: 2026-10-11

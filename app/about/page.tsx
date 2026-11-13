@@ -194,8 +194,18 @@ export default function AboutPage() {
 
         <section aria-labelledby="who" className="flex flex-col gap-4">
           <SectionHeading id="who">Who runs Open Sun</SectionHeading>
-          {/* Add a sentence or two here about who runs the site, why it exists, and how to reach you. */}
-          <p className="max-w-[40rem] text-lede leading-normal text-body">Open Sun is an independent, non-commercial project.</p>
+          <p className="max-w-[40rem] text-lede leading-normal text-body">
+            Open Sun is an independent, non-commercial project run by <strong className="text-ink">Chris Misciagna, MLIS</strong>, a data professional pursuing a career in
+            academic libraries. Chris is a big fan of open access, scholarly communications, and making the world a greener place.
+          </p>
+          <p className="max-w-[40rem] text-copy leading-normal text-body">
+            Find Chris on{' '}
+            <a href="https://www.linkedin.com/in/chris-misciagna/" rel="noopener">
+              LinkedIn
+            </a>
+            . To report a problem with the site or a reading, please use the{' '}
+            <a href="https://github.com/HB-Papa/open-sun/issues/new">public issue list on GitHub</a>.
+          </p>
         </section>
 
         <section aria-labelledby="accessibility" className="flex scroll-mt-6 flex-col gap-4">

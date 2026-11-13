@@ -1,8 +1,9 @@
-import { yearText, type LibraryItem } from './types';
+// The .ts extension lets the Node test runner load this file through lib/exports.ts and lib/marc.ts.
+import { yearText, type LibraryItem } from './types.ts';
 
 const PARTICLES = new Set(['de', 'van', 'von', 'der', 'den', 'du', 'da', 'del', 'la', 'le', 'di', 'dos', 'das']);
 
-interface Name {
+export interface Name {
   given: string[];
   family: string;
 }
@@ -11,7 +12,7 @@ interface Name {
  * Authors are written in natural order ("Rhys Williams"). For family names the
  * rules can't guess, write "Family, Given" instead ("Weik von Mossner, Alexa").
  */
-function splitName(full: string): Name {
+export function splitName(full: string): Name {
   if (full.includes(',')) {
     const [family, given] = full.split(',').map((s) => s.trim());
     return { given: given ? given.split(/\s+/) : [], family };

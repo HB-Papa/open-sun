@@ -5,7 +5,13 @@ import { numHtml } from '@/lib/nums';
 
 type Cite = { text: string; html: string };
 
-export function CitationBox({ apa, chicago }: { apa: Cite; chicago: Cite }) {
+/** The two citation files built for every item by the cite.ris and cite.bib route handlers. */
+const FILES = [
+  { ext: 'ris', label: 'Download RIS', hint: ' citation file, for Zotero, EndNote or Mendeley' },
+  { ext: 'bib', label: 'Download BibTeX', hint: ' citation file, for LaTeX' },
+] as const;
+
+export function CitationBox({ apa, chicago, slug }: { apa: Cite; chicago: Cite; slug: string }) {
   const [style, setStyle] = useState<'apa' | 'chicago'>('apa');
   const [status, setStatus] = useState('');
   const cite = style === 'apa' ? apa : chicago;
@@ -59,6 +65,20 @@ export function CitationBox({ apa, chicago }: { apa: Cite; chicago: Cite }) {
           {status}
         </span>
       </div>
+      <ul className="flex flex-wrap gap-1.5" aria-label="Citation files">
+        {FILES.map((f) => (
+          <li key={f.ext}>
+            <a
+              href={`/library/${slug}/cite.${f.ext}`}
+              download={`${slug}.${f.ext}`}
+              className="inline-flex min-h-11 items-center rounded-full border-2 border-line-strong bg-card px-4 text-small text-ink no-underline hover:text-ink hover:underline"
+            >
+              {f.label}
+              <span className="sr-only">{f.hint}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

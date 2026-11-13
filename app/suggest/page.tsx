@@ -15,6 +15,10 @@ export default function SuggestPage() {
           Know an article, book, story collection, or guide that belongs here? It should be free to read online and connected to solarpunk or the ideas around it. A
           person reviews every suggestion. No account needed.
         </p>
+        <p className="max-w-[35rem] text-copy leading-normal text-body">
+          Every suggestion gets a decision within two weeks. We post it on the{' '}
+          <a href="https://github.com/HB-Papa/open-sun/issues?q=label%3Asuggestion">public review list</a>, not by email, so check back there to see what we decided.
+        </p>
       </div>
       <SuggestForm />
       </main>

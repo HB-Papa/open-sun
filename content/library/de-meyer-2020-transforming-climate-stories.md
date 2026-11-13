@@ -9,7 +9,9 @@ issue: "1"
 pages: "015002"
 doi: 10.1088/1748-9326/abcd5a
 url: https://doi.org/10.1088/1748-9326/abcd5a
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [climate-futures, fiction]
 date_added: 2026-10-11

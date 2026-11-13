@@ -8,7 +8,9 @@ issue: "76"
 pages: "183–204"
 doi: 10.4067/s0719-51762022000100183
 url: https://doi.org/10.4067/s0719-51762022000100183
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
+version: VoR
 language: es
 topics: [solarpunk, degrowth, fiction]
 date_added: 2026-10-11

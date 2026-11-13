@@ -106,15 +106,30 @@ async function getJson(url, label) {
   return null;
 }
 
-/** "cc-by-nc", "CC BY-NC", or a creativecommons.org URL -> "CC BY-NC 4.0". */
-function licenseLabel(raw) {
-  const s = String(raw || '').toLowerCase();
-  if (!s) return 'Free to read';
-  if (/public-?domain|cc0|zero\//.test(s)) return 'CC0 (public domain)';
-  const m = s.match(/(?:licenses\/|cc[-_ ])(by(?:[-_ ](?:nc|sa|nd))*)(?:\/(\d\.\d))?/);
-  if (!m) return 'Free to read';
-  return `CC ${m[1].replace(/[_ ]/g, '-').toUpperCase()} ${m[2] || '4.0'}`;
+// ---------- rights ----------
+// New files get the four rights fields described in docs/metadata/application-profile.md. A license is
+// written only when a harvester gives a creativecommons.org URL that names the version, because a bare
+// "cc-by" could be any version. Everything else is marked for a person to check.
+
+/** A creativecommons.org URL -> an SPDX identifier, for 4.0 licenses and CC0 1.0 only. */
+function spdxFromUrl(url) {
+  const s = String(url || '').toLowerCase().replace(/^http:/, 'https:');
+  if (/^https:\/\/creativecommons\.org\/publicdomain\/zero\/1\.0(\/|$)/.test(s)) return 'CC0-1.0';
+  const m = s.match(/^https:\/\/creativecommons\.org\/licenses\/(by(?:-nc)?(?:-sa|-nd)?)\/4\.0(\/|$)/);
+  return m ? `CC-${m[1].toUpperCase()}-4.0` : undefined;
 }
+
+/** The rights fields for a license URL, or "none" with a note saying what needs checking. */
+function rightsFrom(url, why) {
+  const license = spdxFromUrl(url);
+  if (license) return { license, rights_status: license === 'CC0-1.0' ? 'public-domain' : 'open-license' };
+  return { license: 'none', rights_status: 'in-copyright-free-to-read', access_note: `Needs checking: ${why}` };
+}
+
+const sameUrl = (a, b) => !!a && !!b && String(a).toLowerCase().replace(/^http:/, 'https:') === String(b).toLowerCase().replace(/^http:/, 'https:');
+
+/** OpenAlex location versions -> NISO terms. "submittedVersion" is OpenAlex's default for repository copies, so it is not trusted. */
+const OPENALEX_VERSION = { publishedVersion: 'VoR', acceptedVersion: 'AM' };
 
 function relevance(text) {
   return SIGNALS.reduce((sum, [re, w]) => sum + (re.test(text) ? w : 0), 0);
@@ -148,7 +163,16 @@ async function fromOpenAlex() {
         issue: w.biblio?.issue,
         pages: w.biblio?.first_page ? [w.biblio.first_page, w.biblio.last_page].filter(Boolean).join('–') : undefined,
         url: w.doi || w.best_oa_location?.landing_page_url || w.open_access?.oa_url,
-        license: licenseLabel(w.best_oa_location?.license),
+        // OpenAlex gives short codes such as "cc-by" with no version number, so none is mapped to a license.
+        rights: rightsFrom(
+          undefined,
+          w.best_oa_location?.license ? `OpenAlex lists "${w.best_oa_location.license}" without a version.` : 'no license found in OpenAlex.',
+        ),
+        // A version only for a journal article, and only when the free copy OpenAlex describes is the one this file links to.
+        version:
+          w.type === 'article' && sameUrl(w.best_oa_location?.landing_page_url, w.doi || w.best_oa_location?.landing_page_url)
+            ? OPENALEX_VERSION[w.best_oa_location.version]
+            : undefined,
         isOa: !!w.open_access?.is_oa,
         language: w.language || 'en',
         abstract,
@@ -181,7 +205,12 @@ async function fromDoaj() {
         issue: b.journal?.number,
         pages: b.start_page ? [b.start_page, b.end_page].filter(Boolean).join('–') : undefined,
         url: doi ? `https://doi.org/${doi}` : link,
-        license: licenseLabel(b.journal?.license?.[0]?.type || 'cc-by'),
+        // DOAJ gives the journal's license. Only its URL names a version, so a bare type such as "CC BY" is not mapped.
+        rights: rightsFrom(
+          b.journal?.license?.[0]?.url,
+          b.journal?.license?.[0]?.type ? `DOAJ lists the journal license "${b.journal.license[0].type}" without a version URL.` : 'no license found in DOAJ.',
+        ),
+        version: 'VoR', // DOAJ lists articles in open access journals, and the link goes to the journal's copy
         isOa: true, // every DOAJ journal is open access
         // DOAJ lists the journal's languages, not the article's; prefer English when listed.
         language: (b.journal?.language?.includes('EN') ? 'EN' : b.journal?.language?.[0] || 'EN').slice(0, 2).toLowerCase(),
@@ -199,8 +228,9 @@ async function fromCrossref() {
     const url = `https://api.crossref.org/works?query=${encodeURIComponent(q.replace(/"/g, ''))}&filter=from-pub-date:${since},has-license:true,has-abstract:true&rows=25${mailto ? `&mailto=${encodeURIComponent(mailto)}` : ''}`;
     const data = await getJson(url, `Crossref "${q}"`);
     for (const w of data?.message?.items ?? []) {
-      // Crossref has no open access flag; keep only works under a Creative Commons license.
-      const lic = (w.license || []).map((l) => l.URL).find((u) => /creativecommons\.org/i.test(u));
+      // Crossref has no open access flag; keep only works whose published version is under a Creative Commons
+      // license. Licenses for the accepted manuscript ("am") or for text mining ("tdm") don't count.
+      const lic = (w.license || []).find((l) => /creativecommons\.org/i.test(l.URL) && ['vor', 'unspecified'].includes(l['content-version']))?.URL;
       if (!lic) continue;
       const year = w.issued?.['date-parts']?.[0]?.[0];
       out.push({
@@ -215,7 +245,8 @@ async function fromCrossref() {
         issue: w.issue,
         pages: w.page?.replace('-', '–'),
         url: `https://doi.org/${w.DOI}`,
-        license: licenseLabel(lic),
+        rights: rightsFrom(lic, `Crossref lists ${lic}, which is not a 4.0 license or CC0.`),
+        version: w.type === 'journal-article' ? 'VoR' : undefined, // the DOI goes to the publisher's copy
         isOa: true,
         language: w.language || 'en',
         abstract: stripTags(w.abstract),
@@ -318,7 +349,11 @@ function fileFor(c, d) {
   if (c.issue) fm.push(`issue: ${yaml(c.issue)}`);
   if (c.pages) fm.push(`pages: ${yaml(c.pages)}`);
   if (c.doi) fm.push(`doi: ${c.doi}`);
-  fm.push(`url: ${c.url}`, `license: ${yaml(c.license)}`, `language: ${c.language}`);
+  fm.push(`url: ${c.url}`, `license: ${c.rights.license}`, `rights_status: ${c.rights.rights_status}`);
+  // NISO versions describe journal articles, so leave the version out if the drafter typed the work as something else.
+  if (c.version && ['Article', 'Essay'].includes(d?.type || 'Article')) fm.push(`version: ${c.version}`);
+  if (c.rights.access_note) fm.push(`access_note: ${yaml(c.rights.access_note)}`);
+  fm.push(`language: ${c.language}`);
   fm.push(`topics: [${(d?.topics?.length ? d.topics : c.guessTopics).join(', ')}]`);
   fm.push(`date_added: ${today}`, 'source: agent', 'reviewed: false', 'summary_status: draft');
   if (d?.field_note && d.field_note.options.length === 3 && d.field_note.answer >= 0 && d.field_note.answer <= 2) {

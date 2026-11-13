@@ -8,7 +8,9 @@ volume: "7"
 pages: "35"
 doi: 10.1525/elementa.374
 url: https://doi.org/10.1525/elementa.374
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [climate-futures, ecology, governance]
 date_added: 2026-10-11

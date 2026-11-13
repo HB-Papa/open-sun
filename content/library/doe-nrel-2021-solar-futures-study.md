@@ -6,7 +6,9 @@ year: 2021
 type: Report
 venue: "U.S. Department of Energy"
 url: https://www.energy.gov/sites/default/files/2021-09/Solar%20Futures%20Study.pdf
-license: "Free to read (U.S. government work)"
+license: none
+rights_status: in-copyright-free-to-read
+access_note: "U.S. Department of Energy report written mainly by NREL contractor staff. Public-domain status not confirmed"
 language: en
 topics: [community-energy, climate-futures]
 date_added: 2026-10-11

@@ -45,7 +45,10 @@ issue: "4"
 pages: "73"
 doi: 10.3390/philosophies8040073
 url: https://doi.org/10.3390/philosophies8040073   # the free-to-read link
-license: "CC BY 4.0"
+license: CC-BY-4.0       # SPDX identifier (CC-BY-4.0, CC-BY-NC-ND-4.0, CC0-1.0 ...) or none
+rights_status: open-license   # open-license, public-domain or in-copyright-free-to-read
+version: VoR             # optional, journal articles only: VoR, AM (author manuscript), AO (preprint) ...
+# access_note: "PubMed Central"   # optional: where the free copy is, or what still needs checking
 language: en
 topics: [solarpunk, degrowth, justice, governance] # from the list in lib/topics.ts
 date_added: 2026-10-11

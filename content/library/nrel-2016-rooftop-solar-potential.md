@@ -6,7 +6,8 @@ year: 2016
 type: Report
 venue: "ScienceDaily (news release)"
 url: https://www.sciencedaily.com/releases/2016/04/160405161250.htm
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [community-energy, urban]
 date_added: 2026-10-11

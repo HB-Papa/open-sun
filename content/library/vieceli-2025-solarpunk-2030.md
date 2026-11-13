@@ -9,7 +9,9 @@ issue: "31"
 pages: "14–33"
 doi: 10.15210/pixo.v8i31.28496
 url: https://doi.org/10.15210/pixo.v8i31.28496
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
 language: pt
 topics: [solarpunk, design, justice]
 date_added: 2026-10-11

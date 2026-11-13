@@ -4,12 +4,16 @@
 // The field-by-field mapping is written up in docs/metadata/application-profile.md.
 import type { LibraryItem } from './types.ts';
 import { topicLabel } from './topics.ts';
+import { licenseUrl, rightsStatement } from './rights.ts';
+
+export { licenseUrl };
 
 /** The fields these functions read. A full LibraryItem fits. */
 export type MetaItem = Pick<
   LibraryItem,
   | 'slug' | 'title' | 'authors' | 'organization' | 'edited' | 'editors' | 'year' | 'type' | 'venue'
-  | 'volume' | 'issue' | 'pages' | 'doi' | 'url' | 'license' | 'language' | 'topics' | 'summary'
+  | 'volume' | 'issue' | 'pages' | 'doi' | 'url' | 'license' | 'rightsStatus' | 'version' | 'accessNote'
+  | 'language' | 'topics' | 'summary'
 >;
 
 type Json = { [key: string]: unknown };
@@ -33,18 +37,6 @@ const SCHEMA_TYPE: Record<string, string> = {
 };
 /** The schema.org type for a record's `type`. Fiction, Guide and anything unknown fall back to CreativeWork. */
 export const schemaType = (type: string): string => SCHEMA_TYPE[type] ?? 'CreativeWork';
-
-/**
- * The Creative Commons deed URL for a license value, or undefined. Only version 4.0 licenses and CC0 1.0 are
- * mapped, because earlier versions have country ports that the stored value does not record. A trailing note in
- * brackets, as in "CC BY-NC-ND 4.0 (author manuscript)", is allowed.
- */
-export function licenseUrl(license: string): string | undefined {
-  const s = license.trim();
-  if (/^CC0(?: 1\.0)?(?: \(.*\))?$/i.test(s)) return 'https://creativecommons.org/publicdomain/zero/1.0/';
-  const m = s.match(/^CC (BY(?:-NC)?(?:-(?:ND|SA))?) 4\.0(?: \(.*\))?$/i);
-  return m ? `https://creativecommons.org/licenses/${m[1].toLowerCase()}/4.0/` : undefined;
-}
 
 /** First and last page when `pages` is a range ("717–733"). A single value is an article number, so nothing is returned. */
 export function pageRange(pages?: string): { first: string; last: string } | undefined {
@@ -153,6 +145,7 @@ export function citationMeta(item: MetaItem): Record<string, string | string[]> 
   set('DC.type', 'Text'); // DCMI Type Vocabulary. Every item in the library is a written work.
   set('DC.language', item.language);
   set('DC.identifier', item.doi ? doiUrl(item.doi) : item.url);
-  set('DC.rights', licenseUrl(item.license) ?? item.license);
+  // The license deed when there is one; otherwise a plain statement ("Public domain", or in copyright and free to read).
+  set('DC.rights', licenseUrl(item.license) ?? rightsStatement(item));
   return tags;
 }

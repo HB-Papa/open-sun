@@ -31,6 +31,10 @@ export function SuggestForm() {
         <p className="font-bold">Thank you! Your suggestion is on the public review list.</p>
         <p className="mt-2 text-copy">A person reads every suggestion before anything is added to the library.</p>
         <p className="mt-2 text-copy">
+          You’ll have a decision within two weeks. Look for it on the{' '}
+          <a href="https://github.com/HB-Papa/open-sun/issues?q=label%3Asuggestion">public review list</a>. We can’t reply by email.
+        </p>
+        <p className="mt-2 text-copy">
           <button type="button" className="font-bold text-sky underline" onClick={() => setStatus({ kind: 'idle' })}>
             Suggest another
           </button>

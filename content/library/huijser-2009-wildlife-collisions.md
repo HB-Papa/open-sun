@@ -9,7 +9,9 @@ issue: "2"
 pages: "15"
 doi: 10.5751/ES-03000-140215
 url: https://www.ecologyandsociety.org/vol14/iss2/art15/
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [ecology, multispecies]
 date_added: 2026-10-11

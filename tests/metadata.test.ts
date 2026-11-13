@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 import { citationMeta, displayName, jsonLd, licenseUrl, pageRange, schemaType, type MetaItem } from '../lib/metadata.ts';
+import { parseRights } from '../lib/rights.ts';
 
 const SITE = 'https://example.org';
 
@@ -26,7 +27,7 @@ function load(slug: string): MetaItem {
     pages: str(data.pages),
     doi: str(data.doi),
     url: String(data.url),
-    license: String(data.license ?? 'Free to read'),
+    ...parseRights(data, slug),
     language: String(data.language ?? 'en'),
     topics: (data.topics ?? []).map(String),
     summary: content.split(/\*\*Why it matters/i)[0].replace(/\s+/g, ' ').trim(),
@@ -102,9 +103,29 @@ test('an edited volume lists its editors as editors, not authors', () => {
 });
 
 test('a book with one plain publisher name gets a publisher', () => {
-  const ld = jsonLd(load('bollier-2019-free-fair-alive'), SITE) as Record<string, any>;
+  const item = load('bollier-2019-free-fair-alive');
+  const ld = jsonLd(item, SITE) as Record<string, any>;
   assert.deepEqual(ld.publisher, { '@type': 'Organization', name: 'New Society Publishers' });
-  assert.equal(ld.license, undefined); // "Free to read online" is not a license
+  assert.equal(ld.license, undefined); // license: none, so there is no license URL to give
+  assert.equal(ld.isAccessibleForFree, true);
+  assert.equal(citationMeta(item)['DC.rights'], 'In copyright. Free to read online, no open license.');
+});
+
+test('rights fields drive the license URL and DC.rights', () => {
+  // An author manuscript under a CC license: the license URL is still given, and the version is not a license.
+  const am = load('jenkins-2016-energy-justice-review');
+  assert.equal(am.license, 'CC-BY-NC-ND-4.0');
+  assert.equal(am.version, 'AM');
+  assert.equal((jsonLd(am, SITE) as Record<string, any>).license, 'https://creativecommons.org/licenses/by-nc-nd/4.0/');
+  assert.equal(citationMeta(am)['DC.rights'], 'https://creativecommons.org/licenses/by-nc-nd/4.0/');
+
+  // The U.S. government report was not confirmed as public domain, so it carries no license URL.
+  const gov = load('doe-nrel-2021-solar-futures-study');
+  assert.equal(gov.rightsStatus, 'in-copyright-free-to-read');
+  assert.equal((jsonLd(gov, SITE) as Record<string, any>).license, undefined);
+
+  // A public-domain work with no license URL says so in plain words.
+  assert.equal(citationMeta({ ...gov, rightsStatus: 'public-domain' })['DC.rights'], 'Public domain');
 });
 
 test('authors and separate editors are both kept', () => {
@@ -151,10 +172,11 @@ test('names, types and licenses map only when the mapping is certain', () => {
   assert.equal(schemaType('Guide'), 'CreativeWork');
   assert.equal(schemaType('Something new'), 'CreativeWork');
 
-  assert.equal(licenseUrl('CC BY 4.0'), 'https://creativecommons.org/licenses/by/4.0/');
-  assert.equal(licenseUrl('CC BY-NC-ND 4.0 (author manuscript)'), 'https://creativecommons.org/licenses/by-nc-nd/4.0/');
-  assert.equal(licenseUrl('CC BY 3.0'), undefined);
-  for (const l of ['Free to read', 'Free to read (U.S. government work)', 'Free to read (Elsevier open archive)']) assert.equal(licenseUrl(l), undefined);
+  assert.equal(licenseUrl('CC-BY-4.0'), 'https://creativecommons.org/licenses/by/4.0/');
+  assert.equal(licenseUrl('CC-BY-NC-ND-4.0'), 'https://creativecommons.org/licenses/by-nc-nd/4.0/');
+  assert.equal(licenseUrl('CC-BY-NC-SA-4.0'), 'https://creativecommons.org/licenses/by-nc-sa/4.0/');
+  assert.equal(licenseUrl('CC0-1.0'), 'https://creativecommons.org/publicdomain/zero/1.0/');
+  assert.equal(licenseUrl('none'), undefined);
 
   // A conference paper typed Article with no volume or issue gets no journal title.
   const conf = citationMeta(load('alipio-2024-indigenous-data-sovereignty-solarpunk'));

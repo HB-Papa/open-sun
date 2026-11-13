@@ -44,11 +44,7 @@ In OpenAlex, you can join ideas with AND, OR and NOT. They must be in capital le
 degrowth NOT agriculture
 ```
 
-In Google Scholar, OR works the same way. To leave a word out, put a minus sign straight in front of it.
-
-```
-"community solar" -perovskite
-```
+Google Scholar has an Advanced search in its side menu. Use it to search titles, authors or a journal, or to limit results by date.
 
 Too many results? Add a word. Too few? Remove one or try a synonym.
 

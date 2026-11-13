@@ -6,7 +6,9 @@ type: Article
 venue: "Ecocene: Cappadocia Journal of Environmental Humanities"
 doi: 10.46863/ecocene.64
 url: https://doi.org/10.46863/ecocene.64
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, degrowth, fiction]
 date_added: 2026-10-11

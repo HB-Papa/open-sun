@@ -8,7 +8,9 @@ volume: "43"
 pages: "291–316"
 doi: 10.1146/annurev-environ-102017-025941
 url: https://doi.org/10.1146/annurev-environ-102017-025941
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
 language: en
 topics: [degrowth]
 date_added: 2026-10-11

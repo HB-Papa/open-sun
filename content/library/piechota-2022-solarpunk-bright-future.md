@@ -9,7 +9,9 @@ issue: "1"
 pages: "133–144"
 doi: 10.17951/ff.2022.40.1.133-144
 url: https://doi.org/10.17951/ff.2022.40.1.133-144
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, fiction]
 date_added: 2026-10-11

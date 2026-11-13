@@ -5,7 +5,8 @@ year: 2018
 type: Guide
 venue: "Low-Tech Magazine"
 url: https://solar.lowtechmagazine.com/2018/09/how-to-build-a-lowtech-website/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [technology, design, degrowth]
 date_added: 2026-10-11

@@ -8,7 +8,9 @@ volume: "4"
 issue: "2"
 doi: 10.37536/reden.2023.4.2062
 url: https://doi.org/10.37536/reden.2023.4.2062
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, fiction, technology]
 date_added: 2026-10-11
