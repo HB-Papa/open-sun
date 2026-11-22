@@ -553,7 +553,7 @@ function Board({
               {ranked ? 'That’s today’s grid done. A new one arrives tomorrow.' : 'That’s this bonus grid done.'}
             </p>
             <p className="text-small leading-normal text-on-forest-muted">
-              <Nums text={`${darkHours(lastLit)} For next time: ${hint(puzzle, lastLit, layout)}`} />
+              <Nums text={`${darkHours(lastLit)} For next time: ${hint(puzzle, lastLit, layout).replace(/^./, (c) => c.toLowerCase())}`} />
             </p>
           </>
         ) : (
@@ -842,9 +842,9 @@ function TerrainKey({ terrain }: { terrain: Terrain[] }) {
   const items = all.filter(([t]) => terrain.includes(t));
   return (
     <div className="flex flex-col gap-2">
-      <h3 id="map-key" className="text-small font-bold">
+      <h2 id="map-key" className="text-small font-bold">
         Map key
-      </h3>
+      </h2>
       <ul aria-labelledby="map-key" className="grid gap-x-5 gap-y-2 text-small text-body sm:grid-cols-2">
         {items.map(([t, name, meaning, icon]) => (
           <li key={t} className="flex items-center gap-2.5">

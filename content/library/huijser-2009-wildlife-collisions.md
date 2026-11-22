@@ -24,6 +24,6 @@ field_note:
   answer: 1
 ---
 
-The authors estimate the full cost of collisions between vehicles and deer, elk, and moose, then review the cost and effectiveness of 13 ways to prevent them, such as fencing and wildlife crossings. Looking at costs over 75 years, they work out how many collisions a stretch of road must have before each measure pays for itself.
+The authors estimate the full cost of collisions between vehicles and deer, elk, and moose, then review the cost and effectiveness of 13 ways to prevent them, such as fencing and wildlife crossings. Looking at costs over 75 years, they work out how many collisions per kilometer of road each year it takes before each measure pays for itself.
 
 **Why it matters:** Shows that building for wildlife can make plain economic sense, not just ecological sense.

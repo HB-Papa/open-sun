@@ -76,7 +76,7 @@ Energy has strong interests on every side, so ask a few questions.
 
 Many energy papers sit behind paywalls, but a legal free copy often exists. Look for an “author manuscript” in a university or laboratory repository. It is the author’s own copy of the accepted paper. Google Scholar’s “All versions” link often leads to one.
 
-Works by the U.S. federal government are generally free of copyright within the United States. Reports from other bodies carry their own terms, so look for a license or a “terms of use” link before you reuse charts or long passages.
+Works by U.S. federal employees are generally free of copyright within the United States. National laboratory reports are often written by contractors, though, and reports from other bodies carry their own terms, so look for a license or a “terms of use” link before you reuse charts or long passages.
 
 ## Citing what you find
 

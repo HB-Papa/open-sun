@@ -5,10 +5,11 @@ year: 2022
 type: Article
 venue: "Ecocene: Cappadocia Journal of Environmental Humanities"
 doi: 10.46863/ecocene.64
-url: https://doi.org/10.46863/ecocene.64
+url: http://hdl.handle.net/10017/70692
 license: CC-BY-4.0
 rights_status: open-license
 version: VoR
+access_note: "University of Alcalá repository copy"
 language: en
 topics: [solarpunk, degrowth, fiction]
 date_added: 2026-10-11

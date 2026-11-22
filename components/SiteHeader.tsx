@@ -105,7 +105,7 @@ function PlayPill() {
           <span aria-hidden="true" className="num hidden min-[360px]:inline">
             {status.short}
           </span>
-          <span className="sr-only">{status.spoken}, see your day</span>
+          <span className="sr-only">{status.spoken}. See today’s result.</span>
         </>
       ) : (
         'Microgrid'

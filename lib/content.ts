@@ -146,6 +146,11 @@ export function getPathway(slug: string): Pathway | undefined {
   return getPathways().find((p) => p.slug === slug);
 }
 
+/** Markdown for long documents. A wide table scrolls inside itself, so it can take keyboard focus to be scrolled. */
+function proseHtml(md: string): string {
+  return (marked.parse(md.trim(), { async: false }) as string).replace(/<table>/g, '<table tabindex="0">');
+}
+
 function mdFiles(folder: string) {
   const dir = join(ROOT, folder);
   if (!existsSync(dir)) return [];
@@ -166,7 +171,7 @@ export function getGuides(): Guide[] {
       family: String(data.family ?? 'sun'),
       order: Number(data.order ?? 99),
       lastReviewed: asDate(data.last_reviewed),
-      html: marked.parse(content.trim(), { async: false }) as string,
+      html: proseHtml(content),
       relatedPathways: slugList(data.related_pathways).filter((s) => pathways.has(s)),
       relatedItems: slugList(data.related_items).filter((s) => getItem(s)),
     }))
@@ -192,7 +197,7 @@ export function getLessons(): Lesson[] {
       frames: slugList(data.frames),
       outcomes: slugList(data.outcomes),
       lastReviewed: asDate(data.last_reviewed),
-      html: marked.parse(content.trim(), { async: false }) as string,
+      html: proseHtml(content),
       relatedGuides: slugList(data.related_guides).filter((s) => guides.has(s)),
       relatedItems: slugList(data.related_items).filter((s) => getItem(s)),
     }))
@@ -211,7 +216,7 @@ export function getPolicies(): Policy[] {
       title: String(data.title),
       blurb: String(data.blurb ?? ''),
       lastReviewed: asDate(data.last_reviewed),
-      html: marked.parse(content.trim(), { async: false }) as string,
+      html: proseHtml(content),
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 }
