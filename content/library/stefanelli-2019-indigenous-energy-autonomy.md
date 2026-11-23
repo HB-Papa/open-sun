@@ -9,7 +9,10 @@ issue: "1"
 pages: "95–105"
 doi: 10.1139/er-2018-0024
 url: http://hdl.handle.net/1807/92913
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "TSpace, University of Toronto"
 language: en
 topics: [indigenous-futures, community-energy, energy-justice]
 date_added: 2026-10-11

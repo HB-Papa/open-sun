@@ -9,7 +9,9 @@ issue: "3"
 pages: "192–206"
 doi: 10.1080/02604027.2024.2417042
 url: https://doi.org/10.1080/02604027.2024.2417042
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, education, fiction]
 date_added: 2026-10-11

@@ -8,7 +8,9 @@ volume: "142"
 pages: "104553"
 doi: 10.1016/j.cities.2023.104553
 url: https://doi.org/10.1016/j.cities.2023.104553
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [multispecies, urban, design, education]
 date_added: 2026-10-11

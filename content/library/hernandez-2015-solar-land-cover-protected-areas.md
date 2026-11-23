@@ -9,7 +9,10 @@ issue: "44"
 pages: "13579–13584"
 doi: 10.1073/pnas.1517656112
 url: https://www.ncbi.nlm.nih.gov/pmc/articles/4640750
-license: "Free to read (PubMed Central)"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
+access_note: "PubMed Central"
 language: en
 topics: [ecology, community-energy, agriculture]
 date_added: 2026-10-11

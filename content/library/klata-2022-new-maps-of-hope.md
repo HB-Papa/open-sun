@@ -8,7 +8,9 @@ volume: "65"
 issue: "3"
 doi: 10.26485/zrl/2022/65.3/4
 url: https://doi.org/10.26485/zrl/2022/65.3/4
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, fiction]
 date_added: 2026-10-11

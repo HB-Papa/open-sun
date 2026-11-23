@@ -9,7 +9,9 @@ issue: "2"
 pages: "948"
 doi: 10.3390/su14020948
 url: https://doi.org/10.3390/su14020948
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [multispecies, urban, design, justice]
 date_added: 2026-10-11

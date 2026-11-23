@@ -8,7 +8,10 @@ volume: "11"
 pages: "174–182"
 doi: 10.1016/j.erss.2015.10.004
 url: https://cris.brighton.ac.uk/ws/files/484712/Energy%20Justice%20A%20Conceptual%20Review%20S3.pdf
-license: "CC BY-NC-ND 4.0 (author manuscript)"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: AM
+access_note: "University of Brighton repository"
 language: en
 topics: [energy-justice]
 date_added: 2026-10-11

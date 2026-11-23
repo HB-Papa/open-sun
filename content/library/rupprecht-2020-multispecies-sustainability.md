@@ -8,7 +8,9 @@ volume: "3"
 pages: "e33"
 doi: 10.1017/sus.2020.28
 url: https://doi.org/10.1017/sus.2020.28
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [multispecies, ecology, climate-futures]
 date_added: 2026-10-11

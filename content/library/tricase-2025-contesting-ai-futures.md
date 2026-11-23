@@ -6,7 +6,8 @@ type: Preprint
 venue: "SocArXiv (preprint, not peer reviewed)"
 doi: 10.31235/osf.io/3t9d2_v2
 url: https://doi.org/10.31235/osf.io/3t9d2_v2
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, technology, governance]
 date_added: 2026-10-11

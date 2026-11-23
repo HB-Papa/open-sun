@@ -9,7 +9,9 @@ issue: "3"
 pages: "143–165"
 doi: 10.1177/27539687231190656
 url: https://doi.org/10.1177/27539687231190656
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
 language: en
 topics: [energy-justice, community-energy, governance]
 date_added: 2026-10-11

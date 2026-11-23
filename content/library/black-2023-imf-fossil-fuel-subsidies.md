@@ -6,7 +6,8 @@ type: Report
 venue: "IMF Working Paper 2023/169"
 doi: 10.5089/9798400249006.001
 url: https://doi.org/10.5089/9798400249006.001
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [energy-justice, governance, climate-futures]
 date_added: 2026-10-11

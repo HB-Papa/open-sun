@@ -5,7 +5,8 @@ year: 2014
 type: Essay
 venue: "Project Hieroglyph, Arizona State University"
 url: https://hieroglyph.asu.edu/2014/09/solarpunk-notes-toward-a-manifesto/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [solarpunk, design, resilience]
 date_added: 2026-10-11

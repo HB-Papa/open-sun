@@ -5,7 +5,9 @@ year: 2019
 type: Book
 venue: "New Society Publishers"
 url: https://freefairandalive.org/read-it/
-license: "Free to read online"
+license: none
+rights_status: in-copyright-free-to-read
+access_note: "Read online only"
 language: en
 topics: [commons, governance, degrowth]
 date_added: 2026-10-11

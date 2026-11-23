@@ -5,7 +5,8 @@ year: 2023
 type: Thesis
 venue: "Master's thesis, Stockholm Resilience Centre, Stockholm University"
 url: https://urn.kb.se/resolve?urn=urn:nbn:se:su:diva-217544
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [solarpunk, multispecies, urban, climate-futures]
 date_added: 2026-10-11

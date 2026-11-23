@@ -6,7 +6,8 @@ type: Essay
 venue: "The Conversation"
 doi: 10.64628/ab.7vkfhpxe5
 url: https://theconversation.com/furiosa-a-mad-max-saga-blink-and-youll-miss-a-solarpunk-alternative-to-series-usual-dystopia-230460
-license: "CC BY-ND 4.0"
+license: CC-BY-ND-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, fiction]
 date_added: 2026-10-11

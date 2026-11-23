@@ -7,7 +7,8 @@ type: Book
 venue: "punctum books"
 doi: 10.53288/0404.1.00
 url: https://doi.org/10.53288/0404.1.00
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
 language: en
 topics: [multispecies, energy-justice, indigenous-futures]
 date_added: 2026-10-11

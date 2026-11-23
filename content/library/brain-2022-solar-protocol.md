@@ -5,7 +5,8 @@ year: 2022
 type: Article
 venue: "LIMITS 2022: Eighth Workshop on Computing within Limits"
 url: https://limits.pubpub.org/pub/solar
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
 language: en
 topics: [technology, design, community-energy]
 date_added: 2026-10-11

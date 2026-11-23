@@ -12,10 +12,11 @@ export const metadata: Metadata = {
   description: 'What Open Sun is, how readings are chosen and found, the daily Microgrid puzzle, and your privacy.',
 };
 
-// The five ways into the site, each as an arched window in its idea family's tint.
+// The six ways into the site, each as an arched window in its idea family's tint.
 const WAYS: { href: string; title: string; text: string; glyph: string; family: Family }[] = [
   { href: '/library', title: 'The library', text: 'Search and filter every reading by topic, type, year and language.', glyph: 'libraries-and-the-commons', family: 'commons' },
   { href: '/pathways', title: 'Pathways', text: 'Short guided routes through the library, a few readings at a time.', glyph: 'what-is-solarpunk', family: 'sun' },
+  { href: '/guides', title: 'Research guides', text: 'Where and how to search for open access work on a subject.', glyph: 'solarpunk-fiction', family: 'commons' },
   { href: '/field-guide', title: 'Field Guide', text: 'Plain definitions of the ideas you’ll meet, each linked to readings.', glyph: 'living-land', family: 'land' },
   { href: '/new', title: 'New arrivals', text: 'The latest additions, also as an RSS feed you can follow.', glyph: 'imagining-futures', family: 'futures' },
   { href: '/microgrid', title: 'Microgrid', text: 'A three-minute daily puzzle about powering a neighborhood.', glyph: 'power-from-the-sun', family: 'energy' },
@@ -91,7 +92,7 @@ export default function AboutPage() {
           <SectionHeading id="ways">Ways to explore</SectionHeading>
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-[repeat(auto-fit,minmax(168px,1fr))] sm:gap-4">
             {WAYS.map((w) => (
-              <li key={w.href} className="last:col-span-2 sm:last:col-span-1">
+              <li key={w.href}>
                 <Link
                   href={w.href}
                   className="card arch nouveau flex h-full flex-col items-center gap-2 px-4 pb-5 pt-7 text-center text-ink no-underline hover:text-ink"
@@ -193,8 +194,18 @@ export default function AboutPage() {
 
         <section aria-labelledby="who" className="flex flex-col gap-4">
           <SectionHeading id="who">Who runs Open Sun</SectionHeading>
-          {/* Add a sentence or two here about who runs the site, why it exists, and how to reach you. */}
-          <p className="max-w-[40rem] text-lede leading-normal text-body">Open Sun is an independent, non-commercial project.</p>
+          <p className="max-w-[40rem] text-lede leading-normal text-body">
+            Open Sun is an independent, non-commercial project run by <strong className="text-ink">Chris Misciagna, MLIS</strong>, a data professional pursuing a career in
+            academic libraries. Chris is a big fan of open access, scholarly communications, and making the world a greener place.
+          </p>
+          <p className="max-w-[40rem] text-copy leading-normal text-body">
+            Find Chris on{' '}
+            <a href="https://www.linkedin.com/in/chris-misciagna/" rel="noopener">
+              LinkedIn
+            </a>
+            . To report a problem with the site or a reading, please use the{' '}
+            <a href="https://github.com/HB-Papa/open-sun/issues/new">public issue list on GitHub</a>.
+          </p>
         </section>
 
         <section aria-labelledby="accessibility" className="flex scroll-mt-6 flex-col gap-4">

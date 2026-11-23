@@ -6,7 +6,8 @@ year: null
 type: Essay
 venue: "ReDes – Regenerative Design"
 url: https://re-des.org/a-solarpunk-manifesto/
-license: "CC BY-SA 4.0"
+license: CC-BY-SA-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, design, justice]
 date_added: 2026-10-11

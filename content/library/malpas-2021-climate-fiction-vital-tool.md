@@ -9,7 +9,9 @@ issue: "1"
 pages: "e12–e13"
 doi: 10.1016/S2542-5196(20)30307-7
 url: https://doi.org/10.1016/S2542-5196(20)30307-7
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [fiction, climate-futures]
 date_added: 2026-10-11

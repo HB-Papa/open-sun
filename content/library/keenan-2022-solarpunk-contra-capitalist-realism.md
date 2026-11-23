@@ -9,7 +9,9 @@ issue: "1"
 pages: "77–101"
 doi: 10.46630/gsoc.29.2022.06
 url: https://doi.org/10.46630/gsoc.29.2022.06
-license: "Free to read"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, justice, degrowth]
 date_added: 2026-10-11

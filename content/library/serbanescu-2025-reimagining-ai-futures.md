@@ -6,7 +6,8 @@ type: Article
 venue: "IASDR 2025: Design Next"
 doi: 10.21606/iasdr.2025.523
 url: https://doi.org/10.21606/iasdr.2025.523
-license: "CC BY-NC 4.0"
+license: CC-BY-NC-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, education, design, technology]
 date_added: 2026-10-11

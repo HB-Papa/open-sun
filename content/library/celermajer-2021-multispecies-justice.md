@@ -9,7 +9,10 @@ issue: "1–2"
 pages: "119–140"
 doi: 10.1080/09644016.2020.1827608
 url: https://www.research.ed.ac.uk/files/200702088/CelermajerEtalEP2020MultispeciesJusticeTheoriesChallenges.pdf
-license: "Free to read (author manuscript)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AM
+access_note: "Edinburgh Research Explorer"
 language: en
 topics: [multispecies, justice, indigenous-futures]
 date_added: 2026-10-11

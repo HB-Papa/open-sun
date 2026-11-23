@@ -6,7 +6,8 @@ year: 2021
 type: Fiction
 venue: "Center for Science and the Imagination, Arizona State University"
 url: https://csi.asu.edu/books/cities-of-light/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [solarpunk, fiction, urban, community-energy]
 date_added: 2026-10-11

@@ -6,7 +6,9 @@ type: Essay
 venue: "Places Journal"
 doi: 10.22269/140609
 url: https://placesjournal.org/article/library-as-infrastructure/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
 language: en
 topics: [libraries, commons, design]
 date_added: 2026-10-11

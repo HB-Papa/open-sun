@@ -8,7 +8,10 @@ issue: "2"
 pages: "160–168"
 doi: 10.3280/ess2-2023oa16411
 url: https://hdl.handle.net/11697/263267
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: VoR
+access_note: "Publisher's PDF in the University of L'Aquila repository"
 language: en
 topics: [solarpunk, education, fiction]
 date_added: 2026-10-11

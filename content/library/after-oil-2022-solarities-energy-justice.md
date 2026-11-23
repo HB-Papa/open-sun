@@ -7,7 +7,8 @@ year: 2022
 type: Book
 venue: "University of Minnesota Press (Forerunners)"
 url: https://manifold.umn.edu/projects/solarities
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
 language: en
 topics: [energy-justice, community-energy, multispecies]
 date_added: 2026-10-11

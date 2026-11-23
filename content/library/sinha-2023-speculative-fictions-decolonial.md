@@ -9,7 +9,9 @@ issue: "3"
 pages: "340–349"
 doi: 10.26522/ssj.v17i3.4385
 url: https://doi.org/10.26522/ssj.v17i3.4385
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [indigenous-futures, fiction, justice]
 date_added: 2026-10-11

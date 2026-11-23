@@ -8,7 +8,9 @@ issue: "12"
 pages: "345–359"
 doi: 10.18778/2083-2931.12.21
 url: https://doi.org/10.18778/2083-2931.12.21
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, fiction, climate-futures]
 date_added: 2026-10-11

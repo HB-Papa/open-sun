@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { ItemCardView, ItemRow } from '@/components/ItemCard';
 import { Pages } from '@/components/Pages';
 import { Nums } from '@/lib/nums';
+import { licenseGroup } from '@/lib/rights';
 import { familyOf, FAMILIES, languageName, topicLabel } from '@/lib/topics';
 import type { ItemCard } from '@/lib/types';
 
@@ -16,12 +17,6 @@ type LicenseFilter = 'any' | 'cc' | 'cc-by' | 'other';
 
 const VIEW_KEY = 'opensun:library-view';
 const PAGE_SIZE = 15;
-
-function licenseGroup(l: string): 'cc-by' | 'cc' | 'other' {
-  if (/^CC BY( 4\.0)?$/i.test(l.trim()) || /^CC BY 4\.0/.test(l)) return 'cc-by';
-  if (/^CC /i.test(l)) return 'cc';
-  return 'other';
-}
 
 export function LibraryBrowser({ items }: { items: ItemCard[] }) {
   const params = useSearchParams();

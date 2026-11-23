@@ -9,7 +9,9 @@ issue: "17"
 pages: "7180"
 doi: 10.3390/su12177180
 url: https://doi.org/10.3390/su12177180
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [commons, libraries, degrowth]
 date_added: 2026-10-11

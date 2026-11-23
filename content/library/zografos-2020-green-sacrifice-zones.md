@@ -10,7 +10,10 @@ issue: "5"
 pages: "543–546"
 doi: 10.1016/j.oneear.2020.10.012
 url: https://doi.org/10.1016/j.oneear.2020.10.012
-license: "Free to read (Elsevier open archive)"
+license: none
+rights_status: in-copyright-free-to-read
+version: VoR
+access_note: "Elsevier open archive"
 language: en
 topics: [energy-justice, justice, indigenous-futures]
 date_added: 2026-10-11

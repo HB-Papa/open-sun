@@ -8,7 +8,9 @@ volume: "1"
 issue: "6"
 doi: 10.14713/arestyrurj.v1i6.333
 url: https://doi.org/10.14713/arestyrurj.v1i6.333
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, urban, design]
 date_added: 2026-10-11

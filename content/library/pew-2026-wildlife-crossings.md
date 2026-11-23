@@ -6,7 +6,8 @@ year: 2026
 type: Report
 venue: "The Pew Charitable Trusts (fact sheet)"
 url: https://www.pew.org/en/research-and-analysis/fact-sheets/2026/01/wildlife-crossings-save-lives-cut-costs-and-protect-animals
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [ecology, multispecies]
 date_added: 2026-10-11

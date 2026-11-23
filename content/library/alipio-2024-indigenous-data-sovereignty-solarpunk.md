@@ -7,7 +7,8 @@ venue: "Pacific Symposium on Biocomputing 2025"
 pages: "717–733"
 doi: 10.1142/9789819807024_0054
 url: https://doi.org/10.1142/9789819807024_0054
-license: "CC BY-NC 4.0"
+license: CC-BY-NC-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, indigenous-futures, technology]
 date_added: 2026-10-11

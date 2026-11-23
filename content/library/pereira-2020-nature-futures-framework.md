@@ -10,7 +10,9 @@ issue: "4"
 pages: "1172–1195"
 doi: 10.1002/pan3.10146
 url: https://doi.org/10.1002/pan3.10146
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [climate-futures, ecology, multispecies]
 date_added: 2026-10-11

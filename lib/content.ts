@@ -3,7 +3,8 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
-import type { GlossaryTerm, ItemCard, LibraryItem, Pathway } from './types';
+import { parseRights } from './rights';
+import type { GlossaryTerm, Guide, Lesson, ItemCard, LibraryItem, Pathway, Policy } from './types';
 
 const ROOT = join(process.cwd(), 'content');
 
@@ -71,7 +72,8 @@ function parseItem(slug: string, raw: string): LibraryItem {
     pages: asStr(data.pages),
     doi: asStr(data.doi),
     url: String(data.url),
-    license: String(data.license ?? 'Free to read'),
+    // Throws, and so stops the build, when a rights field holds a value outside its controlled list.
+    ...parseRights(data, `content/library/${slug}.md`),
     language: String(data.language ?? 'en'),
     topics: (data.topics ?? []).map(String),
     dateAdded: asDate(data.date_added),
@@ -142,6 +144,85 @@ export function getPathways(): Pathway[] {
 
 export function getPathway(slug: string): Pathway | undefined {
   return getPathways().find((p) => p.slug === slug);
+}
+
+/** Markdown for long documents. A wide table scrolls inside itself, so it can take keyboard focus to be scrolled. */
+function proseHtml(md: string): string {
+  return (marked.parse(md.trim(), { async: false }) as string).replace(/<table>/g, '<table tabindex="0">');
+}
+
+function mdFiles(folder: string) {
+  const dir = join(ROOT, folder);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md') && f !== 'README.md')
+    .map((file) => ({ slug: file.replace(/\.md$/, ''), ...matter(readFileSync(join(dir, file), 'utf8')) }));
+}
+const slugList = (v: unknown): string[] => (Array.isArray(v) ? v.map(String) : []);
+
+/** Research guides, in their set order. Links to pathways or items that don't exist are dropped. */
+export function getGuides(): Guide[] {
+  const pathways = new Set(getPathways().map((p) => p.slug));
+  return mdFiles('guides')
+    .map(({ slug, data, content }) => ({
+      slug,
+      title: String(data.title),
+      blurb: String(data.blurb ?? ''),
+      family: String(data.family ?? 'sun'),
+      order: Number(data.order ?? 99),
+      lastReviewed: asDate(data.last_reviewed),
+      html: proseHtml(content),
+      relatedPathways: slugList(data.related_pathways).filter((s) => pathways.has(s)),
+      relatedItems: slugList(data.related_items).filter((s) => getItem(s)),
+    }))
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+
+export function getGuide(slug: string): Guide | undefined {
+  return getGuides().find((g) => g.slug === slug);
+}
+
+/** Information-literacy lesson plans, in their set order. Links to guides or items that don't exist are dropped. */
+export function getLessons(): Lesson[] {
+  const guides = new Set(getGuides().map((g) => g.slug));
+  return mdFiles('lessons')
+    .map(({ slug, data, content }) => ({
+      slug,
+      title: String(data.title),
+      blurb: String(data.blurb ?? ''),
+      order: Number(data.order ?? 99),
+      level: String(data.level ?? ''),
+      duration: String(data.duration ?? ''),
+      format: String(data.format ?? ''),
+      frames: slugList(data.frames),
+      outcomes: slugList(data.outcomes),
+      lastReviewed: asDate(data.last_reviewed),
+      html: proseHtml(content),
+      relatedGuides: slugList(data.related_guides).filter((s) => guides.has(s)),
+      relatedItems: slugList(data.related_items).filter((s) => getItem(s)),
+    }))
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+}
+
+export function getLesson(slug: string): Lesson | undefined {
+  return getLessons().find((l) => l.slug === slug);
+}
+
+/** Published policies and statements about how the library is run. */
+export function getPolicies(): Policy[] {
+  return mdFiles('policies')
+    .map(({ slug, data, content }) => ({
+      slug,
+      title: String(data.title),
+      blurb: String(data.blurb ?? ''),
+      lastReviewed: asDate(data.last_reviewed),
+      html: proseHtml(content),
+    }))
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
+export function getPolicy(slug: string): Policy | undefined {
+  return getPolicies().find((p) => p.slug === slug);
 }
 
 export function getGlossary(): GlossaryTerm[] {

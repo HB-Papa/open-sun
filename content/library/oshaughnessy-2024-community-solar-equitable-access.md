@@ -9,7 +9,10 @@ issue: "8"
 pages: "955–963"
 doi: 10.1038/s41560-024-01546-2
 url: https://emp.lbl.gov/publications/evaluating-community-solar-measure
-license: "Free to read (preprint)"
+license: none
+rights_status: in-copyright-free-to-read
+version: AO
+access_note: "Berkeley Lab copy of the manuscript before peer review"
 language: en
 topics: [community-energy, energy-justice]
 date_added: 2026-10-11

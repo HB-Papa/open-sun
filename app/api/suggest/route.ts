@@ -1,4 +1,4 @@
-// Turns a suggestion into a GitHub issue labelled "suggestion" in the site's
+// Turns a suggestion into a GitHub issue labelled "suggestion" and "received" in the site's
 // repository, which is the review queue. Needs two environment variables in Vercel:
 //   GITHUB_REPO   e.g. "your-name/open-sun"
 //   GITHUB_TOKEN  a fine-grained token with "Issues: Read and write" on that repo only
@@ -44,7 +44,9 @@ export async function POST(req: Request) {
 
   const issue = {
     title: `Suggestion: ${safe(title || url).slice(0, 200)}`,
-    labels: ['suggestion'],
+    // "received" is the status label: seen, not yet decided (docs/procedures/suggestions.md).
+    // Both labels should already exist on the repository so they keep their set colors and descriptions.
+    labels: ['suggestion', 'received'],
     body: [
       `**Link:** ${safe(url)}`,
       title && `**Title:** ${safe(title)}`,

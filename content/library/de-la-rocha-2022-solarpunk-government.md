@@ -5,7 +5,8 @@ year: 2022
 type: Essay
 venue: "Solarpunk Magazine"
 url: https://solarpunkmagazine.com/what-would-a-solarpunk-government-look-like/
-license: "Free to read"
+license: none
+rights_status: in-copyright-free-to-read
 language: en
 topics: [solarpunk, governance]
 date_added: 2026-10-11

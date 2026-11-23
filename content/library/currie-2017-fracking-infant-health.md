@@ -9,7 +9,9 @@ issue: "12"
 pages: "e1603021"
 doi: 10.1126/sciadv.1603021
 url: https://doi.org/10.1126/sciadv.1603021
-license: "CC BY-NC 4.0"
+license: CC-BY-NC-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [energy-justice, justice]
 date_added: 2026-10-11

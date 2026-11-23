@@ -9,7 +9,9 @@ issue: "1"
 pages: "58–71"
 doi: 10.1080/01944363.2024.2343670
 url: https://doi.org/10.1080/01944363.2024.2343670
-license: "CC BY-NC-ND 4.0"
+license: CC-BY-NC-ND-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [libraries, resilience, urban]
 date_added: 2026-10-11

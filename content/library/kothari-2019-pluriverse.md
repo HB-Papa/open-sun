@@ -6,7 +6,8 @@ year: 2019
 type: Book
 venue: "Tulika Books and Authorsupfront"
 url: https://archive.org/details/pluriverse-a-post-development-dictionary-2019
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
 language: en
 topics: [degrowth, indigenous-futures, commons, justice]
 date_added: 2026-10-11

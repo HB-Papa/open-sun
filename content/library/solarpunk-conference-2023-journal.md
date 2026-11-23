@@ -7,7 +7,8 @@ year: 2023
 type: Book
 venue: "Knowledge Commons (Humanities Commons)"
 url: https://works.hcommons.org/records/ty47r-b8025
-license: "CC BY-NC-SA 4.0"
+license: CC-BY-NC-SA-4.0
+rights_status: open-license
 language: en
 topics: [solarpunk, fiction, design]
 date_added: 2026-10-11

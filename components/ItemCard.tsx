@@ -5,9 +5,11 @@ import { naturalName } from '@/lib/cite';
 import { LeafSprout } from './icons';
 import { Nums } from '@/lib/nums';
 
-export function authorsLine(item: Pick<Card, 'authors' | 'edited'>): string {
-  const a = item.authors.map(naturalName);
-  let s = a.length <= 3 ? a.join(', ').replace(/, ([^,]*)$/, a.length > 2 ? ', and $1' : ' and $1') : `${a[0]} and ${a.length - 1} others`;
+export function authorsLine(item: Pick<Card, 'authors' | 'edited'> & { organization?: boolean }): string {
+  // A group's name is written as it is: only people's names are stored surname first.
+  const a = item.organization ? item.authors : item.authors.map(naturalName);
+  // Joined by hand, so a comma inside a name ("Center for X, University of Y") is left alone.
+  let s = a.length > 3 ? `${a[0]} and ${a.length - 1} others` : a.length === 3 ? `${a[0]}, ${a[1]}, and ${a[2]}` : a.join(' and ');
   if (item.edited) s += a.length > 1 ? ' (eds.)' : ' (ed.)';
   return s;
 }

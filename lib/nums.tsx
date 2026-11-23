@@ -14,6 +14,14 @@ export function numHtml(html: string): string {
     .join('');
 }
 
+/** As numHtml, but leaves code alone, so search strings and commands keep their own type. */
+export function numProse(html: string): string {
+  return html
+    .split(/(<pre[\s\S]*?<\/pre>|<code[\s\S]*?<\/code>)/)
+    .map((part) => (part.startsWith('<pre') || part.startsWith('<code') ? part : numHtml(part)))
+    .join('');
+}
+
 /** Renders plain text with its digit runs set in Fraunces. */
 export function Nums({ text }: { text: string }) {
   const out: React.ReactNode[] = [];

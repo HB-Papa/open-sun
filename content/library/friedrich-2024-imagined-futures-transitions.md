@@ -8,7 +8,9 @@ volume: "164"
 pages: "103502"
 doi: 10.1016/j.futures.2024.103502
 url: https://doi.org/10.1016/j.futures.2024.103502
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [climate-futures]
 date_added: 2026-10-11

@@ -9,7 +9,9 @@ issue: "1"
 pages: "55–68"
 doi: 10.24908/ijesjp.v8i1.14292
 url: https://doi.org/10.24908/ijesjp.v8i1.14292
-license: "CC BY 4.0"
+license: CC-BY-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, community-energy, fiction, justice]
 date_added: 2026-10-11

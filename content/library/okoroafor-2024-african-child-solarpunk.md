@@ -9,7 +9,9 @@ issue: "2"
 pages: "45–57"
 doi: 10.4314/jda.v9i2.2
 url: https://doi.org/10.4314/jda.v9i2.2
-license: "CC BY-NC 4.0"
+license: CC-BY-NC-4.0
+rights_status: open-license
+version: VoR
 language: en
 topics: [solarpunk, education, climate-futures]
 date_added: 2026-10-11
