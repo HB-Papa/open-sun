@@ -181,7 +181,7 @@ test('MARC: leader and 008 are the right length and coded for the type', () => {
   for (const item of [...all(), { ...load('kothari-2019-pluriverse'), type: 'Journal' }]) {
     const f = field008(item);
     assert.equal(f.length, 40, item.slug);
-    assert.equal(f.slice(0, 6), '261011'); // date entered: 2026-10-11
+    assert.equal(f.slice(0, 6), item.dateAdded.slice(2).replace(/-/g, ''), item.slug); // date entered: yymmdd from date_added
     assert.equal(f.slice(35, 38), marcLanguage(item.language));
     assert.equal(f[23], 'o'); // online
     assert.equal(f[39], 'd');

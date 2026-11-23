@@ -1,2 +1,12 @@
 # Items the update agent should never suggest again.
 # One DOI (e.g. 10.1234/abcd) or exact title per line.
+
+# Library batch 2026-11-22
+# Mahmud, "The Utopian Enlightenment of Romantic Sublime…" (2026): out of scope (a reading of an 1826 Romantic novel, not about an Open Sun idea); publisher widely listed as questionable.
+10.11648/j.ijla.20261405.11
+# Panjaitan & Giri, "From Skills Gaps to Energy Resilience…" (2026): published text says it is a draft "before journal submission"; venue not credibly peer reviewed.
+10.56442/pef.v4i4.1605
+# Guć, "Pandemic – Utopia – Bioethics" (2022): full text is in Croatian, only the abstract is in English. Skipped at the owner's request.
+10.21860/j.13.1.8
+# Cros et al., "BⱯBEL RËVOLUㅏION 2022|2025…" (2026): full text is in French, only the abstract is in English. Skipped at the owner's request.
+10.4000/16rzg
